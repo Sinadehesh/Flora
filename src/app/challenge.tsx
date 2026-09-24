@@ -5,7 +5,7 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { blocker } from '../blocker';
-import { PhotoCredit, PlantPhoto } from '../components/PlantPhoto';
+import { PlantPhoto } from '../components/PlantPhoto';
 import { Button } from '../components/ui';
 import {
   challengeReducer,
@@ -168,7 +168,6 @@ export default function ChallengeScreen() {
               </View>
             )}
           </View>
-          {challenge.phase === 'penalty' && <PhotoCredit plant={plant} photo={photo} />}
 
           {challenge.phase === 'question' ? (
             <View style={styles.panel}>
@@ -272,7 +271,6 @@ function Result({
             <PlantPhoto plant={plant} photo={photo} />
           </View>
         )}
-        {plant && <PhotoCredit plant={plant} photo={photo} />}
         <View style={styles.panel}>
           <Text style={[styles.answerName, { color: c.success, fontFamily: serif }]}>{title}</Text>
           {plant && (

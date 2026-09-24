@@ -1,9 +1,9 @@
 import { Image } from 'expo-image';
-import { Linking, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import type { Plant } from '../core/types';
 import { PLANT_IMAGES } from '../data/plantImages.generated';
-import { creditLine, type PlantImage } from '../data/plantImageTypes';
+import type { PlantImage } from '../data/plantImageTypes';
 import { CATEGORY_EMOJI, useColors } from '../theme';
 
 interface Props {
@@ -48,25 +48,8 @@ export function imageFor(plant: Plant, photo = 0): PlantImage | undefined {
   return images?.length ? images[photo % images.length] : undefined;
 }
 
-/** Attribution under a photo (CC BY requires it). Tapping opens the original observation. */
-export function PhotoCredit({ plant, photo }: { plant: Plant; photo?: number }) {
-  const colors = useColors();
-  const image = imageFor(plant, photo);
-  if (!image) return null;
-  return (
-    <Text
-      style={[styles.credit, { color: colors.textMuted }]}
-      numberOfLines={1}
-      onPress={() => Linking.openURL(image.credit.sourceUrl)}
-    >
-      {creditLine(image)}
-    </Text>
-  );
-}
-
 const styles = StyleSheet.create({
   fill: { width: '100%', height: '100%' },
   placeholder: { alignItems: 'center', justifyContent: 'center', gap: 12 },
-  credit: { fontSize: 12, marginTop: 6 },
   hint: { fontSize: 13, textAlign: 'center', paddingHorizontal: 24 },
 });

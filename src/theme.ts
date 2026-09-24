@@ -11,6 +11,7 @@ const light = {
   onPrimary: '#FFFFFF',
   accent: '#C4546A',
   success: '#2E7D4F',
+  warning: '#A5660F',
   danger: '#B3413A',
   overlay: 'rgba(12, 20, 15, 0.72)',
 };
@@ -26,6 +27,7 @@ const dark: typeof light = {
   onPrimary: '#0F1F15',
   accent: '#E58A9B',
   success: '#7BD19A',
+  warning: '#E9B35F',
   danger: '#F08A80',
   overlay: 'rgba(0, 0, 0, 0.78)',
 };

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { PLANT_DETAILS } from '../data/plantDetails';
 import { PLANTS, PLANTS_BY_ID } from '../data/plants';
 import { challengeReducer, penaltySecondsLeft, startChallenge } from './challenge';
 import { acceptedNames, isCorrectAnswer, levenshtein, normalizeName } from './matching';
@@ -21,6 +22,13 @@ describe('plant data', () => {
     expect(new Set(PLANTS.map((p) => p.id)).size).toBe(PLANTS.length);
     for (const p of PLANTS) {
       expect(p.commonName && p.scientificName && p.family && p.fact).toBeTruthy();
+    }
+  });
+
+  it('has plant-page details for exactly the plants in the deck', () => {
+    expect(Object.keys(PLANT_DETAILS).sort()).toEqual(PLANTS.map((p) => p.id).sort());
+    for (const d of Object.values(PLANT_DETAILS)) {
+      expect(d.about && d.where && d.edibilityNote).toBeTruthy();
     }
   });
 

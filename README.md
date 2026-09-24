@@ -17,15 +17,16 @@ flashcard practice and a browsable plant guide. Everything runs offline.
 
 ## Status
 
-| Piece                                              | State                                                                              |
-| -------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Challenge flow (easy/hard, penalty, retry, unlock) | ✅ Built and unit-tested                                                           |
-| Spaced repetition (Leitner boxes) + Botany IQ      | ✅ Built and unit-tested                                                           |
-| Herbarium, plant browser, plant pages, settings    | ✅ Built                                                                           |
-| Plant database                                     | ✅ 70 plants (35 flowers, 18 houseplants, 17 trees), each with a fact              |
-| Photos                                             | ✅ Real iNaturalist photos, several per plant, CC0 / CC BY / CC BY-SA with credits |
-| iOS shield (Screen Time API)                       | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)   |
-| Android blocker (UsageStats + foreground service)  | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)   |
+| Piece                                                     | State                                                                              |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Challenge flow (easy/hard, penalty, retry, unlock)        | ✅ Built and unit-tested                                                           |
+| Spaced repetition (Leitner boxes) + Botany IQ             | ✅ Built and unit-tested                                                           |
+| Herbarium, plant browser, plant pages, settings           | ✅ Built                                                                           |
+| Plant pages: about, where it grows, edibility, uses, lore | ✅ All 70 plants                                                                   |
+| Plant database                                            | ✅ 70 plants (35 flowers, 18 houseplants, 17 trees), each with a fact              |
+| Photos                                                    | ✅ Real iNaturalist photos, several per plant, CC0 / CC BY / CC BY-SA with credits |
+| iOS shield (Screen Time API)                              | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)   |
+| Android blocker (UsageStats + foreground service)         | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)   |
 
 Until the native blockers exist, `src/blocker/index.ts` is a simulated blocker. Use **Preview the lock screen** on
 the Herbarium tab to try the full intercept flow.

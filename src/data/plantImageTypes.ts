@@ -2,10 +2,6 @@ import type { ImageSourcePropType } from 'react-native';
 
 export interface PlantImage {
   source: ImageSourcePropType;
-  /** Required for CC BY / CC BY-SA photos; shown with the photo and on the Credits screen. */
+  /** Required by CC BY / CC BY-SA licences; listed on the Credits screen only. */
   credit: { author: string; license: string; sourceUrl: string };
-}
-
-export function creditLine({ credit }: PlantImage): string {
-  return `Photo: ${credit.author} · ${credit.license}`;
 }
