@@ -33,7 +33,10 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "photos:download": "node scripts/download-plant-photos.mjs",
-    "photos:find": "node scripts/find-plant-photos.mjs"
+    "photos:find": "node scripts/find-plant-photos.mjs",
+    "build:apk": "npx eas-cli@latest build --platform android --profile preview",
+    "build:playstore": "npx eas-cli@latest build --platform android --profile production",
+    "submit:playstore": "npx eas-cli@latest submit --platform android --profile production"
   },
   "private": true
 }

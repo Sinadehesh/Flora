@@ -17,15 +17,15 @@ flashcard practice and a browsable plant guide. Everything runs offline.
 
 ## Status
 
-| Piece                                                  | State                                                                                      |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| Challenge flow (easy/hard, penalty, retry, unlock)     | ✅ Built and unit-tested                                                                   |
-| Spaced repetition (Leitner boxes) + Botany IQ          | ✅ Built and unit-tested                                                                   |
-| Herbarium, plant browser, plant pages, settings        | ✅ Built                                                                                   |
-| Plant database                                         | ✅ 70 plants (35 flowers, 18 houseplants, 17 trees), each with a fact                       |
-| Photos                                                 | ✅ Real iNaturalist photos, several per plant, CC0 / CC BY / CC BY-SA with credits          |
-| iOS shield (Screen Time API)                           | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)           |
-| Android blocker (UsageStats + foreground service)      | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)           |
+| Piece                                              | State                                                                              |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Challenge flow (easy/hard, penalty, retry, unlock) | ✅ Built and unit-tested                                                           |
+| Spaced repetition (Leitner boxes) + Botany IQ      | ✅ Built and unit-tested                                                           |
+| Herbarium, plant browser, plant pages, settings    | ✅ Built                                                                           |
+| Plant database                                     | ✅ 70 plants (35 flowers, 18 houseplants, 17 trees), each with a fact              |
+| Photos                                             | ✅ Real iNaturalist photos, several per plant, CC0 / CC BY / CC BY-SA with credits |
+| iOS shield (Screen Time API)                       | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)   |
+| Android blocker (UsageStats + foreground service)  | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)   |
 
 Until the native blockers exist, `src/blocker/index.ts` is a simulated blocker. Use **Preview the lock screen** on
 the Herbarium tab to try the full intercept flow.
@@ -41,6 +41,31 @@ npx expo start         # press i / a / w for iOS, Android or web
 npm test               # core logic tests (vitest)
 npm run typecheck
 ```
+
+## Build for Android
+
+Builds run in the cloud on [EAS Build](https://docs.expo.dev/build/introduction/). You need a free Expo
+account, but not Android Studio. Log in once with `npx eas-cli@latest login`. The first build asks to create
+the project and an Android signing key. Let EAS generate and store the key; you need that same key for
+every future Play Store update.
+
+| Command                    | Output | Use it for                                                                     |
+| -------------------------- | ------ | ------------------------------------------------------------------------------ |
+| `npm run build:apk`        | `.apk` | Installing directly on phones: you, friends, testers. The link opens a QR.     |
+| `npm run build:playstore`  | `.aab` | The Play Store. The version code increases automatically on each build.        |
+| `npm run submit:playstore` | —      | Uploads the latest `.aab` to Play Console's internal testing track as a draft. |
+
+Before the first Play Store upload:
+
+- Create the app in [Play Console](https://play.google.com/console) with the package name `com.floralock.app`.
+  Upload the first `.aab` by hand; after that, `submit:playstore` works.
+- For `submit:playstore`, create a Google Cloud service account with Play Console access and give its JSON key
+  to EAS ([guide](https://docs.expo.dev/submit/android/)).
+- New personal developer accounts must run a closed test with at least 12 testers for 14 days before
+  publishing to production.
+- Both builds currently have the simulated blocker. Blocking other apps needs the native Android module
+  (see [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)). That module's permissions, Usage Access
+  and a special-use foreground service, need Play Console declarations.
 
 ## Layout
 
