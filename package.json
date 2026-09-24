@@ -11,6 +11,7 @@
     "expo-image": "~57.0.5",
     "expo-linking": "~57.0.10",
     "expo-router": "~57.0.22",
+    "expo-splash-screen": "~57.0.9",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -36,7 +37,8 @@
     "photos:find": "node scripts/find-plant-photos.mjs",
     "build:apk": "npx eas-cli@latest build --platform android --profile preview",
     "build:playstore": "npx eas-cli@latest build --platform android --profile production",
-    "submit:playstore": "npx eas-cli@latest submit --platform android --profile production"
+    "submit:playstore": "npx eas-cli@latest submit --platform android --profile production",
+    "icons": "node scripts/generate-icons.mjs"
   },
   "private": true
 }

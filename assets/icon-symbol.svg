@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="540 320 852 1240">
+  <!--
+    FloraLock mark: a padlock whose shackle is a flower stem, topped with a tulip,
+    with a leaf-shaped keyhole. Gaps are real cut-outs (masks), so the symbol
+    works on any background and as a single-colour silhouette.
+    Edit this file, then run `npm run icons` to regenerate every PNG in assets/.
+    The script swaps the two colours for white to make the monochrome variant.
+  -->
+  <defs>
+    <path id="petal-back" d="M901 385 C919 362 940 342 958 334 Q966 330 974 334 C992 342 1013 362 1031 385 L966 442 Z" />
+    <path id="petal-left" d="M822 388 C905 394 990 445 1013 540 C1028 603 1008 652 966 667 C878 667 822 602 822 530 C822 482 832 452 813 407 C809 396 813 388 822 388 Z" />
+    <path id="petal-right" d="M1108 388 C1118 390 1122 399 1117 409 C1101 452 1110 482 1110 530 C1110 600 1072 648 1011 660 C1036 618 1040 560 1016 502 C1004 474 990 458 981 449 C1020 412 1062 393 1108 388 Z" />
+    <path id="keyhole" d="M1035 1083 C1050 1160 1050 1215 997 1248 L1017 1360 C1019 1372 1012 1380 1003 1380 L928 1380 C918 1380 912 1372 915 1362 L937 1250 C930 1246 922 1242 915 1237 C885 1205 885 1160 915 1130 C950 1096 1000 1085 1035 1083 Z" />
+
+    <!-- Halo around the tulip, cut out of the shackle. -->
+    <mask id="shackle-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="1932" height="1932">
+      <rect width="1932" height="1932" fill="#fff" />
+      <g fill="#000" stroke="#000" stroke-width="44" stroke-linejoin="round">
+        <use href="#petal-back" />
+        <use href="#petal-left" />
+        <use href="#petal-right" />
+      </g>
+    </mask>
+
+    <!-- Thin gaps between petals. -->
+    <mask id="petal-gaps" maskUnits="userSpaceOnUse" x="0" y="0" width="1932" height="1932">
+      <rect width="1932" height="1932" fill="#fff" />
+      <g fill="none" stroke="#000" stroke-width="18" stroke-linejoin="round">
+        <use href="#petal-left" />
+        <use href="#petal-right" />
+      </g>
+    </mask>
+
+    <!-- Leaf keyhole, with the green midrib left in. -->
+    <mask id="keyhole-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="1932" height="1932">
+      <rect width="1932" height="1932" fill="#fff" />
+      <use href="#keyhole" fill="#000" />
+      <path d="M912 1242 C932 1196 955 1168 990 1140 C966 1172 948 1205 938 1250 Z" fill="#fff" />
+    </mask>
+  </defs>
+
+  <g class="green" fill="#2F5D43">
+    <g mask="url(#shackle-cut)">
+      <path d="M713 917 V780 A253 253 0 0 1 1219 780 V917" fill="none" stroke="#2F5D43" stroke-width="70" />
+      <!-- Leaves on the stem -->
+      <path d="M680 778 C612 775 566 716 571 642 C622 636 666 656 692 698 Z" />
+      <path d="M746 845 C820 846 884 790 878 712 C810 706 762 736 746 778 Z" />
+    </g>
+    <rect x="555" y="917" width="823" height="630" rx="84" mask="url(#keyhole-cut)" />
+  </g>
+
+  <g class="pink" fill="#DC6A7C" mask="url(#petal-gaps)">
+    <use href="#petal-back" />
+    <use href="#petal-left" />
+    <use href="#petal-right" />
+  </g>
+</svg>
