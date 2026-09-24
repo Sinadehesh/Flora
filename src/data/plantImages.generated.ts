@@ -2,4 +2,355 @@
 // Photos: iNaturalist observers, CC0 / CC BY / CC BY-SA. See scripts/plant-photos.json.
 import type { PlantImage } from './plantImageTypes';
 
-export const PLANT_IMAGES: Record<string, PlantImage[]> = {};
+export const PLANT_IMAGES: Record<string, PlantImage[]> = {
+  "african-violet": [
+    { source: require('../../assets/plants/african-violet-1.jpg'), credit: {"author":"adamcvean","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/b46b9345-837c-41bb-8bf1-4f2f9aaeec13"} },
+    { source: require('../../assets/plants/african-violet-2.jpg'), credit: {"author":"Sean Rigney","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/de410b46-7db4-4e44-abf6-2b73e2c7b57c"} },
+    { source: require('../../assets/plants/african-violet-3.jpg'), credit: {"author":"Ong Jyh Seng","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/9ec7e5e4-9969-44c3-8f21-70262b86227e"} },
+  ],
+  "aloe-vera": [
+    { source: require('../../assets/plants/aloe-vera-1.jpg'), credit: {"author":"Chuck Wilson","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/991e5654-808f-476a-adfc-e7f673ac571b"} },
+    { source: require('../../assets/plants/aloe-vera-2.jpg'), credit: {"author":"johnyochum","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/d531ec3e-ccb5-4e2d-b1dd-fee79944d1fa"} },
+    { source: require('../../assets/plants/aloe-vera-3.jpg'), credit: {"author":"mhouston00","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/889819f4-ae2e-42b3-9ce5-7db99b70f482"} },
+  ],
+  "anemone": [
+    { source: require('../../assets/plants/anemone-1.jpg'), credit: {"author":"helen1688","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/6f6fe87a-e2c1-4d9b-a8b3-e412f2d68b45"} },
+    { source: require('../../assets/plants/anemone-2.jpg'), credit: {"author":"Léo Souillard","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/3ebc841b-c46e-405e-a7da-641138f33452"} },
+    { source: require('../../assets/plants/anemone-3.jpg'), credit: {"author":"Maaike Verschueren","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/6ce49fc5-a47e-428a-9c18-3c8feffde2d4"} },
+  ],
+  "baobab": [
+    { source: require('../../assets/plants/baobab-1.jpg'), credit: {"author":"Dixie Sommers","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/a91bad6f-1976-45b9-ad6d-8adad3ba1290"} },
+    { source: require('../../assets/plants/baobab-2.jpg'), credit: {"author":"Seig","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/cb18aba4-eac8-4c4e-a00d-c4a9449591d6"} },
+    { source: require('../../assets/plants/baobab-3.jpg'), credit: {"author":"Brooke Smith","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/5859d077-9157-4f1b-8917-7675eff897d2"} },
+  ],
+  "bird-of-paradise": [
+    { source: require('../../assets/plants/bird-of-paradise-1.jpg'), credit: {"author":"Rafael Silva","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/6a329a27-e1e3-4f02-b411-d024952b1505"} },
+    { source: require('../../assets/plants/bird-of-paradise-2.jpg'), credit: {"author":"Greg Tasney","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/a75d96b6-06db-4a99-8c45-944cba31008d"} },
+    { source: require('../../assets/plants/bird-of-paradise-3.jpg'), credit: {"author":"Martin Kalfatovic","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/d612be8c-f334-4911-80be-c8abf7cebf59"} },
+  ],
+  "bluebell": [
+    { source: require('../../assets/plants/bluebell-1.jpg'), credit: {"author":"Robert H. Wardell","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/c44309d1-7af1-4a27-b223-68122a299232"} },
+    { source: require('../../assets/plants/bluebell-2.jpg'), credit: {"author":"Thierry Arbault","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/54c371f5-e95b-4088-b443-bf294427442a"} },
+    { source: require('../../assets/plants/bluebell-3.jpg'), credit: {"author":"Nick Butcher","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/b3ba0253-b1d1-4ed6-bcf4-d2239299b2d6"} },
+  ],
+  "boston-fern": [
+    { source: require('../../assets/plants/boston-fern-1.jpg'), credit: {"author":"Bruno - Yolande Zanette","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/c2edc745-96eb-4af5-9c2b-fb15c7394a72"} },
+    { source: require('../../assets/plants/boston-fern-2.jpg'), credit: {"author":"tetyanakuchma","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/1ae2eca9-91a6-494c-8ff8-5f1a89c23e34"} },
+    { source: require('../../assets/plants/boston-fern-3.jpg'), credit: {"author":"Jay Horn","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/023eeed2-02a0-48fa-b038-44ee9566ebd7"} },
+  ],
+  "bougainvillea": [
+    { source: require('../../assets/plants/bougainvillea-1.jpg'), credit: {"author":"Philippe Hornus","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/c6bf959d-bb39-440e-b895-cde671dfa5e0"} },
+    { source: require('../../assets/plants/bougainvillea-2.jpg'), credit: {"author":"Diogo Luiz","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/a23243e5-5478-4fbc-a782-6f49bf4a1882"} },
+    { source: require('../../assets/plants/bougainvillea-3.jpg'), credit: {"author":"nebrooks","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/3264a0c9-d34c-4248-820b-37b2d34c9877"} },
+  ],
+  "calla-lily": [
+    { source: require('../../assets/plants/calla-lily-1.jpg'), credit: {"author":"Michael and Antoni Hinczewski","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/0c949bd8-3ab4-4ac1-bce6-af19accfab61"} },
+    { source: require('../../assets/plants/calla-lily-2.jpg'), credit: {"author":"Dave Richardson","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/50c8b7ad-81b4-474a-aa68-32462aa9c289"} },
+    { source: require('../../assets/plants/calla-lily-3.jpg'), credit: {"author":"Nina Kerr","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/c8e72502-6ef0-403c-adba-b33948f914fd"} },
+  ],
+  "camellia": [
+    { source: require('../../assets/plants/camellia-1.jpg'), credit: {"author":"René Boe Sørensen","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/1e1c79f2-19a3-409a-b4fc-68a6830a0491"} },
+    { source: require('../../assets/plants/camellia-2.jpg'), credit: {"author":"Peter Andersen","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/08086103-96b8-40c8-a4eb-b459ddd22daa"} },
+    { source: require('../../assets/plants/camellia-3.jpg'), credit: {"author":"Yoshihiro Tokue","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/2b936ff7-603f-4280-b40a-380a691f4838"} },
+  ],
+  "carnation": [
+    { source: require('../../assets/plants/carnation-1.jpg'), credit: {"author":"Carlos Lozano-Flores","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/6a428b3d-e6dc-46c4-9022-1cad5b8f95fe"} },
+    { source: require('../../assets/plants/carnation-2.jpg'), credit: {"author":"Michal Honskus","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/488c51da-86f7-462a-849c-6919e845b5a1"} },
+    { source: require('../../assets/plants/carnation-3.jpg'), credit: {"author":"ks1v","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/1bb3feed-4b84-41d1-9efb-923dee55bb38"} },
+  ],
+  "cherry-blossom": [
+    { source: require('../../assets/plants/cherry-blossom-1.jpg'), credit: {"author":"Samuele Papeschi","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/9e030847-bf79-4c8b-8674-d8302162c628"} },
+    { source: require('../../assets/plants/cherry-blossom-2.jpg'), credit: {"author":"labradorite_luster","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/a3f1a598-30ff-4b6a-8d08-88b1433832a5"} },
+    { source: require('../../assets/plants/cherry-blossom-3.jpg'), credit: {"author":"Jenny Saito","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/db84313e-2f5e-42ba-a054-45dc235bbb97"} },
+  ],
+  "chinese-money-plant": [
+    { source: require('../../assets/plants/chinese-money-plant-1.jpg'), credit: {"author":"dinomariobob","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/a2e9a8d4-7369-4f42-ad9c-6154655d619d"} },
+    { source: require('../../assets/plants/chinese-money-plant-2.jpg'), credit: {"author":"dmagdee","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/76923b6f-aef7-4a8a-9b5c-554177441b89"} },
+    { source: require('../../assets/plants/chinese-money-plant-3.jpg'), credit: {"author":"Tiago Lubiana","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/9da9d61d-4f38-4368-ad38-19e9f3eb14a0"} },
+  ],
+  "christmas-cactus": [
+    { source: require('../../assets/plants/christmas-cactus-1.jpg'), credit: {"author":"Daniel Mesa","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/c10b8bc9-de59-44d8-a7a7-6c06600e924b"} },
+    { source: require('../../assets/plants/christmas-cactus-2.jpg'), credit: {"author":"Jenny Saito","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/2d6fe9c8-fedd-4281-9657-c709cff8fedd"} },
+    { source: require('../../assets/plants/christmas-cactus-3.jpg'), credit: {"author":"Daniel Schelesky","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/69ccabcf-e436-4cb5-b7f5-a2438e5b3729"} },
+  ],
+  "chrysanthemum": [
+    { source: require('../../assets/plants/chrysanthemum-1.jpg'), credit: {"author":"Irving Ríos","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/a6d3b819-b42a-44d3-bfb2-a15c067b51df"} },
+    { source: require('../../assets/plants/chrysanthemum-2.jpg'), credit: {"author":"mister_bumble","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/31febd5a-5ae3-47b9-b290-beabc14eee7d"} },
+    { source: require('../../assets/plants/chrysanthemum-3.jpg'), credit: {"author":"Diane","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/e346af0f-8804-451c-9ab8-729f00fc9dd4"} },
+  ],
+  "coast-redwood": [
+    { source: require('../../assets/plants/coast-redwood-1.jpg'), credit: {"author":"Northcut","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/c3a8a6c7-b1aa-4953-9c77-2cbfb66911f9"} },
+    { source: require('../../assets/plants/coast-redwood-2.jpg'), credit: {"author":"Aaron Iemma","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/dc4b1d50-dafb-4383-8f2c-5c9e474e62ee"} },
+    { source: require('../../assets/plants/coast-redwood-3.jpg'), credit: {"author":"Joshua Zupan","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/70fe4d8e-becf-442a-a3c4-3823a6a3ebd6"} },
+  ],
+  "coconut-palm": [
+    { source: require('../../assets/plants/coconut-palm-1.jpg'), credit: {"author":"Alex Doyle","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/bb7d44c4-ad52-46e7-a27c-241fc85b03a3"} },
+    { source: require('../../assets/plants/coconut-palm-2.jpg'), credit: {"author":"stephen","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/7dacd352-fe27-445d-8979-badbd10d0ae5"} },
+    { source: require('../../assets/plants/coconut-palm-3.jpg'), credit: {"author":"Gabriel Cardoso Fialho","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/589b9e64-f058-446e-ae74-e27213e1d2d1"} },
+  ],
+  "cosmos": [
+    { source: require('../../assets/plants/cosmos-1.jpg'), credit: {"author":"Sean Hartnett","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/a1242742-d177-4ebc-bef9-6f86f53807b7"} },
+    { source: require('../../assets/plants/cosmos-2.jpg'), credit: {"author":"danygl","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/c36c797d-9147-4fcc-b1b4-ec84d813ef0a"} },
+    { source: require('../../assets/plants/cosmos-3.jpg'), credit: {"author":"agujaceratops","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/65cacbe9-2089-43fe-8bd1-515b1460726f"} },
+  ],
+  "daffodil": [
+    { source: require('../../assets/plants/daffodil-1.jpg'), credit: {"author":"Roland Godon","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/f90609a6-4dbf-41a4-bd29-b6c1159a5d19"} },
+    { source: require('../../assets/plants/daffodil-2.jpg'), credit: {"author":"Grzegorz Grzejszczak","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/dd5437cf-dabf-4e37-9d0c-a76978f13c60"} },
+    { source: require('../../assets/plants/daffodil-3.jpg'), credit: {"author":"Cecil Smith","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/8776574c-0a5a-4da4-8e0a-8cfe884b31b3"} },
+  ],
+  "dahlia": [
+    { source: require('../../assets/plants/dahlia-1.jpg'), credit: {"author":"Dairon Cuevas Riveras","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/2c259da8-10a6-451c-8605-67e549ae5b57"} },
+    { source: require('../../assets/plants/dahlia-2.jpg'), credit: {"author":"biogeek","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/e56ac35f-b94d-4aa7-b99b-e08187ca6752"} },
+    { source: require('../../assets/plants/dahlia-3.jpg'), credit: {"author":"Daniel Mesa","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/f0f1f29c-eabf-4f8d-8e14-725e46ce6378"} },
+  ],
+  "daisy": [
+    { source: require('../../assets/plants/daisy-1.jpg'), credit: {"author":"OlleHanna","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/eb49a2ef-889a-4b26-8c43-1b5f95ebda87"} },
+    { source: require('../../assets/plants/daisy-2.jpg'), credit: {"author":"Elaine Mitchell","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/16013a09-7c1e-410a-8052-56990c9cb88c"} },
+    { source: require('../../assets/plants/daisy-3.jpg'), credit: {"author":"William Harland","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/812e7b90-abcc-4dc6-857c-ae1ccf6f9ecd"} },
+  ],
+  "dogwood": [
+    { source: require('../../assets/plants/dogwood-1.jpg'), credit: {"author":"Annika Lindqvist","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/16b2a262-9aed-4705-b761-4bd9ea842919"} },
+    { source: require('../../assets/plants/dogwood-2.jpg'), credit: {"author":"jrsweet","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/6937113b-1eb0-4670-82a1-d80d0669c480"} },
+    { source: require('../../assets/plants/dogwood-3.jpg'), credit: {"author":"lisebsb","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/e51eaa80-12f0-4e64-8eea-bb004fb3c119"} },
+  ],
+  "eucalyptus": [
+    { source: require('../../assets/plants/eucalyptus-1.jpg'), credit: {"author":"DeeF","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/f962e08b-9dfd-40fe-a176-ec64dc18300e"} },
+    { source: require('../../assets/plants/eucalyptus-2.jpg'), credit: {"author":"Elliot Greiner","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/f9dc2c3c-ec3e-4431-a8fa-48f2e67aa49c"} },
+    { source: require('../../assets/plants/eucalyptus-3.jpg'), credit: {"author":"Bruno Avilez","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/44023f0e-46bf-46c8-a24e-3da40956a33a"} },
+  ],
+  "fiddle-leaf-fig": [
+    { source: require('../../assets/plants/fiddle-leaf-fig-1.jpg'), credit: {"author":"Eric Knight","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/e1dc685a-d5ce-4a1a-bfb0-6a7600d3d927"} },
+    { source: require('../../assets/plants/fiddle-leaf-fig-2.jpg'), credit: {"author":"L.J. Lamera","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/a8564d06-387c-4f94-8cb6-3093fce5c4c8"} },
+    { source: require('../../assets/plants/fiddle-leaf-fig-3.jpg'), credit: {"author":"Diogo Luiz","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/ff7949be-95af-4feb-8d56-352823cd019a"} },
+  ],
+  "forget-me-not": [
+    { source: require('../../assets/plants/forget-me-not-1.jpg'), credit: {"author":"Paulius Rupšas","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/24569e99-90d4-43b9-8f2d-fa443ac12ff5"} },
+    { source: require('../../assets/plants/forget-me-not-2.jpg'), credit: {"author":"Steve DeGrace","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/bb093a05-5012-40b1-9c28-230f678ef255"} },
+    { source: require('../../assets/plants/forget-me-not-3.jpg'), credit: {"author":"naturalist charlie","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/cb3ba3b9-1759-4e68-a473-a6bb259c8966"} },
+  ],
+  "foxglove": [
+    { source: require('../../assets/plants/foxglove-1.jpg'), credit: {"author":"Albert Rainbow","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/1852d4f8-22c5-46c3-ad8e-df04ce0350b5"} },
+    { source: require('../../assets/plants/foxglove-2.jpg'), credit: {"author":"Maura","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/0496f58f-6b7c-460d-8ad0-a70c23da59c2"} },
+    { source: require('../../assets/plants/foxglove-3.jpg'), credit: {"author":"russnamitz","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/2c5828b2-b73e-4daa-8744-e934a7746045"} },
+  ],
+  "gardenia": [
+    { source: require('../../assets/plants/gardenia-1.jpg'), credit: {"author":"四角銅鑼","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/21dcb8cd-5d57-4c34-bbe6-85c7f165cb7d"} },
+    { source: require('../../assets/plants/gardenia-2.jpg'), credit: {"author":"謝麗霦","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/f52c39d1-e6e3-48e9-82cd-525f25aad238"} },
+    { source: require('../../assets/plants/gardenia-3.jpg'), credit: {"author":"Cheng-Tao Lin","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/876bffe7-c070-4eff-bccf-caedf284ecca"} },
+  ],
+  "ginkgo": [
+    { source: require('../../assets/plants/ginkgo-1.jpg'), credit: {"author":"mister_bumble","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/810df76a-44bc-402d-ba13-c412391f38da"} },
+    { source: require('../../assets/plants/ginkgo-2.jpg'), credit: {"author":"Adam DeHollander","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/cbd7c39c-1bb2-418e-b1d8-1c98f713ef44"} },
+    { source: require('../../assets/plants/ginkgo-3.jpg'), credit: {"author":"Leila Dasher","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/f1823ef7-5dd2-4b99-b7b0-d7d10c4ed2c7"} },
+  ],
+  "hibiscus": [
+    { source: require('../../assets/plants/hibiscus-1.jpg'), credit: {"author":"Dan Schofield","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/61767a3e-6d62-482e-a43a-21cc16a263bc"} },
+    { source: require('../../assets/plants/hibiscus-2.jpg'), credit: {"author":"Dan Killam","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/652f2757-e29b-4314-bb6b-f7ee3d56f629"} },
+    { source: require('../../assets/plants/hibiscus-3.jpg'), credit: {"author":"Jhonatan Matheus","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/2edeb41a-6305-4193-8f15-1b344dd0911d"} },
+  ],
+  "horse-chestnut": [
+    { source: require('../../assets/plants/horse-chestnut-1.jpg'), credit: {"author":"Lauren N","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/ab9bc757-a282-439d-b5e3-5943a15b4d1f"} },
+    { source: require('../../assets/plants/horse-chestnut-2.jpg'), credit: {"author":"NENP_StBartsNewbury","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/6f2a4c94-b6cc-40c1-b971-b194c6f95d66"} },
+    { source: require('../../assets/plants/horse-chestnut-3.jpg'), credit: {"author":"tens","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/8713cc70-d566-43f8-bead-ba721b89c06f"} },
+  ],
+  "hyacinth": [
+    { source: require('../../assets/plants/hyacinth-1.jpg'), credit: {"author":"Caleb Catto","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/cb6a0d3e-8ec0-4191-ae17-1f162b2c68c1"} },
+    { source: require('../../assets/plants/hyacinth-2.jpg'), credit: {"author":"Y. Liu","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/1845df80-1374-4e9f-b259-1a01b66fc92d"} },
+    { source: require('../../assets/plants/hyacinth-3.jpg'), credit: {"author":"Alex Pinch","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/5d96d0d8-bffc-4fed-8e4b-1d96bd7e8e3a"} },
+  ],
+  "hydrangea": [
+    { source: require('../../assets/plants/hydrangea-1.jpg'), credit: {"author":"geralg","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/fd63610d-eb06-4809-ab4b-3ab77982d32a"} },
+    { source: require('../../assets/plants/hydrangea-2.jpg'), credit: {"author":"j","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/46512191-ac71-4e69-87a3-3037811452af"} },
+    { source: require('../../assets/plants/hydrangea-3.jpg'), credit: {"author":"Arnim Littek","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/5473c5a3-9784-45b1-aa69-f3af5e4689ca"} },
+  ],
+  "iris": [
+    { source: require('../../assets/plants/iris-1.jpg'), credit: {"author":"Patrick Hacker","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/035d5048-1485-4d37-9952-12f61698a23e"} },
+    { source: require('../../assets/plants/iris-2.jpg'), credit: {"author":"jsimons","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/ecaaf962-1c42-44e7-8fe1-ec465a92abb5"} },
+    { source: require('../../assets/plants/iris-3.jpg'), credit: {"author":"Yuliana Leshchenko","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/07b6c447-9173-4f36-a211-19512d00c750"} },
+  ],
+  "jacaranda": [
+    { source: require('../../assets/plants/jacaranda-1.jpg'), credit: {"author":"Lucas Christofides","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/9184554f-4968-4b2f-ae1b-b20620cf9dfc"} },
+    { source: require('../../assets/plants/jacaranda-2.jpg'), credit: {"author":"Tony Rebelo","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/712d0d8d-f287-4d73-8998-e5eddf666cbb"} },
+    { source: require('../../assets/plants/jacaranda-3.jpg'), credit: {"author":"Mario Cohn-Haft","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/8d89af78-1fb9-46d8-8c93-d14ed9c98201"} },
+  ],
+  "jade-plant": [
+    { source: require('../../assets/plants/jade-plant-1.jpg'), credit: {"author":"kiwialli","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/7df73a28-6dfa-4c63-9d94-5834aa09d45d"} },
+    { source: require('../../assets/plants/jade-plant-2.jpg'), credit: {"author":"Jack Rouse","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/7adf5bc1-86cf-4265-9555-44b5af11a4fa"} },
+    { source: require('../../assets/plants/jade-plant-3.jpg'), credit: {"author":"Murray Dawson","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/9db2e1c4-45b1-4b20-8732-ea26597deb8c"} },
+  ],
+  "lavender": [
+    { source: require('../../assets/plants/lavender-1.jpg'), credit: {"author":"Christoph Moning","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/98f2d451-2a52-48cf-8877-81a99b65de10"} },
+    { source: require('../../assets/plants/lavender-2.jpg'), credit: {"author":"Tim Johnson","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/f0a9a17f-df75-43bd-ac8b-8ee0017480de"} },
+    { source: require('../../assets/plants/lavender-3.jpg'), credit: {"author":"suprez","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/3ee3b622-864d-4c02-afc9-ce44601d395d"} },
+  ],
+  "lilac": [
+    { source: require('../../assets/plants/lilac-1.jpg'), credit: {"author":"mister_bumble","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/016e97a6-ccac-474d-8d24-119254504c08"} },
+    { source: require('../../assets/plants/lilac-2.jpg'), credit: {"author":"Jason Grant","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/e74b6dc1-8e4e-4c8a-824a-2666869c1e81"} },
+    { source: require('../../assets/plants/lilac-3.jpg'), credit: {"author":"elazinha","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/0b6a6776-9ac6-4d02-8794-2f6609ab9cf3"} },
+  ],
+  "lily": [
+    { source: require('../../assets/plants/lily-1.jpg'), credit: {"author":"brendanboyd","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/83d6888a-8478-4e88-a092-3eb57b6647a0"} },
+    { source: require('../../assets/plants/lily-2.jpg'), credit: {"author":"B. Phalan","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/be60acf3-1d00-40fd-ae48-6ce61374c3dc"} },
+    { source: require('../../assets/plants/lily-3.jpg'), credit: {"author":"Alexander Soto","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/1600cadd-8a4d-418e-b909-a2350f41f45a"} },
+  ],
+  "lotus": [
+    { source: require('../../assets/plants/lotus-1.jpg'), credit: {"author":"Sandipan Das","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/083fa080-7ae6-4b96-907c-085a550775af"} },
+    { source: require('../../assets/plants/lotus-2.jpg'), credit: {"author":"georgiasteel","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/7a96b13f-169f-4319-b9c5-df17f293f5fb"} },
+    { source: require('../../assets/plants/lotus-3.jpg'), credit: {"author":"Fabien Piednoir","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/570b73c0-c484-4627-af58-c22593e490ee"} },
+  ],
+  "magnolia": [
+    { source: require('../../assets/plants/magnolia-1.jpg'), credit: {"author":"Steve Milsom","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/c4583fb0-2b0e-459d-8e47-10a4f17b4e1e"} },
+    { source: require('../../assets/plants/magnolia-2.jpg'), credit: {"author":"Анна Митрошенкова","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/fd562900-d321-4431-8c72-b52226131730"} },
+    { source: require('../../assets/plants/magnolia-3.jpg'), credit: {"author":"Rafael Torres","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/cdaddd97-6538-45ef-af2d-e91456d16746"} },
+  ],
+  "marigold": [
+    { source: require('../../assets/plants/marigold-1.jpg'), credit: {"author":"Aryan K","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/13d087fd-e200-4921-8468-ba80dba39eef"} },
+    { source: require('../../assets/plants/marigold-2.jpg'), credit: {"author":"Miguel Angel Ramírez Guillermo","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/06fa5ada-23db-4694-877f-37cbffed779d"} },
+    { source: require('../../assets/plants/marigold-3.jpg'), credit: {"author":"Alexis López Hernández","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/76390e5f-b34c-483a-9796-c3661ad4c263"} },
+  ],
+  "monstera": [
+    { source: require('../../assets/plants/monstera-1.jpg'), credit: {"author":"biogeek","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/647fa288-8e61-447c-95ed-089d5c0c27a1"} },
+    { source: require('../../assets/plants/monstera-2.jpg'), credit: {"author":"Rafael Silva","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/2f4a709d-7408-4483-b211-c070d1d979f7"} },
+    { source: require('../../assets/plants/monstera-3.jpg'), credit: {"author":"Hannah Jones","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/8755acba-8429-4963-840a-640beed477f8"} },
+  ],
+  "morning-glory": [
+    { source: require('../../assets/plants/morning-glory-1.jpg'), credit: {"author":"Neptalí Ramírez Marcial","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/c676a287-d4f9-4de9-84cd-dc895532cf83"} },
+    { source: require('../../assets/plants/morning-glory-2.jpg'), credit: {"author":"Kai Löhr","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/34383d11-560e-4335-b0ed-8d77f05b5817"} },
+    { source: require('../../assets/plants/morning-glory-3.jpg'), credit: {"author":"Tereka Lasso","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/c1042d51-0aa1-4f36-89ae-31f58c3b2200"} },
+  ],
+  "oak": [
+    { source: require('../../assets/plants/oak-1.jpg'), credit: {"author":"Benny Albro","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/0b103a9d-4f2e-46b6-ae03-30b16f3cbc26"} },
+    { source: require('../../assets/plants/oak-2.jpg'), credit: {"author":"Jeff Davis","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/e932c078-3a32-4e6f-9b83-596a6cabce92"} },
+    { source: require('../../assets/plants/oak-3.jpg'), credit: {"author":"Igor Balashov","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/5e4d3655-44dd-423d-9f45-423771a41774"} },
+  ],
+  "olive": [
+    { source: require('../../assets/plants/olive-1.jpg'), credit: {"author":"Peter Burka","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/599c0831-a507-49d2-8b5c-0831de653468"} },
+    { source: require('../../assets/plants/olive-2.jpg'), credit: {"author":"Andrea Loya Castillo","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/063412c9-9924-4df8-aad0-0c8f07993314"} },
+    { source: require('../../assets/plants/olive-3.jpg'), credit: {"author":"bitsandbugs","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/12c1114d-c711-4e84-8409-b5fcb7dc50e6"} },
+  ],
+  "peace-lily": [
+    { source: require('../../assets/plants/peace-lily-1.jpg'), credit: {"author":"Diogo Luiz","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/0e54c976-180a-4a3c-9cd5-0ff6fa1818a3"} },
+    { source: require('../../assets/plants/peace-lily-2.jpg'), credit: {"author":"Carter Dorscht","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/b093d731-8adc-42cd-96d1-817d117a2ed2"} },
+    { source: require('../../assets/plants/peace-lily-3.jpg'), credit: {"author":"Jeffry Cubero","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/bec95526-8bcb-4536-84c8-66817511da55"} },
+  ],
+  "peony": [
+    { source: require('../../assets/plants/peony-1.jpg'), credit: {"author":"Bob","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/e73fcc93-2b2d-48c7-98a3-8f913784130c"} },
+    { source: require('../../assets/plants/peony-2.jpg'), credit: {"author":"Pavel Borodin","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/23ea5777-1270-4a04-bddc-73dd0ae79b84"} },
+    { source: require('../../assets/plants/peony-3.jpg'), credit: {"author":"Andreas Taeger","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/31afa7e9-caf2-43be-a2d5-1e8127554616"} },
+  ],
+  "phalaenopsis": [
+    { source: require('../../assets/plants/phalaenopsis-1.jpg'), credit: {"author":"Jhonatan Matheus","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/b66e4ee9-20e1-431b-a90d-a6cae0eb4dd2"} },
+    { source: require('../../assets/plants/phalaenopsis-2.jpg'), credit: {"author":"Анна Митрошенкова","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/0813e450-f2a3-4707-8cb7-17a70094c3c4"} },
+    { source: require('../../assets/plants/phalaenopsis-3.jpg'), credit: {"author":"Ametsak","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/ab8ce554-e3a5-4e6a-9651-1d113e86faac"} },
+  ],
+  "poppy": [
+    { source: require('../../assets/plants/poppy-1.jpg'), credit: {"author":"Robert H. Wardell","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/10570193-ac3e-48b8-954a-be05fe25075d"} },
+    { source: require('../../assets/plants/poppy-2.jpg'), credit: {"author":"Y. Liu","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/512b47d2-2a50-4a74-8e63-30d1ada9a4aa"} },
+    { source: require('../../assets/plants/poppy-3.jpg'), credit: {"author":"Pavel Kacl","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/9d4df1f7-2405-49de-bee0-fc8c0e4dee72"} },
+  ],
+  "pothos": [
+    { source: require('../../assets/plants/pothos-1.jpg'), credit: {"author":"Tyler Bishop","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/826f2aaf-1f2b-4509-97ac-577d25af07ac"} },
+    { source: require('../../assets/plants/pothos-2.jpg'), credit: {"author":"fmunoz","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/0cc4209a-bb7f-49ce-9215-6bc67454531f"} },
+    { source: require('../../assets/plants/pothos-3.jpg'), credit: {"author":"Michael Bakker Paiva","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/8c21dfd4-355f-4616-a6c8-f61f7aedb0eb"} },
+  ],
+  "prayer-plant": [
+    { source: require('../../assets/plants/prayer-plant-1.jpg'), credit: {"author":"Karthik Thrikkadeeri","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/1124ba5d-8e7a-4097-9757-b1df6fa15b0d"} },
+    { source: require('../../assets/plants/prayer-plant-2.jpg'), credit: {"author":"Óscar Sampedro","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/dca9f9ef-6e15-47ad-aef8-c16babd701a5"} },
+    { source: require('../../assets/plants/prayer-plant-3.jpg'), credit: {"author":"Nicolas Olejnik","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/55ab56fd-5325-48c8-aec6-15e2402d8de1"} },
+  ],
+  "protea": [
+    { source: require('../../assets/plants/protea-1.jpg'), credit: {"author":"Nicola van Berkel","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/81f32d17-6b65-462c-a9e4-ad0cbda00f41"} },
+    { source: require('../../assets/plants/protea-2.jpg'), credit: {"author":"Di Turner","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/cf09c764-f9bd-4bb3-905e-a495fb014a47"} },
+    { source: require('../../assets/plants/protea-3.jpg'), credit: {"author":"Klaus Wehrlin","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/0cd86c2e-1c43-4bb5-a5ac-5b69e5b2bf7a"} },
+  ],
+  "ranunculus": [
+    { source: require('../../assets/plants/ranunculus-1.jpg'), credit: {"author":"Mitch Van Dyke","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/fececc63-7fe8-42af-b070-bbff66d91a5e"} },
+    { source: require('../../assets/plants/ranunculus-2.jpg'), credit: {"author":"yelena_antipova","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/e085542e-9442-4b20-a0e6-0f2da9081f86"} },
+    { source: require('../../assets/plants/ranunculus-3.jpg'), credit: {"author":"Elias","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/b3e50ed9-9176-4eb2-8bb1-353d61d20e78"} },
+  ],
+  "rose": [
+    { source: require('../../assets/plants/rose-1.jpg'), credit: {"author":"njbayonav","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/514c699f-8498-469c-b032-0e32e29a621e"} },
+    { source: require('../../assets/plants/rose-2.jpg'), credit: {"author":"Иван Пристрем","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/9df739d3-e93c-471e-ab69-877908663edc"} },
+    { source: require('../../assets/plants/rose-3.jpg'), credit: {"author":"crowMoon","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/3d3f1b5f-10d7-46aa-a68c-10a9ea8576c1"} },
+  ],
+  "rubber-plant": [
+    { source: require('../../assets/plants/rubber-plant-1.jpg'), credit: {"author":"nebrooks","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/09b75e08-5c7c-4db3-87a3-e0c39a25017b"} },
+    { source: require('../../assets/plants/rubber-plant-2.jpg'), credit: {"author":"Sabarni Sarker","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/3e4e6f56-f51f-456e-8a39-f3f1eec688b6"} },
+    { source: require('../../assets/plants/rubber-plant-3.jpg'), credit: {"author":"Manoj Karingamadathil","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/ea4f5661-28e5-4be0-81a4-342d3f6e6847"} },
+  ],
+  "scots-pine": [
+    { source: require('../../assets/plants/scots-pine-1.jpg'), credit: {"author":"Tatiana Strus","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/b695d440-bbbc-4d6a-bce4-63e41b72c187"} },
+    { source: require('../../assets/plants/scots-pine-2.jpg'), credit: {"author":"Alexander Dubynin","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/c2795f8e-83e4-4cb4-90d3-3906b68a2f2d"} },
+    { source: require('../../assets/plants/scots-pine-3.jpg'), credit: {"author":"Анна Митрошенкова","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/c62d746d-ac7c-4aa9-9938-59059c74fb4c"} },
+  ],
+  "silver-birch": [
+    { source: require('../../assets/plants/silver-birch-1.jpg'), credit: {"author":"Denis Otkydach","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/a4d93be0-68c7-4258-b36a-06a1c6e98e81"} },
+    { source: require('../../assets/plants/silver-birch-2.jpg'), credit: {"author":"Oleg Kosterin","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/a71cba06-2587-4107-b14c-c3151f5250be"} },
+    { source: require('../../assets/plants/silver-birch-3.jpg'), credit: {"author":"Alexis Tinker-Tsavalas","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/b64073b5-7b64-4a2d-a7db-b4cc8acd61a9"} },
+  ],
+  "snake-plant": [
+    { source: require('../../assets/plants/snake-plant-1.jpg'), credit: {"author":"Nomzamo","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/10f3acb2-2365-4dca-9f8a-d3b6c40787eb"} },
+    { source: require('../../assets/plants/snake-plant-2.jpg'), credit: {"author":"Katie A","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/537ff185-56b8-49f8-9200-27c16b139779"} },
+    { source: require('../../assets/plants/snake-plant-3.jpg'), credit: {"author":"Lucas Rodrigues","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/f98b4b90-5840-422f-8697-79db9d4e593b"} },
+  ],
+  "snapdragon": [
+    { source: require('../../assets/plants/snapdragon-1.jpg'), credit: {"author":"lisemari","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/2ba54c21-9381-447e-ba92-d5ae17d7e5c3"} },
+    { source: require('../../assets/plants/snapdragon-2.jpg'), credit: {"author":"Loïc Chalmandrier","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/95338486-7c9d-4961-95c4-e89fef1aef8c"} },
+    { source: require('../../assets/plants/snapdragon-3.jpg'), credit: {"author":"will allman","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/c8ad3ded-ce31-4710-8adf-30c6dc1af966"} },
+  ],
+  "spider-plant": [
+    { source: require('../../assets/plants/spider-plant-1.jpg'), credit: {"author":"Leon Perrie","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/8eca36e7-99ce-49e8-aa3e-ce26d1dd3c2b"} },
+    { source: require('../../assets/plants/spider-plant-2.jpg'), credit: {"author":"Vale Jenny Conolly","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/f87b27fc-4c47-42c6-b922-764902e87628"} },
+    { source: require('../../assets/plants/spider-plant-3.jpg'), credit: {"author":"Jenny Christianson","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/3775b66f-abe9-4ddb-a0a9-1df631d6a990"} },
+  ],
+  "string-of-pearls": [
+    { source: require('../../assets/plants/string-of-pearls-1.jpg'), credit: {"author":"Maria G","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/bef9ed20-f140-4532-b3c7-7d0dde856137"} },
+    { source: require('../../assets/plants/string-of-pearls-2.jpg'), credit: {"author":"adamcvean","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/f7c6375b-4101-49f1-9434-139a28cf9468"} },
+    { source: require('../../assets/plants/string-of-pearls-3.jpg'), credit: {"author":"Dagmar Gleiss","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/1f1dc07e-0884-4344-a4e1-7b37132c4cb9"} },
+  ],
+  "sugar-maple": [
+    { source: require('../../assets/plants/sugar-maple-1.jpg'), credit: {"author":"Caleb Catto","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/56a45a39-1cf5-496c-a7c9-86b14df66844"} },
+    { source: require('../../assets/plants/sugar-maple-2.jpg'), credit: {"author":"Andrew Conboy","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/210716fb-8510-44d8-a6fa-a671cdb134cf"} },
+    { source: require('../../assets/plants/sugar-maple-3.jpg'), credit: {"author":"Nick T.","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/3528b423-bc54-4bb2-bf2d-dd9214476370"} },
+  ],
+  "sunflower": [
+    { source: require('../../assets/plants/sunflower-1.jpg'), credit: {"author":"Chris Stahl","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/4668bf8e-cc0c-4616-9aac-30d66d28cf2c"} },
+    { source: require('../../assets/plants/sunflower-2.jpg'), credit: {"author":"Michelle W. （鍾偉瑋）","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/15968e6c-a9c4-4946-8784-cc9b28e697d6"} },
+    { source: require('../../assets/plants/sunflower-3.jpg'), credit: {"author":"Annika Lindqvist","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/3ba67174-7b72-454f-91ca-d9aaf86df3d6"} },
+  ],
+  "sweet-pea": [
+    { source: require('../../assets/plants/sweet-pea-1.jpg'), credit: {"author":"Cricket Raspet","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/63844700-4731-427e-9f79-3a012863365b"} },
+    { source: require('../../assets/plants/sweet-pea-2.jpg'), credit: {"author":"pmgaspar","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/8c2f0546-b1bf-471a-9bf0-80f8ed6b889c"} },
+    { source: require('../../assets/plants/sweet-pea-3.jpg'), credit: {"author":"Heather DeGaetano","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/2f65df42-0d7b-452d-926d-787e51d48983"} },
+  ],
+  "tulip": [
+    { source: require('../../assets/plants/tulip-1.jpg'), credit: {"author":"jamie-aa","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/e11f1988-d9ba-4627-adca-b4bc9fe17fe0"} },
+    { source: require('../../assets/plants/tulip-2.jpg'), credit: {"author":"Peter Gabler","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/1d441adc-6bb1-4298-9990-d5a646756add"} },
+    { source: require('../../assets/plants/tulip-3.jpg'), credit: {"author":"Julius P","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/9190a4cf-91ab-40ab-9a62-817cc9571028"} },
+  ],
+  "venus-flytrap": [
+    { source: require('../../assets/plants/venus-flytrap-1.jpg'), credit: {"author":"Terry Loeb","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/d054012d-b281-4efa-a3a7-d97a9543a286"} },
+    { source: require('../../assets/plants/venus-flytrap-2.jpg'), credit: {"author":"Jennifer Styrsky","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/465e1f94-bacf-4961-9cd8-91a31a859bd8"} },
+    { source: require('../../assets/plants/venus-flytrap-3.jpg'), credit: {"author":"NC Wetlands","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/339ef9a8-5999-404c-805b-6c2a1be53c0a"} },
+  ],
+  "weeping-willow": [
+    { source: require('../../assets/plants/weeping-willow-1.jpg'), credit: {"author":"Fyodor Pudovikov","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/9577080d-3ca1-44d6-9891-b1e4de319ad9"} },
+    { source: require('../../assets/plants/weeping-willow-2.jpg'), credit: {"author":"Claude Kolwelter","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/fa618297-8ed8-4a41-a7c5-ebed886019a1"} },
+    { source: require('../../assets/plants/weeping-willow-3.jpg'), credit: {"author":"Ben Wallace","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/3e1a4593-36a2-466c-942b-0c1111f570bd"} },
+  ],
+  "wisteria": [
+    { source: require('../../assets/plants/wisteria-1.jpg'), credit: {"author":"Kathy Richardson","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/cf000d80-ea06-4788-b359-e495dbd25f6b"} },
+    { source: require('../../assets/plants/wisteria-2.jpg'), credit: {"author":"inbetweenbays","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/b029b6eb-e91c-4754-8ca9-0db08ca6ce35"} },
+    { source: require('../../assets/plants/wisteria-3.jpg'), credit: {"author":"Óscar Sampedro","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/1a6f0fcd-0511-4521-9c92-74c9d2b304b1"} },
+  ],
+  "zinnia": [
+    { source: require('../../assets/plants/zinnia-1.jpg'), credit: {"author":"Rick Field","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/62d31316-5a4c-46b3-be37-16d241bf61ca"} },
+    { source: require('../../assets/plants/zinnia-2.jpg'), credit: {"author":"Lucas Lopes","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/a13c2556-703f-47f3-84ae-cfe109f65200"} },
+    { source: require('../../assets/plants/zinnia-3.jpg'), credit: {"author":"AnnLazaro","license":"CC BY-SA","sourceUrl":"https://www.inaturalist.org/observations/8faa95de-b1a8-4e90-8c6d-db561d2e69af"} },
+  ],
+  "zz-plant": [
+    { source: require('../../assets/plants/zz-plant-1.jpg'), credit: {"author":"Tristan Haab","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/66d68175-d530-4a19-97f8-988c63614ca0"} },
+    { source: require('../../assets/plants/zz-plant-2.jpg'), credit: {"author":"marius","license":"CC BY","sourceUrl":"https://www.inaturalist.org/observations/5e58c8ce-8841-4709-aac8-bf9d674f5429"} },
+    { source: require('../../assets/plants/zz-plant-3.jpg'), credit: {"author":"Martin Tlustos","license":"CC0","sourceUrl":"https://www.inaturalist.org/observations/993ef46d-1ca2-48c6-a1e8-002e5ffbc4cc"} },
+  ],
+};

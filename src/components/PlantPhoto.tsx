@@ -27,7 +27,8 @@ export function PlantPhoto({ plant, style, showHint, compact, photo = 0 }: Props
         style={[styles.fill, style as object]}
         contentFit="cover"
         transition={150}
-        accessibilityLabel="Photo of the plant to identify"
+        // In the quiz (showHint set) the label must not give the answer away.
+        accessibilityLabel={showHint === undefined ? `Photo of ${plant.commonName}` : 'Photo of the plant to identify'}
       />
     );
   }
