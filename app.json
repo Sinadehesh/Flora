@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "FloraLock",
+    "slug": "floralock",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.floralock.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#EEF3EA",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.floralock.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-image"
+    ],
+    "scheme": "floralock",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
