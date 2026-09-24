@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "sharp": "^0.35.4",
     "typescript": "~6.0.3",
     "vitest": "^5.0.1"
   },
@@ -31,7 +32,8 @@
     "web": "expo start --web",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "fetch-images": "node scripts/fetch-plant-images.mjs"
+    "photos:download": "node scripts/download-plant-photos.mjs",
+    "photos:find": "node scripts/find-plant-photos.mjs"
   },
   "private": true
 }

@@ -45,4 +45,4 @@ Docs: https://docs.expo.dev/eas/index.md
 - Pure logic lives in `src/core/` (no React imports) and is covered by `npm test` (vitest). Keep new learning/quiz rules there, with tests.
 - In this sandbox, `npx expo install` needs `EXPO_OFFLINE=1` because the Expo API host is unreachable.
 - The OS-level blocker is abstracted behind `src/blocker/index.ts`; see `docs/PLATFORM_INTEGRATION.md` before touching native code.
-- `src/data/plantImages.generated.ts` is written by `scripts/fetch-plant-images.mjs` — don't edit it by hand.
+- `src/data/plantImages.generated.ts` is written by `scripts/download-plant-photos.mjs` from `scripts/plant-photos.json` — don't edit it by hand.

@@ -23,7 +23,7 @@ flashcard practice and a browsable plant guide. Everything runs offline.
 | Spaced repetition (Leitner boxes) + Botany IQ          | ✅ Built and unit-tested                                                                   |
 | Herbarium, plant browser, plant pages, settings        | ✅ Built                                                                                   |
 | Plant database                                         | ✅ 70 plants (35 flowers, 18 houseplants, 17 trees), each with a fact                       |
-| Photos                                                 | ⏳ Run `npm run fetch-images` (downloads CC-licensed photos and credits from Wikimedia)    |
+| Photos                                                 | ✅ Real iNaturalist photos, several per plant, CC0 / CC BY / CC BY-SA with credits          |
 | iOS shield (Screen Time API)                           | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)           |
 | Android blocker (UsageStats + foreground service)      | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)           |
 
@@ -34,7 +34,6 @@ the Herbarium tab to try the full intercept flow.
 
 ```bash
 npm install
-npm run fetch-images   # optional; needs internet access to Wikimedia; without it you get placeholders
 npx expo start         # press i / a / w for iOS, Android or web
 ```
 
@@ -63,7 +62,9 @@ src/
   data/plants.ts        The plant database
   blocker/              OS app-blocker bridge (simulated for now)
   state/store.tsx       App state, persisted to AsyncStorage
-scripts/fetch-plant-images.mjs   Downloads openly licensed photos and writes credits
+scripts/plant-photos.json            Curated photo list (iNaturalist photo id, license, author)
+scripts/download-plant-photos.mjs    Downloads + resizes those photos, regenerates credits
+scripts/find-plant-photos.mjs        Finds candidate photos for a plant via the iNaturalist API
 ```
 
 ### Learning model
@@ -76,12 +77,28 @@ the weakest overdue one, then an unseen one, then whichever is due soonest.
 **Botany IQ** goes from 60 to 160. It is 60 + 100 × (average box ÷ 6) across the enabled deck, so it only rises
 with spaced, repeated correct answers.
 
+## Photos
+
+Photos come from [iNaturalist](https://www.inaturalist.org). Its observers upload millions of plant photos, each
+identified to species and verified by the community. Many are released under open licences. FloraLock uses only
+**CC0, CC BY and CC BY-SA** photos. It skips the common CC BY-NC licence, which forbids commercial use. Each
+photo's author is shown under the photo and on the Credits screen.
+
+Each plant has several photos, and the lock screen picks one at random. That way you learn the plant, not one
+particular picture.
+
+To add or swap photos:
+
+```bash
+npm run photos:find -- peony      # candidates from the iNaturalist API, with preview links
+# paste the ones you like into scripts/plant-photos.json
+npm run photos:download           # downloads from iNaturalist's open-data bucket, resizes to 1000px
+```
+
 ## Next steps
 
-1. Fetch and review the photos. Lead images are sometimes diagrams or show the wrong part of the plant. Override
-   those in `scripts/image-overrides.json`.
-2. Build the iOS blocker with `react-native-device-activity`, and request the Family Controls distribution
+1. Build the iOS blocker with `react-native-device-activity`, and request the Family Controls distribution
    entitlement from Apple now, since approval takes time.
-3. Build the Android blocker as a local Expo module (Kotlin foreground service + UsageStats).
-4. Grow the deck to 300–500 plants. Group look-alikes (e.g. rose vs. ranunculus vs. peony) as Easy Mode distractors
+2. Build the Android blocker as a local Expo module (Kotlin foreground service + UsageStats).
+3. Grow the deck to 300–500 plants. Group look-alikes (e.g. rose vs. ranunculus vs. peony) as Easy Mode distractors
    so it gets harder as your Botany IQ rises.

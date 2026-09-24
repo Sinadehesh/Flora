@@ -1,7 +1,8 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { PlantPhoto } from '../../components/PlantPhoto';
+import { PhotoCredit, PlantPhoto } from '../../components/PlantPhoto';
 import { Card, SectionTitle } from '../../components/ui';
 import { MAX_BOX } from '../../core/srs';
 import { PLANT_IMAGES } from '../../data/plantImages.generated';
@@ -14,22 +15,35 @@ export default function PlantDetail() {
   const plant = PLANTS_BY_ID[id];
   const c = useColors();
   const { state } = useStore();
+  const [photo, setPhoto] = useState(0);
 
   if (!plant) return <Text style={{ padding: 16, color: c.text }}>Unknown plant.</Text>;
 
   const progress = state.progress[plant.id];
-  const credit = PLANT_IMAGES[plant.id]?.credit;
+  const photoCount = PLANT_IMAGES[plant.id]?.length ?? 0;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Stack.Screen options={{ title: plant.commonName }} />
       <View style={[styles.photo, { backgroundColor: c.surfaceMuted }]}>
-        <PlantPhoto plant={plant} />
+        <PlantPhoto plant={plant} photo={photo} />
       </View>
-      {credit && (
-        <Text style={[styles.credit, { color: c.textMuted }]} onPress={() => Linking.openURL(credit.sourceUrl)}>
-          Photo: {credit.author} · {credit.license}
-        </Text>
+      <PhotoCredit plant={plant} photo={photo} />
+      {photoCount > 1 && (
+        <View style={styles.thumbs}>
+          {Array.from({ length: photoCount }, (_, i) => (
+            <Pressable
+              key={i}
+              accessibilityRole="button"
+              accessibilityLabel={`Photo ${i + 1} of ${photoCount}`}
+              accessibilityState={{ selected: i === photo }}
+              onPress={() => setPhoto(i)}
+              style={[styles.thumb, { borderColor: i === photo ? c.primary : 'transparent' }]}
+            >
+              <PlantPhoto plant={plant} photo={i} compact />
+            </Pressable>
+          ))}
+        </View>
       )}
 
       <Text style={[styles.name, { color: c.text, fontFamily: serif }]}>{plant.commonName}</Text>
@@ -79,7 +93,8 @@ function Detail({ label, value }: { label: string; value: string }) {
 const styles = StyleSheet.create({
   container: { padding: 16, paddingBottom: 48, maxWidth: 640, width: '100%', alignSelf: 'center' },
   photo: { width: '100%', aspectRatio: 4 / 3, borderRadius: 20, overflow: 'hidden' },
-  credit: { fontSize: 12, marginTop: 6 },
+  thumbs: { flexDirection: 'row', gap: 8, marginTop: 10 },
+  thumb: { width: 60, height: 60, borderRadius: 10, overflow: 'hidden', borderWidth: 2 },
   name: { fontSize: 32, fontWeight: '700', marginTop: 16 },
   sci: { fontSize: 18, fontStyle: 'italic' },
   fact: { fontSize: 17, lineHeight: 25 },

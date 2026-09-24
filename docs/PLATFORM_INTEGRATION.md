@@ -91,9 +91,12 @@ service to the manifest. `npx create-expo-module@latest --local` scaffolds it.
 
 - Everything works offline. Photos are bundled under `assets/plants/`, and
   progress lives in AsyncStorage.
-- Budget: ~400 photos × ~120 KB (1080 px JPEG, quality 75) ≈ 48 MB. That's
-  acceptable. Use WebP to roughly halve it.
-- **Licensing:** only CC0, public-domain, CC BY and CC BY-SA photos. CC BY and
-  CC BY-SA require visible attribution. The Credits screen and the per-plant
-  credit line cover that. `scripts/fetch-plant-images.mjs` enforces the
-  license allow-list and records author and source.
+- Budget: 3 photos per plant at 1000 px (mozjpeg, quality 74) is roughly
+  150 KB per photo. At 400 plants that's about 180 MB, too much to bundle. At
+  that size, bundle 1–2 photos per plant and download the rest with
+  on-demand asset packs, or switch to WebP.
+- **Licensing:** photos come from iNaturalist. Only CC0, CC BY and CC BY-SA
+  are allowed; CC BY-NC is excluded because the app may be sold. CC BY and
+  CC BY-SA require visible attribution. The credit line under each photo and
+  the Credits screen cover that. `scripts/download-plant-photos.mjs` enforces the
+  licence allow-list, and `scripts/plant-photos.json` records each photo's author and source.

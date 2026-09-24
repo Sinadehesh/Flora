@@ -5,7 +5,7 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { blocker } from '../blocker';
-import { PlantPhoto } from '../components/PlantPhoto';
+import { PhotoCredit, PlantPhoto } from '../components/PlantPhoto';
 import { Button } from '../components/ui';
 import {
   challengeReducer,
@@ -22,6 +22,8 @@ import type { Plant } from '../core/types';
 import { PLANTS, PLANTS_BY_ID } from '../data/plants';
 import { emergencyLeft, useDeck, useStore } from '../state/store';
 import { serif, useColors } from '../theme';
+
+const randomPhoto = () => Math.floor(Math.random() * 1_000_000);
 
 function haptic(success: boolean) {
   if (Platform.OS === 'web') return;
@@ -46,6 +48,8 @@ export default function ChallengeScreen() {
   const [now, setNow] = useState(Date.now);
   const [typed, setTyped] = useState('');
   const [emergencyUsed, setEmergencyUsed] = useState(false);
+  // A fresh photo for every question, so users learn the plant rather than one picture.
+  const [photo, setPhoto] = useState(randomPhoto);
 
   // Pick the first plant only once saved progress has loaded, so SRS sees it.
   useEffect(() => {
@@ -90,11 +94,13 @@ export default function ChallengeScreen() {
     const t = Date.now();
     const next = retryUsesSamePlant(difficulty) ? plant : pickNextPlant(deck, store.progress, t, Math.random, plant.id);
     setTyped('');
+    setPhoto(randomPhoto());
     send({ type: 'retry', now: t, nextPlantId: next.id });
   };
 
   const nextCard = () => {
     setTyped('');
+    setPhoto(randomPhoto());
     setChallenge(startChallenge(pickNextPlant(deck, store.progress, Date.now(), Math.random, plant.id).id));
   };
 
@@ -123,6 +129,7 @@ export default function ChallengeScreen() {
     return (
       <Result
         plant={plant}
+        photo={photo}
         title={`Yes — ${plant.commonName}!`}
         body={
           isPractice ? plant.fact : `You earned ${store.settings.unlockMinutes} minutes of ${appName}. ${plant.fact}`
@@ -151,7 +158,7 @@ export default function ChallengeScreen() {
           </View>
 
           <View style={[styles.photo, { backgroundColor: c.surfaceMuted }]}>
-            <PlantPhoto plant={plant} showHint={challenge.phase === 'question'} />
+            <PlantPhoto plant={plant} photo={photo} showHint={challenge.phase === 'question'} />
             {challenge.phase === 'penalty' && (
               <View style={[StyleSheet.absoluteFill, styles.penaltyOverlay, { backgroundColor: c.overlay }]}>
                 <Text style={styles.countdown} accessibilityLiveRegion="polite">
@@ -161,6 +168,7 @@ export default function ChallengeScreen() {
               </View>
             )}
           </View>
+          {challenge.phase === 'penalty' && <PhotoCredit plant={plant} photo={photo} />}
 
           {challenge.phase === 'question' ? (
             <View style={styles.panel}>
@@ -242,12 +250,14 @@ export default function ChallengeScreen() {
 
 function Result({
   plant,
+  photo,
   title,
   body,
   primary,
   secondary,
 }: {
   plant?: Plant;
+  photo?: number;
   title: string;
   body: string;
   primary: { label: string; onPress: () => void };
@@ -259,9 +269,10 @@ function Result({
       <ScrollView contentContainerStyle={styles.scroll}>
         {plant && (
           <View style={[styles.photo, { backgroundColor: c.surfaceMuted }]}>
-            <PlantPhoto plant={plant} />
+            <PlantPhoto plant={plant} photo={photo} />
           </View>
         )}
+        {plant && <PhotoCredit plant={plant} photo={photo} />}
         <View style={styles.panel}>
           <Text style={[styles.answerName, { color: c.success, fontFamily: serif }]}>{title}</Text>
           {plant && (

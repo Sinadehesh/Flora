@@ -20,7 +20,7 @@ describe('plant data', () => {
   it('has unique ids and complete entries', () => {
     expect(new Set(PLANTS.map((p) => p.id)).size).toBe(PLANTS.length);
     for (const p of PLANTS) {
-      expect(p.commonName && p.scientificName && p.family && p.fact && p.wikiTitle).toBeTruthy();
+      expect(p.commonName && p.scientificName && p.family && p.fact).toBeTruthy();
     }
   });
 

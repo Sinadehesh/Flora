@@ -1,17 +1,9 @@
 import type { Plant, PlantCategory } from '../core/types';
 
-type Row = [
-  id: string,
-  commonName: string,
-  scientificName: string,
-  family: string,
-  aliases: string[],
-  fact: string,
-  wikiTitle?: string,
-];
+type Row = [id: string, commonName: string, scientificName: string, family: string, aliases: string[], fact: string];
 
 function rows(category: PlantCategory, list: Row[]): Plant[] {
-  return list.map(([id, commonName, scientificName, family, aliases, fact, wikiTitle]) => ({
+  return list.map(([id, commonName, scientificName, family, aliases, fact]) => ({
     id,
     commonName,
     scientificName,
@@ -19,7 +11,6 @@ function rows(category: PlantCategory, list: Row[]): Plant[] {
     category,
     aliases,
     fact,
-    wikiTitle: wikiTitle ?? scientificName,
   }));
 }
 
@@ -31,7 +22,6 @@ const flowers = rows('flower', [
     'Paeoniaceae',
     ['peonies', 'paeonia', 'chinese peony'],
     'A happy peony can keep flowering in the same spot for decades — some plantings are over a century old.',
-    'Paeonia lactiflora',
   ],
   [
     'hydrangea',
@@ -48,7 +38,6 @@ const flowers = rows('flower', [
     'Asteraceae',
     ['dahlias'],
     'The dahlia is the national flower of Mexico, and the Aztecs ate its tubers.',
-    'Dahlia',
   ],
   [
     'ranunculus',
@@ -65,7 +54,6 @@ const flowers = rows('flower', [
     'Rosaceae',
     ['roses', 'rosa'],
     'Roses are in the same family as apples, cherries and strawberries.',
-    'Rose',
   ],
   [
     'tulip',
@@ -74,7 +62,6 @@ const flowers = rows('flower', [
     'Liliaceae',
     ['tulips', 'tulipa'],
     "During 1630s 'Tulip Mania' in Holland, a single rare bulb could sell for more than a craftsman earned in a year.",
-    'Tulip',
   ],
   [
     'sunflower',
@@ -107,7 +94,6 @@ const flowers = rows('flower', [
     'Liliaceae',
     ['lilies', 'lilium', 'true lily'],
     'True lilies are extremely toxic to cats — even the pollen or vase water can cause kidney failure.',
-    'Lilium',
   ],
   [
     'iris',
@@ -156,7 +142,6 @@ const flowers = rows('flower', [
     'Asteraceae',
     ['mum', 'mums', 'chrysanth'],
     "The chrysanthemum is the emblem of Japan's imperial family — the 'Chrysanthemum Throne'.",
-    'Chrysanthemum',
   ],
   ['lilac', 'Lilac', 'Syringa vulgaris', 'Oleaceae', ['common lilac', 'syringa'], 'Lilacs belong to the olive family.'],
   [
@@ -294,7 +279,6 @@ const flowers = rows('flower', [
     'Boraginaceae',
     ['myosotis', 'forget me not', 'scorpion grass'],
     "Myosotis means 'mouse's ear' in Greek, after the shape of its leaves.",
-    'Myosotis',
   ],
   [
     'bougainvillea',
@@ -303,7 +287,6 @@ const flowers = rows('flower', [
     'Nyctaginaceae',
     ['paper flower'],
     "Its bright 'petals' are really papery bracts — the true flowers are the tiny white tubes in the middle.",
-    'Bougainvillea',
   ],
 ]);
 
@@ -347,7 +330,6 @@ const houseplants = rows('houseplant', [
     'Araceae',
     ['spathiphyllum', 'spath'],
     'It droops dramatically when thirsty, then perks back up within hours of watering.',
-    'Spathiphyllum',
   ],
   [
     'aloe-vera',
@@ -364,7 +346,6 @@ const houseplants = rows('houseplant', [
     'Araceae',
     ['zz', 'zanzibar gem', 'zamioculcas'],
     'It stores water in potato-like underground rhizomes, so it can survive months of neglect.',
-    'Zamioculcas',
   ],
   [
     'spider-plant',
@@ -405,7 +386,6 @@ const houseplants = rows('houseplant', [
     'Nephrolepidaceae',
     ['sword fern', 'nephrolepis', 'fern'],
     'Ferns make no flowers or seeds; they reproduce with spores from dots under their fronds.',
-    'Nephrolepis exaltata',
   ],
   [
     'prayer-plant',
@@ -438,7 +418,6 @@ const houseplants = rows('houseplant', [
     'Cactaceae',
     ['schlumbergera', 'holiday cactus', 'thanksgiving cactus'],
     "It's a jungle cactus that grows on tree branches in Brazil's coastal rainforests.",
-    'Schlumbergera',
   ],
   [
     'african-violet',
@@ -447,7 +426,6 @@ const houseplants = rows('houseplant', [
     'Gesneriaceae',
     ['saintpaulia', 'streptocarpus'],
     'Cold water on its fuzzy leaves leaves pale spots, so it is best watered from below.',
-    'Saintpaulia',
   ],
   [
     'phalaenopsis',
@@ -456,7 +434,6 @@ const houseplants = rows('houseplant', [
     'Orchidaceae',
     ['orchid', 'phalaenopsis', 'phal'],
     'Orchid seeds are as fine as dust and carry no food, so they need a fungus partner to germinate.',
-    'Phalaenopsis',
   ],
 ]);
 

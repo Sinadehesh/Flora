@@ -10,8 +10,6 @@ export interface Plant {
   aliases: string[];
   /** One-sentence micro-fact shown during the Genius Penalty. */
   fact: string;
-  /** English Wikipedia article title used by scripts/fetch-plant-images.mjs. */
-  wikiTitle: string;
 }
 
 export type Difficulty = 'easy' | 'hard';
