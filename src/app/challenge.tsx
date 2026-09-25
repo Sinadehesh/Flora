@@ -38,7 +38,12 @@ function haptic(success: boolean) {
  * `?practice=1` for flashcard study (no unlock, no emergency exit).
  */
 export default function ChallengeScreen() {
-  const { source, practice } = useLocalSearchParams<{ source?: string; practice?: string }>();
+  // `package` is set when the Android blocker opened this screen over a locked app.
+  const {
+    source,
+    practice,
+    package: lockedPackage,
+  } = useLocalSearchParams<{ source?: string; practice?: string; package?: string }>();
   const isPractice = practice === '1';
   const { state: store, dispatch } = useStore();
   const deck = useDeck();
@@ -87,7 +92,7 @@ export default function ChallengeScreen() {
     send({ type: 'answer', correct, guess, now: t, penaltySeconds: store.settings.penaltySeconds });
     setNow(t);
     haptic(correct);
-    if (correct && !isPractice) blocker.grantTemporaryAccess(source, store.settings.unlockMinutes);
+    if (correct && !isPractice) blocker.grantTemporaryAccess(lockedPackage, store.settings.unlockMinutes);
   };
 
   const retry = () => {
@@ -106,11 +111,20 @@ export default function ChallengeScreen() {
 
   const emergencyUnlock = () => {
     dispatch({ type: 'useEmergency', now: Date.now() });
-    blocker.grantTemporaryAccess(source, store.settings.unlockMinutes);
+    blocker.grantTemporaryAccess(lockedPackage, store.settings.unlockMinutes);
     setEmergencyUsed(true);
   };
 
   const leave = () => (router.canGoBack() ? router.back() : router.replace('/'));
+  // Leaving a real lock: close the challenge, then open the unlocked app or go to the home screen.
+  const continueToApp = () => {
+    router.replace('/');
+    if (lockedPackage) blocker.returnToApp(lockedPackage);
+  };
+  const skipApp = () => {
+    router.replace('/');
+    if (lockedPackage) blocker.goHome();
+  };
   const secondsLeft = penaltySecondsLeft(challenge, now);
   const emergencies = emergencyLeft(store, now);
   const appName = source ?? 'your app';
@@ -120,7 +134,7 @@ export default function ChallengeScreen() {
       <Result
         title="Emergency unlock"
         body={`${appName} is open for ${store.settings.unlockMinutes} minutes. ${emergencies} emergency unlock${emergencies === 1 ? '' : 's'} left today.`}
-        primary={{ label: `Continue to ${appName}`, onPress: leave }}
+        primary={{ label: `Continue to ${appName}`, onPress: continueToApp }}
       />
     );
   }
@@ -135,7 +149,9 @@ export default function ChallengeScreen() {
           isPractice ? plant.fact : `You earned ${store.settings.unlockMinutes} minutes of ${appName}. ${plant.fact}`
         }
         primary={
-          isPractice ? { label: 'Next card', onPress: nextCard } : { label: `Continue to ${appName}`, onPress: leave }
+          isPractice
+            ? { label: 'Next card', onPress: nextCard }
+            : { label: `Continue to ${appName}`, onPress: continueToApp }
         }
         secondary={isPractice ? { label: 'Done', onPress: leave } : undefined}
       />
@@ -207,7 +223,7 @@ export default function ChallengeScreen() {
 
               {!isPractice && (
                 <View style={styles.escapes}>
-                  <Button variant="ghost" label={`I don't need ${appName} right now`} onPress={leave} />
+                  <Button variant="ghost" label={`I don't need ${appName} right now`} onPress={skipApp} />
                   {emergencies > 0 && (
                     <Pressable accessibilityRole="button" onPress={emergencyUnlock} hitSlop={8}>
                       <Text style={[styles.emergency, { color: c.textMuted }]}>

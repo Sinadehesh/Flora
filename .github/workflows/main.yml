@@ -3,7 +3,7 @@ name: Android builds
 on:
   workflow_dispatch:        # "Run workflow" button in the Actions tab
   push:
-    branches: [main]
+    branches: [main, 'claude/**']
 
 jobs:
   build:

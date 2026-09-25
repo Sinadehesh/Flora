@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
-import { useEffect, useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Alert, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { blocker, type BlockerStatus } from '../../blocker';
-import { Button, Card, Chip, SectionTitle } from '../../components/ui';
+import { LockSetup } from '../../components/LockSetup';
+import { Button, Chip, SectionTitle } from '../../components/ui';
 import type { PlantCategory } from '../../core/types';
 import { useStore } from '../../state/store';
 import { CATEGORY_LABEL, useColors } from '../../theme';
@@ -15,11 +15,6 @@ export default function SettingsScreen() {
   const { state, dispatch } = useStore();
   const { settings } = state;
   const update = (patch: Partial<typeof settings>) => dispatch({ type: 'updateSettings', patch });
-  const [status, setStatus] = useState<BlockerStatus>('notDetermined');
-
-  useEffect(() => {
-    blocker.getStatus().then(setStatus);
-  }, []);
 
   const toggleCategory = (cat: PlantCategory) => {
     const next = settings.categories.includes(cat)
@@ -42,25 +37,8 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <SectionTitle>Blocked apps</SectionTitle>
-      <Card style={{ gap: 12 }}>
-        <Text style={{ color: c.text, fontSize: 15, lineHeight: 22 }}>
-          {status === 'unsupported'
-            ? 'App blocking needs the native iOS/Android build. In this preview, use “Preview the lock screen” on the Herbarium tab to try the flow.'
-            : status === 'authorized'
-              ? 'FloraLock can shield the apps you choose.'
-              : 'Give FloraLock permission to shield distracting apps.'}
-        </Text>
-        {status !== 'unsupported' && (
-          <Button
-            label={status === 'authorized' ? 'Choose apps to lock' : 'Grant permission'}
-            onPress={async () => {
-              if (status === 'authorized') await blocker.chooseBlockedApps();
-              else setStatus(await blocker.requestAuthorization());
-            }}
-          />
-        )}
-      </Card>
+      <SectionTitle>App lock</SectionTitle>
+      <LockSetup />
 
       <SectionTitle>Lock screen</SectionTitle>
       <Setting

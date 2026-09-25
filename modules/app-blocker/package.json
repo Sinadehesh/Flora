@@ -1,0 +1,6 @@
+{
+  "name": "app-blocker",
+  "version": "1.0.0",
+  "description": "FloraLock's Android app blocker: watches the foreground app and opens the flower challenge over blocked apps",
+  "private": true
+}

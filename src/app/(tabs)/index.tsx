@@ -1,6 +1,8 @@
 import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { blocker } from '../../blocker';
+import { useLockState } from '../../components/LockSetup';
 import { PlantPhoto } from '../../components/PlantPhoto';
 import { Button, Card, SectionTitle } from '../../components/ui';
 import { accuracy, botanyIQ, masteredCount, troublePlants } from '../../core/stats';
@@ -18,9 +20,23 @@ export default function Herbarium() {
   const seen = deck.filter((p) => state.progress[p.id]).length;
   const due = deck.filter((p) => state.progress[p.id] && state.progress[p.id].dueAt <= now).length;
   const trouble = troublePlants(deck, state.progress);
+  const [lock] = useLockState();
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {blocker.available && (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('/settings')}
+          style={[styles.lockBanner, { backgroundColor: lock.enabled ? c.surface : c.primary, borderColor: c.border }]}
+        >
+          <Text style={{ color: lock.enabled ? c.text : c.onPrimary, fontSize: 16, fontWeight: '700' }}>
+            {lock.enabled
+              ? `🔒 Guarding ${lock.blockedCount} app${lock.blockedCount === 1 ? '' : 's'}`
+              : '🔓 Your apps aren’t locked yet — set up the lock'}
+          </Text>
+        </Pressable>
+      )}
       <Card style={styles.iqCard}>
         <Text style={[styles.iqLabel, { color: c.textMuted }]}>Botany IQ</Text>
         <Text style={[styles.iq, { color: c.primary, fontFamily: serif }]}>{iq}</Text>
@@ -87,6 +103,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   container: { padding: 16, paddingBottom: 48, maxWidth: 640, width: '100%', alignSelf: 'center' },
+  lockBanner: { borderRadius: 14, borderWidth: StyleSheet.hairlineWidth, padding: 14, marginBottom: 12 },
   iqCard: { alignItems: 'center', paddingVertical: 24 },
   iqLabel: { fontSize: 14, fontWeight: '600', letterSpacing: 0.6, textTransform: 'uppercase' },
   iq: { fontSize: 72, fontWeight: '700', lineHeight: 84 },

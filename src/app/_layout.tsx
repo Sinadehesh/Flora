@@ -21,6 +21,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="plant/[id]" options={{ title: '', headerBackTitle: 'Back' }} />
         <Stack.Screen name="credits" options={{ title: 'Photo credits' }} />
+        <Stack.Screen name="apps" options={{ title: 'Apps to lock' }} />
         {/* The lock-screen intercept: no swipe-to-dismiss, no back gesture. */}
         <Stack.Screen
           name="challenge"
