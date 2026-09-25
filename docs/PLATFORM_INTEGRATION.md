@@ -83,9 +83,12 @@ friction of its own.
 - **Unlock window:** the service keeps `unlockedUntil[package]` and ignores that
   package until the window expires.
 
-**Implementation path in Expo:** a local Expo module (`modules/app-blocker`)
-written in Kotlin, with a config plugin that adds the permissions and the
-service to the manifest. `npx create-expo-module@latest --local` scaffolds it.
+**Implemented** in `modules/app-blocker` (a local Expo module, autolinked):
+`BlockerService.kt` polls usage events every 600 ms and opens
+`floralock://challenge?source=<label>&package=<pkg>`. `BootReceiver.kt`
+restarts it after a reboot, and `AppBlockerModule.kt` is the JS API. Its
+`AndroidManifest.xml` is merged into the app, so no config plugin is needed.
+Unlock windows are stored per app in SharedPreferences.
 
 ## Shared: offline content
 

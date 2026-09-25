@@ -26,10 +26,14 @@ flashcard practice and a browsable plant guide. Everything runs offline.
 | Plant database                                            | ✅ 70 plants (35 flowers, 18 houseplants, 17 trees), each with a fact              |
 | Photos                                                    | ✅ Real iNaturalist photos, several per plant, CC0 / CC BY / CC BY-SA with credits |
 | iOS shield (Screen Time API)                              | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)   |
-| Android blocker (UsageStats + foreground service)         | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)   |
+| Android app lock (UsageStats + foreground service)        | 🧪 Built in `modules/app-blocker`; needs testing on a real phone                   |
 
-Until the native blockers exist, `src/blocker/index.ts` is a simulated blocker. Use **Preview the lock screen** on
-the Herbarium tab to try the full intercept flow.
+On Android, open **Settings → App lock**, allow Usage access and Display over other apps, choose the apps to
+lock, then tap **Turn lock on**. Opening a locked app then shows a plant first. On iOS and the web the lock isn't
+available yet; **Preview the lock screen** on the Herbarium tab shows the challenge instead.
+
+The lock is native code, so it doesn't run in Expo Go. Install the APK from GitHub Actions (every push to a
+`claude/**` branch builds one) or run `npx expo run:android`.
 
 ## Run it
 
@@ -64,9 +68,8 @@ Before the first Play Store upload:
   to EAS ([guide](https://docs.expo.dev/submit/android/)).
 - New personal developer accounts must run a closed test with at least 12 testers for 14 days before
   publishing to production.
-- Both builds currently have the simulated blocker. Blocking other apps needs the native Android module
-  (see [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md)). That module's permissions, Usage Access
-  and a special-use foreground service, need Play Console declarations.
+- The app lock's permissions (Usage Access, a special-use foreground service and Display over other apps) need
+  Play Console declarations; see [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md).
 
 ## Layout
 
@@ -125,6 +128,7 @@ npm run photos:download           # downloads from iNaturalist's open-data bucke
 
 1. Build the iOS blocker with `react-native-device-activity`, and request the Family Controls distribution
    entitlement from Apple now, since approval takes time.
-2. Build the Android blocker as a local Expo module (Kotlin foreground service + UsageStats).
+2. Test the Android lock on several phones (Samsung, Xiaomi and Pixel handle background services differently)
+   and add a battery-optimisation exemption prompt if the lock stops after a while.
 3. Grow the deck to 300–500 plants. Group look-alikes (e.g. rose vs. ranunculus vs. peony) as Easy Mode distractors
    so it gets harder as your Botany IQ rises.
