@@ -8,7 +8,7 @@ appId: com.floralock.app
 - extendedWaitUntil:
     visible: "Botany IQ|.*isn.t responding"
     timeout: 90000
-# A just-booted emulator can show "System UI isn.t responding" over the app; let it carry on.
+# A just-booted emulator can show "System UI isn't responding" over the app; let it carry on.
 - runFlow:
     when:
       visible: ".*isn.t responding"
