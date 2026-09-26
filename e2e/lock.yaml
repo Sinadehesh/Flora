@@ -6,8 +6,17 @@ appId: com.floralock.app
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Botany IQ"
+    visible: "Botany IQ|.*isn.t responding"
     timeout: 90000
+# A just-booted emulator can show "System UI isn.t responding" over the app; let it carry on.
+- runFlow:
+    when:
+      visible: ".*isn.t responding"
+    commands:
+      - tapOn: "Wait"
+- extendedWaitUntil:
+    visible: "Botany IQ"
+    timeout: 60000
 
 # Settings tab > App lock > choose the app to lock
 - tapOn: "Settings"

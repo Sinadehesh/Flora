@@ -17,6 +17,11 @@ adb shell appops set "$PKG" SYSTEM_ALERT_WINDOW allow
 # Android 13+ notification permission (the lock works without it; avoids a dialog in the flow).
 adb shell pm grant "$PKG" android.permission.POST_NOTIFICATIONS 2>/dev/null || true
 adb logcat -c 2>/dev/null || true
+# CI emulators sometimes flag their own System UI as "not responding" just after a cold boot,
+# and that system dialog covers whatever app is in front. Hide system error dialogs and close
+# any that is already showing (this changes the emulator only, not FloraLock).
+adb shell settings put global hide_error_dialogs 1 || true
+adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS >/dev/null 2>&1 || true
 
 status=0
 maestro test e2e/lock.yaml --format junit --output "$OUT/report.xml" --debug-output "$OUT/debug" || status=$?
