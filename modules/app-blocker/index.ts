@@ -19,6 +19,12 @@ export interface AppBlockerNativeModule {
   grantTemporaryAccess(packageName: string | null, minutes: number): void;
   openApp(packageName: string): boolean;
   goHome(): void;
+  isServiceRunning(): boolean;
+  ensureRunning(): void;
+  isIgnoringBatteryOptimizations(): boolean;
+  requestIgnoreBatteryOptimizations(): void;
+  getManufacturer(): string;
+  openManufacturerSettings(): boolean;
 }
 
 /** Android only. `null` on iOS, on the web, and in Expo Go (which can't load custom native code). */

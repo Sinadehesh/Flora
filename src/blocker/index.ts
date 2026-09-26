@@ -17,6 +17,8 @@ export interface BlockerPermissions {
   usageAccess: boolean;
   /** Android "Display over other apps": lets FloraLock open the challenge on top. */
   overlay: boolean;
+  /** Exempt from battery optimisation, so the system doesn't stop the watcher. */
+  batteryUnrestricted: boolean;
 }
 
 export interface AppBlocker {
@@ -34,6 +36,15 @@ export interface AppBlocker {
   /** Bring the app the user was trying to open back to the front. */
   returnToApp(packageName: string): boolean;
   goHome(): void;
+  /** True while the watcher service is alive. */
+  isRunning(): boolean;
+  /** Restart the watcher if the lock is on but the system stopped it. */
+  ensureRunning(): void;
+  requestBatteryExemption(): void;
+  /** Lower-case phone maker, e.g. "xiaomi". */
+  manufacturer(): string;
+  /** The maker's own autostart / background screen; returns false if the phone has none. */
+  openManufacturerSettings(): boolean;
 }
 
 const CHALLENGE_URL = 'floralock://challenge';
@@ -41,7 +52,11 @@ const CHALLENGE_URL = 'floralock://challenge';
 function androidBlocker(native: NonNullable<typeof AppBlocker>): AppBlocker {
   return {
     available: true,
-    permissions: () => ({ usageAccess: native.hasUsageAccess(), overlay: native.canDrawOverlays() }),
+    permissions: () => ({
+      usageAccess: native.hasUsageAccess(),
+      overlay: native.canDrawOverlays(),
+      batteryUnrestricted: native.isIgnoringBatteryOptimizations(),
+    }),
     openUsageAccessSettings: () => native.openUsageAccessSettings(),
     openOverlaySettings: () => native.openOverlaySettings(),
     getLaunchableApps: () => native.getLaunchableApps(),
@@ -55,12 +70,17 @@ function androidBlocker(native: NonNullable<typeof AppBlocker>): AppBlocker {
     grantTemporaryAccess: (packageName, minutes) => native.grantTemporaryAccess(packageName ?? null, minutes),
     returnToApp: (packageName) => native.openApp(packageName),
     goHome: () => native.goHome(),
+    isRunning: () => native.isServiceRunning(),
+    ensureRunning: () => native.ensureRunning(),
+    requestBatteryExemption: () => native.requestIgnoreBatteryOptimizations(),
+    manufacturer: () => native.getManufacturer(),
+    openManufacturerSettings: () => native.openManufacturerSettings(),
   };
 }
 
 const simulatedBlocker: AppBlocker = {
   available: false,
-  permissions: () => ({ usageAccess: false, overlay: false }),
+  permissions: () => ({ usageAccess: false, overlay: false, batteryUnrestricted: false }),
   openUsageAccessSettings: () => {},
   openOverlaySettings: () => {},
   getLaunchableApps: async () => [],
@@ -71,6 +91,11 @@ const simulatedBlocker: AppBlocker = {
   grantTemporaryAccess: () => {},
   returnToApp: () => false,
   goHome: () => {},
+  isRunning: () => false,
+  ensureRunning: () => {},
+  requestBatteryExemption: () => {},
+  manufacturer: () => '',
+  openManufacturerSettings: () => false,
 };
 
 export const blocker: AppBlocker = AppBlocker ? androidBlocker(AppBlocker) : simulatedBlocker;

@@ -1,11 +1,22 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
+import { AppState } from 'react-native';
+
+import { blocker } from '../blocker';
 
 import { StoreProvider } from '../state/store';
 import { useColors } from '../theme';
 
 export default function RootLayout() {
   const c = useColors();
+
+  // Phones that kill background services can stop the lock; restart it whenever FloraLock is opened.
+  useEffect(() => {
+    blocker.ensureRunning();
+    const sub = AppState.addEventListener('change', (s) => s === 'active' && blocker.ensureRunning());
+    return () => sub.remove();
+  }, []);
   return (
     <StoreProvider>
       <StatusBar style="auto" />

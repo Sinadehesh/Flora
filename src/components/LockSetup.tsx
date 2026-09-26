@@ -9,13 +9,39 @@ import { Button, Card } from './ui';
 interface LockState {
   usageAccess: boolean;
   overlay: boolean;
+  batteryUnrestricted: boolean;
   blockedCount: number;
   enabled: boolean;
+  running: boolean;
 }
 
 function readLockState(): LockState {
-  return { ...blocker.permissions(), blockedCount: blocker.getBlockedApps().length, enabled: blocker.isEnabled() };
+  return {
+    ...blocker.permissions(),
+    blockedCount: blocker.getBlockedApps().length,
+    enabled: blocker.isEnabled(),
+    running: blocker.isRunning(),
+  };
 }
+
+/** Makers whose phones stop background apps unless the user allows it in their own settings screen. */
+const MAKER_TIPS: Record<string, { brand: string; tip: string }> = {
+  xiaomi: { brand: 'Xiaomi', tip: 'Turn on Autostart and “Display pop-up windows while running in the background”.' },
+  redmi: { brand: 'Redmi', tip: 'Turn on Autostart and “Display pop-up windows while running in the background”.' },
+  poco: { brand: 'POCO', tip: 'Turn on Autostart and “Display pop-up windows while running in the background”.' },
+  huawei: {
+    brand: 'Huawei',
+    tip: 'Set FloraLock to “Manage manually” and allow auto-launch and running in background.',
+  },
+  honor: { brand: 'Honor', tip: 'Set FloraLock to “Manage manually” and allow auto-launch and running in background.' },
+  oppo: { brand: 'OPPO', tip: 'Allow FloraLock to auto-launch and run in the background.' },
+  realme: { brand: 'realme', tip: 'Allow FloraLock to auto-launch and run in the background.' },
+  oneplus: { brand: 'OnePlus', tip: 'Allow FloraLock to auto-launch and run in the background.' },
+  vivo: { brand: 'vivo', tip: 'Allow FloraLock to start in the background (Background startup / Autostart).' },
+  iqoo: { brand: 'iQOO', tip: 'Allow FloraLock to start in the background (Background startup / Autostart).' },
+  samsung: { brand: 'Samsung', tip: 'Set battery usage to “Unrestricted” and keep FloraLock out of “Sleeping apps”.' },
+  asus: { brand: 'ASUS', tip: 'Allow FloraLock to auto-start.' },
+};
 
 /** Lock status, refreshed whenever the screen regains focus or the user returns from system settings. */
 export function useLockState(): [LockState, () => void] {
@@ -46,9 +72,15 @@ export function LockSetup() {
   }
 
   const ready = lock.usageAccess && lock.overlay && lock.blockedCount > 0;
+  const maker = MAKER_TIPS[blocker.manufacturer()];
   const toggle = () => {
     blocker.setEnabled(!lock.enabled);
     refresh();
+    setTimeout(refresh, 1000); // the service starts asynchronously
+  };
+  const restart = () => {
+    blocker.ensureRunning();
+    setTimeout(refresh, 1000);
   };
 
   return (
@@ -82,8 +114,33 @@ export function LockSetup() {
         onPress={() => router.push('/apps')}
         alwaysShowAction
       />
+      <Step
+        n={4}
+        done={lock.batteryUnrestricted}
+        title="Keep FloraLock running"
+        hint="Recommended: stops your phone’s battery saver from switching the lock off."
+        action="Allow"
+        onPress={blocker.requestBatteryExemption}
+      />
+      {maker && (
+        <Step
+          n={5}
+          done={false}
+          title={`${maker.brand} setting`}
+          hint={`Recommended on ${maker.brand} phones: ${maker.tip}`}
+          action="Open"
+          onPress={blocker.openManufacturerSettings}
+          alwaysShowAction
+        />
+      )}
       <View style={{ marginTop: 12 }}>
-        {lock.enabled ? (
+        {lock.enabled && !lock.running ? (
+          <>
+            <Text style={[styles.status, { color: c.danger }]}>⚠️ Your phone stopped the lock</Text>
+            <Button label="Restart lock" onPress={restart} />
+            <Button variant="ghost" label="Turn lock off" onPress={toggle} />
+          </>
+        ) : lock.enabled ? (
           <>
             <Text style={[styles.status, { color: c.success }]}>🔒 Lock is on</Text>
             <Button variant="secondary" label="Turn lock off" onPress={toggle} />

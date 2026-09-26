@@ -1,0 +1,54 @@
+# End-to-end check of the Android app lock (run by .github/scripts/lock-e2e.sh on emulators).
+# Locks the system Settings app through FloraLock's own UI, opens Settings, and expects the
+# flower challenge; then uses an emergency unlock and expects Settings to stay open.
+appId: com.floralock.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Botany IQ"
+    timeout: 90000
+
+# Settings tab > App lock > choose the app to lock
+- tapOn: "Settings"
+- tapOn: "Choose"
+- tapOn: "Search apps"
+- inputText: "com.android.settings"
+- tapOn: "com.android.settings"
+- hideKeyboard
+- back
+- extendedWaitUntil:
+    visible: "1 app locked"
+    timeout: 10000
+- tapOn: "Turn lock on"
+- extendedWaitUntil:
+    visible: ".*Lock is on"
+    timeout: 10000
+
+# Opening the locked app must bring up the challenge (directly, or via the fallback overlay).
+- launchApp:
+    appId: com.android.settings
+- extendedWaitUntil:
+    visible: "What is this plant\\?|Identify the plant"
+    timeout: 20000
+- runFlow:
+    when:
+      visible: "Identify the plant"
+    commands:
+      - tapOn: "Identify the plant"
+- extendedWaitUntil:
+    visible: "What is this plant\\?"
+    timeout: 15000
+- takeScreenshot: challenge-over-locked-app
+
+# Emergency unlock opens Settings and it stays open during the unlock window.
+- tapOn: "Emergency unlock.*"
+- tapOn: "Continue to Settings"
+- extendedWaitUntil:
+    notVisible: "What is this plant\\?"
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible: "What is this plant\\?"
+- assertNotVisible: "Identify the plant"
+- takeScreenshot: unlocked-app

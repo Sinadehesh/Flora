@@ -2,10 +2,12 @@ package expo.modules.appblocker
 
 import android.Manifest
 import android.app.AppOpsManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
 import android.os.Process
 import android.provider.Settings
 import expo.modules.kotlin.exception.Exceptions
@@ -104,11 +106,97 @@ class AppBlockerModule : Module() {
     }
 
     Function("goHome") {
-      val home = Intent(Intent.ACTION_MAIN)
-        .addCategory(Intent.CATEGORY_HOME)
-        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-      context.startActivity(home)
+      goHome(context)
     }
+
+    // --- Staying alive ---------------------------------------------------------
+
+    /** True while the watcher service is alive in this process. */
+    Function("isServiceRunning") {
+      BlockerService.running
+    }
+
+    /** Restart the watcher if the lock is on but the system killed it. Call on every app start. */
+    Function("ensureRunning") {
+      if (BlockerStore(context).enabled && !BlockerService.running) BlockerService.start(context)
+    }
+
+    Function("isIgnoringBatteryOptimizations") {
+      val power = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+      power.isIgnoringBatteryOptimizations(context.packageName)
+    }
+
+    /** System dialog "Let FloraLock always run in background?"; falls back to the settings list. */
+    Function("requestIgnoreBatteryOptimizations") {
+      val direct = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:${context.packageName}"))
+      if (!tryStart(direct)) tryStart(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+    }
+
+    /** Lower-case manufacturer, e.g. "xiaomi", "samsung". */
+    Function("getManufacturer") {
+      Build.MANUFACTURER.lowercase()
+    }
+
+    /**
+     * Opens the manufacturer's own "autostart / background activity" screen (Xiaomi, Huawei,
+     * Oppo, Vivo, Samsung…), which stock Android doesn't have. Falls back to the app's
+     * system settings page. Returns true when a manufacturer screen was opened.
+     */
+    Function("openManufacturerSettings") {
+      val opened = manufacturerIntents().any { tryStart(it) }
+      if (!opened) {
+        tryStart(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}")))
+      }
+      opened
+    }
+  }
+
+  private fun manufacturerIntents(): List<Intent> {
+    val pkg = context.packageName
+    fun component(owner: String, cls: String) = Intent().setComponent(ComponentName(owner, cls))
+    return when (Build.MANUFACTURER.lowercase()) {
+      "xiaomi", "redmi", "poco" -> listOf(
+        // "Other permissions": Display pop-up windows while running in the background, etc.
+        Intent("miui.intent.action.APP_PERM_EDITOR")
+          .setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity")
+          .putExtra("extra_pkgname", pkg),
+        Intent("miui.intent.action.APP_PERM_EDITOR")
+          .setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity")
+          .putExtra("extra_pkgname", pkg),
+        component("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"),
+      )
+      "huawei", "honor" -> listOf(
+        component("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity"),
+        component("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity"),
+        component("com.hihonor.systemmanager", "com.hihonor.systemmanager.startupmgr.ui.StartupNormalAppListActivity"),
+      )
+      "oppo", "realme", "oneplus" -> listOf(
+        component("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"),
+        component("com.coloros.safecenter", "com.coloros.safecenter.startupapp.StartupAppListActivity"),
+        component("com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity"),
+        component("com.oneplus.security", "com.oneplus.security.chainlaunch.view.ChainLaunchAppListActivity"),
+      )
+      "vivo", "iqoo" -> listOf(
+        component("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"),
+        component("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager"),
+      )
+      "samsung" -> listOf(
+        component("com.samsung.android.lool", "com.samsung.android.sm.battery.ui.BatteryActivity"),
+        component("com.samsung.android.sm", "com.samsung.android.sm.ui.battery.BatteryActivity"),
+      )
+      "asus" -> listOf(
+        component("com.asus.mobilemanager", "com.asus.mobilemanager.autostart.AutoStartActivity"),
+        component("com.asus.mobilemanager", "com.asus.mobilemanager.entry.FunctionActivity"),
+      )
+      else -> emptyList()
+    }
+  }
+
+  private fun tryStart(intent: Intent): Boolean = try {
+    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    true
+  } catch (e: Exception) {
+    false
   }
 
   private fun openSettings(intent: Intent) {
