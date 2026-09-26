@@ -44,7 +44,16 @@ appId: com.floralock.app
 - takeScreenshot: challenge-over-locked-app
 
 # Emergency unlock opens Settings and it stays open during the unlock window.
+# (Scroll first: on small screens these links sit below the photo and the answers.)
+- scrollUntilVisible:
+    element:
+      text: "Emergency unlock.*"
+    direction: DOWN
 - tapOn: "Emergency unlock.*"
+- scrollUntilVisible:
+    element:
+      text: "Continue to Settings"
+    direction: DOWN
 - tapOn: "Continue to Settings"
 - extendedWaitUntil:
     notVisible: "What is this plant\\?"
