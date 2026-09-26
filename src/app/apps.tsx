@@ -60,6 +60,7 @@ export default function AppsToLock() {
           <Pressable
             accessibilityRole="checkbox"
             accessibilityState={{ checked: on }}
+            testID={`app-${item.packageName}`}
             onPress={() => toggle(item.packageName)}
             style={[styles.row, { borderColor: c.border }]}
           >

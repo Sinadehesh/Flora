@@ -13,9 +13,11 @@ appId: com.floralock.app
 - tapOn: "Settings"
 - tapOn: "Choose"
 - tapOn: "Search apps"
-- inputText: "com.android.settings"
-- tapOn: "com.android.settings"
+- inputText: "settings"
 - hideKeyboard
+# By testID: tapping the text would hit the search box, which also shows the typed text.
+- tapOn:
+    id: "app-com.android.settings"
 - back
 - extendedWaitUntil:
     visible: "1 app locked"
