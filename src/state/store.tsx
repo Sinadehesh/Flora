@@ -1,15 +1,21 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react';
 
-import { recordAnswer } from '../core/srs';
-import { DEFAULT_SETTINGS, type ProgressMap, type Settings } from '../core/types';
+import { dayKey, markStudied, recordRepeat, recordStats } from '../core/daily';
+import { DEFAULT_SETTINGS, type LearnMap, type Settings, type StatsMap } from '../core/types';
 import { PLANTS } from '../data/plants';
 
-const STORAGE_KEY = 'floralock/v1';
+// v2: daily lessons with one repeat replaced the Leitner boxes of v1.
+const STORAGE_KEY = 'floralock/v2';
 
 interface PersistedState {
   settings: Settings;
-  progress: ProgressMap;
+  learn: LearnMap;
+  stats: StatsMap;
+  /** Plants answered right today, so the lock screen moves on to the others. */
+  today: { day: string; correct: string[] };
+  /** Day the user last finished the lesson's exam. */
+  examDoneOn: string;
   emergency: { day: string; used: number };
 }
 
@@ -19,20 +25,19 @@ interface State extends PersistedState {
 
 type Action =
   | { type: 'hydrate'; state: Partial<PersistedState> | null }
+  | { type: 'studied'; plantIds: string[]; now: number }
   | { type: 'answer'; plantId: string; correct: boolean; now: number }
+  | { type: 'examDone'; now: number }
   | { type: 'updateSettings'; patch: Partial<Settings> }
   | { type: 'useEmergency'; now: number }
   | { type: 'resetProgress' };
 
-/** Local calendar day, so emergency unlocks reset at the user's midnight. */
-export function dayKey(now: number): string {
-  const d = new Date(now);
-  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-}
-
 const initialState: State = {
   settings: DEFAULT_SETTINGS,
-  progress: {},
+  learn: {},
+  stats: {},
+  today: { day: '', correct: [] },
+  examDoneOn: '',
   emergency: { day: '', used: 0 },
   hydrated: false,
 };
@@ -46,14 +51,24 @@ function reducer(state: State, action: Action): State {
         settings: { ...DEFAULT_SETTINGS, ...action.state?.settings },
         hydrated: true,
       };
-    case 'answer':
+    case 'studied':
+      return { ...state, learn: markStudied(state.learn, action.plantIds, dayKey(action.now)) };
+    case 'answer': {
+      const day = dayKey(action.now);
+      const correctToday = state.today.day === day ? state.today.correct : [];
       return {
         ...state,
-        progress: {
-          ...state.progress,
-          [action.plantId]: recordAnswer(state.progress[action.plantId], action.correct, action.now),
+        stats: recordStats(state.stats, action.plantId, action.correct),
+        learn: recordRepeat(state.learn, action.plantId, action.correct, day),
+        today: {
+          day,
+          correct:
+            action.correct && !correctToday.includes(action.plantId) ? [...correctToday, action.plantId] : correctToday,
         },
       };
+    }
+    case 'examDone':
+      return { ...state, examDoneOn: dayKey(action.now) };
     case 'updateSettings':
       return { ...state, settings: { ...state.settings, ...action.patch } };
     case 'useEmergency': {
@@ -62,7 +77,7 @@ function reducer(state: State, action: Action): State {
       return { ...state, emergency: { day, used } };
     }
     case 'resetProgress':
-      return { ...state, progress: {} };
+      return { ...state, learn: {}, stats: {}, today: { day: '', correct: [] }, examDoneOn: '' };
   }
 }
 
@@ -79,8 +94,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!state.hydrated) return;
-    const { settings, progress, emergency } = state;
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ settings, progress, emergency })).catch(() => {});
+    const { hydrated: _, ...persisted } = state;
+    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(persisted)).catch(() => {});
   }, [state]);
 
   const value = useMemo(() => ({ state, dispatch }), [state]);
@@ -100,6 +115,10 @@ export function useDeck() {
     () => PLANTS.filter((p) => state.settings.categories.includes(p.category)),
     [state.settings.categories],
   );
+}
+
+export function correctToday(state: State, now: number): Set<string> {
+  return new Set(state.today.day === dayKey(now) ? state.today.correct : []);
 }
 
 export function emergencyLeft(state: State, now: number): number {

@@ -65,7 +65,7 @@ export function LockSetup() {
       <Card>
         <Text style={[styles.body, { color: c.text }]}>
           App locking works in the Android app. On iPhone it needs Apple’s Screen Time permission, which isn’t built
-          yet. Meanwhile, “Preview the lock screen” on the Herbarium tab shows the challenge.
+          yet. Meanwhile, “Preview the lock screen” on the Today tab shows the challenge.
         </Text>
       </Card>
     );

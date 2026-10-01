@@ -4,8 +4,8 @@ import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-na
 
 import { PlantPhoto } from '../../components/PlantPhoto';
 import { Chip } from '../../components/ui';
-import { normalizeName } from '../../core/matching';
-import { MAX_BOX } from '../../core/srs';
+import { learnStatus, type LearnStatus } from '../../core/daily';
+import { normalizeName } from '../../core/text';
 import type { PlantCategory } from '../../core/types';
 import { PLANTS } from '../../data/plants';
 import { useStore } from '../../state/store';
@@ -56,7 +56,6 @@ export default function Browse() {
       }
       ListEmptyComponent={<Text style={{ color: c.textMuted }}>No plants match “{query}”.</Text>}
       renderItem={({ item }) => {
-        const box = state.progress[item.id]?.box;
         return (
           <Pressable
             accessibilityRole="link"
@@ -70,7 +69,7 @@ export default function Browse() {
               <Text style={[styles.name, { color: c.text }]}>{item.commonName}</Text>
               <Text style={{ color: c.textMuted, fontStyle: 'italic' }}>{item.scientificName}</Text>
             </View>
-            <MasteryDots box={box} />
+            <StatusDots status={learnStatus(state.learn, item.id)} />
           </Pressable>
         );
       }}
@@ -78,23 +77,22 @@ export default function Browse() {
   );
 }
 
-/** Leitner box as filled dots; hollow when the plant hasn't been seen yet. */
-function MasteryDots({ box }: { box?: number }) {
+const STATUS_LABEL: Record<LearnStatus, string> = {
+  new: 'Not learned yet',
+  learning: 'Learned, repeat to come',
+  learned: 'Learned',
+};
+
+/** Two dots: one for the lesson, one for the repeat. */
+function StatusDots({ status }: { status: LearnStatus }) {
   const c = useColors();
+  const filled = { new: 0, learning: 1, learned: 2 }[status];
   return (
-    <View
-      style={{ flexDirection: 'row', gap: 3 }}
-      accessibilityLabel={box === undefined ? 'Not seen yet' : `Mastery ${box} of ${MAX_BOX}`}
-    >
-      {Array.from({ length: MAX_BOX }, (_, i) => (
+    <View style={{ flexDirection: 'row', gap: 4 }} accessibilityLabel={STATUS_LABEL[status]}>
+      {[0, 1].map((i) => (
         <View
           key={i}
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: 3,
-            backgroundColor: box !== undefined && i < box ? c.primary : c.border,
-          }}
+          style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: i < filled ? c.primary : c.border }}
         />
       ))}
     </View>

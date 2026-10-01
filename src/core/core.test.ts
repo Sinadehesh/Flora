@@ -1,13 +1,27 @@
+import { readFileSync } from 'node:fs';
+
 import { describe, expect, it } from 'vitest';
 
 import { PLANT_DETAILS } from '../data/plantDetails';
+import { privacyMarkdown } from '../data/privacyPolicy';
 import { PLANTS, PLANTS_BY_ID } from '../data/plants';
 import { challengeReducer, penaltySecondsLeft, startChallenge } from './challenge';
-import { acceptedNames, isCorrectAnswer, levenshtein, normalizeName } from './matching';
+import {
+  dayKey,
+  dueRepeats,
+  examPlants,
+  lessonStudied,
+  lockScreenPool,
+  markStudied,
+  pickLockPlant,
+  recordRepeat,
+  recordStats,
+  todaysNewPlants,
+} from './daily';
 import { buildChoices } from './quiz';
-import { BOX_INTERVALS, MAX_BOX, pickNextPlant, recordAnswer } from './srs';
-import { botanyIQ, troublePlants } from './stats';
-import type { ProgressMap } from './types';
+import { botanyIQ, learnedCount, troublePlants } from './stats';
+import { normalizeName } from './text';
+import type { LearnMap, StatsMap } from './types';
 
 /** Deterministic PRNG so tests don't flake. */
 function seeded(seed = 42) {
@@ -32,50 +46,17 @@ describe('plant data', () => {
     }
   });
 
-  it('never accepts the same name for two different plants', () => {
-    const owner = new Map<string, string>();
-    for (const p of PLANTS) {
-      for (const name of acceptedNames(p)) {
-        expect(owner.get(name) ?? p.id, `"${name}" is used by ${owner.get(name)} and ${p.id}`).toBe(p.id);
-        owner.set(name, p.id);
-      }
-    }
+  it('gives every plant its own common name, so a multiple-choice answer is never ambiguous', () => {
+    const names = PLANTS.map((p) => normalizeName(p.commonName));
+    expect(new Set(names).size).toBe(names.length);
   });
 });
 
-describe('matching', () => {
-  it('normalizes case, accents and punctuation', () => {
+describe('text', () => {
+  it('normalizes case, accents and punctuation for search', () => {
     expect(normalizeName('  Bird-of-Paradise! ')).toBe('bird of paradise');
     expect(normalizeName('Cempasúchil')).toBe('cempasuchil');
     expect(normalizeName("Devil's Ivy")).toBe('devils ivy');
-  });
-
-  it('computes edit distance', () => {
-    expect(levenshtein('kitten', 'sitting')).toBe(3);
-    expect(levenshtein('', 'abc')).toBe(3);
-  });
-
-  it('accepts common names, aliases, scientific names, plurals and small typos', () => {
-    expect(isCorrectAnswer('peony', plant('peony'))).toBe(true);
-    expect(isCorrectAnswer('Peonies', plant('peony'))).toBe(true);
-    expect(isCorrectAnswer('Paeonia lactiflora', plant('peony'))).toBe(true);
-    expect(isCorrectAnswer('hydrangia', plant('hydrangea'))).toBe(true);
-    expect(isCorrectAnswer('sansevieria', plant('snake-plant'))).toBe(true);
-    expect(isCorrectAnswer('Sunflowers', plant('sunflower'))).toBe(true);
-    expect(isCorrectAnswer('chrysanthemun', plant('chrysanthemum'))).toBe(true);
-  });
-
-  it('rejects wrong or empty answers', () => {
-    expect(isCorrectAnswer('', plant('rose'))).toBe(false);
-    expect(isCorrectAnswer('tulip', plant('rose'))).toBe(false);
-    expect(isCorrectAnswer('dahlia', plant('peony'))).toBe(false);
-    // short names get no typo allowance
-    expect(isCorrectAnswer('rise', plant('rose'))).toBe(false);
-  });
-
-  it("doesn't treat another plant's exact name as a typo", () => {
-    expect(isCorrectAnswer('lilac', plant('lily'), PLANTS)).toBe(false);
-    expect(isCorrectAnswer('lilies', plant('lily'), PLANTS)).toBe(true);
   });
 });
 
@@ -90,40 +71,71 @@ describe('quiz choices', () => {
   });
 });
 
-describe('spaced repetition', () => {
-  it('promotes on correct and resets to box 0 on wrong', () => {
-    let p = recordAnswer(undefined, true, 0);
-    expect(p.box).toBe(1);
-    expect(p.dueAt).toBe(BOX_INTERVALS[1]);
-    p = recordAnswer(p, true, 1000);
-    expect(p.box).toBe(2);
-    p = recordAnswer(p, false, 2000);
-    expect(p).toMatchObject({ box: 0, seen: 3, correct: 2, wrong: 1, dueAt: 2000 + BOX_INTERVALS[0] });
+describe('daily plan', () => {
+  const deck = PLANTS.slice(0, 6);
+  const ids = (plants: { id: string }[]) => plants.map((p) => p.id);
+  const DAY1 = '2026-10-01';
+  const DAY2 = '2026-10-02';
+  const DAY3 = '2026-10-03';
+
+  it('writes zero-padded local days that sort as strings', () => {
+    expect(dayKey(new Date(2026, 8, 30, 23, 59).getTime())).toBe('2026-09-30');
+    expect(dayKey(new Date(2026, 9, 1, 0, 1).getTime())).toBe('2026-10-01');
+    expect('2026-09-30' < '2026-10-01').toBe(true);
   });
 
-  it('caps at the max box', () => {
-    let p = recordAnswer(undefined, true, 0);
-    for (let i = 0; i < 20; i++) p = recordAnswer(p, true, 0);
-    expect(p.box).toBe(MAX_BOX);
+  it("offers the next unlearned plants as today's lesson, and keeps them once studied", () => {
+    expect(ids(todaysNewPlants(deck, {}, DAY1, 2))).toEqual(ids(deck.slice(0, 2)));
+    const learn = markStudied({}, ids(deck.slice(0, 2)), DAY1);
+    expect(lessonStudied(deck, learn, DAY1)).toBe(true);
+    // Same day: still today's two, even if the daily number changes afterwards.
+    expect(ids(todaysNewPlants(deck, learn, DAY1, 4))).toEqual(ids(deck.slice(0, 2)));
+    // Next day: the next two.
+    expect(ids(todaysNewPlants(deck, learn, DAY2, 2))).toEqual(ids(deck.slice(2, 4)));
+    expect(lessonStudied(deck, learn, DAY2)).toBe(false);
   });
 
-  it('prefers overdue weak plants, then unseen, then soonest due', () => {
-    const now = 1_000_000;
-    const progress: ProgressMap = {
-      rose: { ...recordAnswer(undefined, false, 0), dueAt: now - 1 }, // due, box 0
-      tulip: { ...recordAnswer(undefined, true, 0), box: 3, dueAt: now - 1 }, // due, box 3
-    };
-    expect(pickNextPlant(PLANTS, progress, now, seeded()).id).toBe('rose');
-    expect(pickNextPlant(PLANTS, progress, now, seeded(), 'rose').id).toBe('tulip');
+  it('repeats each plant once on a later day; a right answer there completes it', () => {
+    let learn = markStudied({}, ids(deck.slice(0, 2)), DAY1);
+    const [a, b] = deck;
+    // Answers on the lesson day are not the repeat.
+    expect(recordRepeat(learn, a.id, true, DAY1)).toBe(learn);
+    expect(ids(dueRepeats(deck, learn, DAY1))).toEqual([]);
 
-    const subset = [plant('rose'), plant('tulip'), plant('oak')];
-    const notDue: ProgressMap = {
-      rose: { ...progress.rose, dueAt: now + 5000 },
-      tulip: { ...progress.tulip, dueAt: now + 100 },
-    };
-    expect(pickNextPlant(subset, notDue, now, seeded()).id).toBe('oak');
-    notDue.oak = { ...progress.rose, dueAt: now + 9000 };
-    expect(pickNextPlant(subset, notDue, now, seeded()).id).toBe('tulip');
+    expect(ids(dueRepeats(deck, learn, DAY2))).toEqual([a.id, b.id]);
+    learn = recordRepeat(learn, a.id, true, DAY2);
+    learn = recordRepeat(learn, b.id, false, DAY2); // missed: comes back again
+    expect(learn[a.id].repeated).toBe(true);
+    expect(ids(dueRepeats(deck, learn, DAY3))).toEqual([b.id]);
+    expect(learnedCount(deck, learn)).toBe(1);
+  });
+
+  it("examines today's new plants and today's repeats", () => {
+    let learn = markStudied({}, ids(deck.slice(0, 2)), DAY1);
+    expect(ids(examPlants(deck, learn, DAY1, 2))).toEqual(ids(deck.slice(0, 2)));
+    // Day 2 before the lesson: only the repeats.
+    expect(ids(examPlants(deck, learn, DAY2, 2))).toEqual(ids(deck.slice(0, 2)));
+    learn = markStudied(learn, ids(deck.slice(2, 4)), DAY2);
+    expect(ids(examPlants(deck, learn, DAY2, 2))).toEqual(ids([deck[2], deck[3], deck[0], deck[1]]));
+  });
+
+  it('keeps the lock screen on what is due, then on anything learned', () => {
+    // Day one, nothing studied: today's new plants.
+    expect(ids(lockScreenPool(deck, {}, DAY1, 2))).toEqual(ids(deck.slice(0, 2)));
+    let learn = markStudied({}, [deck[0].id], DAY1);
+    expect(ids(lockScreenPool(deck, learn, DAY1, 1))).toEqual([deck[0].id]);
+    learn = recordRepeat(learn, deck[0].id, true, DAY2);
+    // Day 2, repeat done, lesson not studied yet: nothing due, so anything learned.
+    expect(ids(lockScreenPool(deck, learn, DAY2, 1))).toEqual([deck[0].id]);
+  });
+
+  it('asks plants not yet answered right today first, never twice in a row', () => {
+    const pool = deck.slice(0, 3);
+    expect(pickLockPlant(pool, new Set([pool[0].id, pool[1].id]), seeded()).id).toBe(pool[2].id);
+    for (let i = 0; i < 20; i++) {
+      expect(pickLockPlant(pool, new Set(), seeded(i + 1), pool[0].id).id).not.toBe(pool[0].id);
+    }
+    expect(pickLockPlant([pool[0]], new Set(), seeded(), pool[0].id).id).toBe(pool[0].id);
   });
 });
 
@@ -151,20 +163,31 @@ describe('challenge (Genius Penalty)', () => {
 });
 
 describe('stats', () => {
-  it('scores Botany IQ from 60 to 160', () => {
+  it('scores Botany IQ from 60 to 160: half for introduced, full once repeated', () => {
     const subset = [plant('rose'), plant('tulip')];
     expect(botanyIQ(subset, {})).toBe(60);
-    const mastered = { ...recordAnswer(undefined, true, 0), box: MAX_BOX };
-    expect(botanyIQ(subset, { rose: mastered, tulip: mastered })).toBe(160);
-    expect(botanyIQ(subset, { rose: mastered })).toBe(110);
+    const done: LearnMap = {
+      rose: { learnedOn: '2026-10-01', repeated: true },
+      tulip: { learnedOn: '2026-10-01', repeated: true },
+    };
+    expect(botanyIQ(subset, done)).toBe(160);
+    expect(botanyIQ(subset, { ...done, tulip: { learnedOn: '2026-10-01', repeated: false } })).toBe(135);
   });
 
   it('ranks trouble plants by miss rate', () => {
-    const progress: ProgressMap = {
-      rose: recordAnswer(recordAnswer(undefined, true, 0), false, 0), // 1/2 wrong
-      tulip: recordAnswer(undefined, false, 0), // 1/1 wrong
-      oak: recordAnswer(undefined, true, 0),
-    };
-    expect(troublePlants(PLANTS, progress).map((p) => p.id)).toEqual(['tulip', 'rose']);
+    let stats: StatsMap = {};
+    stats = recordStats(stats, 'rose', true);
+    stats = recordStats(stats, 'rose', false); // 1/2 wrong
+    stats = recordStats(stats, 'tulip', false); // 1/1 wrong
+    stats = recordStats(stats, 'oak', true);
+    expect(stats.rose).toEqual({ seen: 2, correct: 1, wrong: 1 });
+    expect(troublePlants(PLANTS, stats).map((p) => p.id)).toEqual(['tulip', 'rose']);
+  });
+});
+
+describe('privacy policy', () => {
+  it('PRIVACY.md matches the in-app policy (run `npm run privacy` after editing it)', () => {
+    const file = readFileSync(new URL('../../PRIVACY.md', import.meta.url), 'utf8');
+    expect(file).toBe(privacyMarkdown());
   });
 });

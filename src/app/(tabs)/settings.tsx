@@ -3,9 +3,10 @@ import type { ReactNode } from 'react';
 import { Alert, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { LockSetup } from '../../components/LockSetup';
+import { PlantsPerDay } from '../../components/PlantsPerDay';
 import { Button, Chip, SectionTitle } from '../../components/ui';
 import type { PlantCategory } from '../../core/types';
-import { useStore } from '../../state/store';
+import { useDeck, useStore } from '../../state/store';
 import { CATEGORY_LABEL, useColors } from '../../theme';
 
 const CATEGORIES: PlantCategory[] = ['flower', 'houseplant', 'tree'];
@@ -14,6 +15,7 @@ export default function SettingsScreen() {
   const c = useColors();
   const { state, dispatch } = useStore();
   const { settings } = state;
+  const deck = useDeck();
   const update = (patch: Partial<typeof settings>) => dispatch({ type: 'updateSettings', patch });
 
   const toggleCategory = (cat: PlantCategory) => {
@@ -29,7 +31,7 @@ export default function SettingsScreen() {
       if (window.confirm('Reset all learning progress?')) reset();
       return;
     }
-    Alert.alert('Reset progress?', 'Your Botany IQ and review schedule will start over.', [
+    Alert.alert('Reset progress?', 'Your lessons, repeats and Botany IQ will start over.', [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Reset', style: 'destructive', onPress: reset },
     ]);
@@ -40,14 +42,14 @@ export default function SettingsScreen() {
       <SectionTitle>App lock</SectionTitle>
       <LockSetup />
 
+      <SectionTitle>Daily lesson</SectionTitle>
+      <PlantsPerDay
+        value={settings.plantsPerDay}
+        deckSize={deck.length}
+        onChange={(plantsPerDay) => update({ plantsPerDay })}
+      />
+
       <SectionTitle>Lock screen</SectionTitle>
-      <Setting
-        label="Mode"
-        hint={settings.difficulty === 'easy' ? 'Pick from 4 names' : 'Type the name (small typos OK)'}
-      >
-        <Chip label="Easy" selected={settings.difficulty === 'easy'} onPress={() => update({ difficulty: 'easy' })} />
-        <Chip label="Hard" selected={settings.difficulty === 'hard'} onPress={() => update({ difficulty: 'hard' })} />
-      </Setting>
       <Setting label="Unlock for" hint="How long a correct answer opens the app">
         {[5, 10, 15, 30].map((m) => (
           <Chip
@@ -93,7 +95,9 @@ export default function SettingsScreen() {
 
       <SectionTitle>About</SectionTitle>
       <View style={{ gap: 8 }}>
+        <Button variant="secondary" label="Privacy policy" onPress={() => router.push('/privacy')} />
         <Button variant="secondary" label="Photo credits" onPress={() => router.push('/credits')} />
+        <Button variant="ghost" label="Run the setup again" onPress={() => update({ onboarded: false })} />
         <Button variant="ghost" label="Reset learning progress" onPress={confirmReset} />
       </View>
     </ScrollView>

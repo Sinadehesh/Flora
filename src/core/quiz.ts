@@ -1,5 +1,5 @@
 import type { Plant } from './types';
-import type { Rng } from './srs';
+import type { Rng } from './daily';
 
 export function shuffle<T>(items: T[], rng: Rng = Math.random): T[] {
   const out = [...items];
@@ -11,7 +11,7 @@ export function shuffle<T>(items: T[], rng: Rng = Math.random): T[] {
 }
 
 /**
- * Easy Mode options: the answer plus distractors drawn from the same category
+ * Multiple-choice options: the answer plus distractors drawn from the same category
  * first (a tulip next to three trees is too easy), topping up from the rest.
  */
 export function buildChoices(answer: Plant, allPlants: Plant[], count = 4, rng: Rng = Math.random): Plant[] {

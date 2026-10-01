@@ -1,12 +1,13 @@
-# End-to-end check of the Android app lock (run by .github/scripts/lock-e2e.sh on emulators).
-# Locks the system Settings app through FloraLock's own UI, opens Settings, and expects the
-# flower challenge; then uses an emergency unlock and expects Settings to stay open.
+# End-to-end check of the Android app (run by .github/scripts/lock-e2e.sh on emulators).
+# Goes through first-launch setup (plants per day, lock the system Settings app, turn the lock on),
+# opens Settings and expects the flower challenge, uses an emergency unlock and expects Settings
+# to stay open, then does today's lesson and exam.
 appId: com.floralock.app
 ---
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: "Botany IQ|.*isn.t responding"
+    visible: "Get started|.*isn.t responding"
     timeout: 90000
 # A just-booted emulator can show "System UI isn't responding" over the app; let it carry on.
 - runFlow:
@@ -15,25 +16,32 @@ appId: com.floralock.app
     commands:
       - tapOn: "Wait"
 - extendedWaitUntil:
-    visible: "Botany IQ"
+    visible: "Get started"
     timeout: 60000
 
-# Settings tab > App lock > choose the app to lock
-- tapOn: "Settings"
-- tapOn: "Choose"
+# Setup: welcome > plants a day (keep 5) > apps to lock > turn the lock on
+- tapOn: "Get started"
+- extendedWaitUntil:
+    visible: "How many plants a day\\?"
+    timeout: 10000
+- tapOn: "Next"
 - tapOn: "Search apps"
 - inputText: "settings"
 - hideKeyboard
 # By testID: tapping the text would hit the search box, which also shows the typed text.
 - tapOn:
     id: "app-com.android.settings"
-- back
+- tapOn: "Next"
 - extendedWaitUntil:
     visible: "1 app locked"
     timeout: 10000
 - tapOn: "Turn lock on"
 - extendedWaitUntil:
     visible: ".*Lock is on"
+    timeout: 10000
+- tapOn: "Finish setup"
+- extendedWaitUntil:
+    visible: "Start today.s lesson"
     timeout: 10000
 
 # Opening the locked app must bring up the challenge (directly, or via the fallback overlay).
@@ -72,3 +80,30 @@ appId: com.floralock.app
 - assertNotVisible: "What is this plant\\?"
 - assertNotVisible: "Identify the plant"
 - takeScreenshot: unlocked-app
+
+# Today's lesson: each new plant once, then a multiple-choice exam on them.
+- launchApp:
+    appId: com.floralock.app
+- tapOn: "Start today.s lesson"
+- repeat:
+    while:
+      visible: "Next plant"
+    commands:
+      - tapOn: "Next plant"
+- tapOn: "Start the exam"
+- repeat:
+    while:
+      notVisible: "\\d+ of \\d+ right"
+    commands:
+      - tapOn:
+          id: "choice-0"
+      - scrollUntilVisible:
+          element:
+            text: "Next question|See my score"
+          direction: DOWN
+      - tapOn: "Next question|See my score"
+- takeScreenshot: exam-score
+- tapOn: "Done for today"
+- extendedWaitUntil:
+    visible: "Tomorrow: .*"
+    timeout: 10000

@@ -1,39 +1,43 @@
-import { MAX_BOX } from './srs';
-import type { Plant, ProgressMap } from './types';
+import type { LearnMap, Plant, StatsMap } from './types';
 
-/**
- * Botany IQ: 60 for a beginner, 160 when every plant in the deck is mastered.
- * Each plant contributes its Leitner box / MAX_BOX, so it only rises with
- * repeated, spaced correct answers — not with one lucky guess.
- */
-export function botanyIQ(plants: Plant[], progress: ProgressMap): number {
-  if (!plants.length) return 60;
-  const mastery = plants.reduce((sum, p) => sum + (progress[p.id]?.box ?? 0) / MAX_BOX, 0) / plants.length;
-  return Math.round(60 + 100 * mastery);
+/** Plants that passed their repeat: these count as learned. */
+export function learnedCount(deck: Plant[], learn: LearnMap): number {
+  return deck.filter((p) => learn[p.id]?.repeated).length;
 }
 
-export function accuracy(progress: ProgressMap): number | null {
+/** Plants introduced but still waiting for their repeat. */
+export function inProgressCount(deck: Plant[], learn: LearnMap): number {
+  return deck.filter((p) => learn[p.id] && !learn[p.id].repeated).length;
+}
+
+/**
+ * Botany IQ: 60 for a beginner, 160 when the whole deck is learned. A plant counts
+ * half once introduced and fully once it passes its repeat on a later day.
+ */
+export function botanyIQ(deck: Plant[], learn: LearnMap): number {
+  if (!deck.length) return 60;
+  const score = deck.reduce((sum, p) => sum + (learn[p.id] ? (learn[p.id].repeated ? 1 : 0.5) : 0), 0);
+  return Math.round(60 + (100 * score) / deck.length);
+}
+
+export function accuracy(stats: StatsMap): number | null {
   let correct = 0;
   let seen = 0;
-  for (const p of Object.values(progress)) {
-    correct += p.correct;
-    seen += p.seen;
+  for (const s of Object.values(stats)) {
+    correct += s.correct;
+    seen += s.seen;
   }
   return seen ? correct / seen : null;
 }
 
-export function masteredCount(plants: Plant[], progress: ProgressMap): number {
-  return plants.filter((p) => (progress[p.id]?.box ?? 0) >= MAX_BOX - 1).length;
-}
-
 /** Plants the user keeps missing, worst first. */
-export function troublePlants(plants: Plant[], progress: ProgressMap, limit = 5): Plant[] {
+export function troublePlants(plants: Plant[], stats: StatsMap, limit = 5): Plant[] {
   return plants
-    .filter((p) => (progress[p.id]?.wrong ?? 0) > 0)
+    .filter((p) => (stats[p.id]?.wrong ?? 0) > 0)
     .sort((a, b) => {
-      const pa = progress[a.id];
-      const pb = progress[b.id];
-      return pb.wrong / pb.seen - pa.wrong / pa.seen || pb.wrong - pa.wrong;
+      const sa = stats[a.id];
+      const sb = stats[b.id];
+      return sb.wrong / sb.seen - sa.wrong / sa.seen || sb.wrong - sa.wrong;
     })
     .slice(0, limit);
 }

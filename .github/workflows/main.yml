@@ -34,7 +34,8 @@ jobs:
       - name: Generate native Android project
         run: npx expo prebuild --platform android --no-install
 
-      # Without these secrets, builds are signed with Android's debug key: the APK installs fine, but the Play Store rejects the AAB.
+      # Needs the ANDROID_KEYSTORE_BASE64 and ANDROID_KEYSTORE_PASSWORD secrets (see docs/PLAY_STORE.md).
+      # Without them, builds are signed with Android's debug key: the APK installs fine, but the Play Store rejects the AAB.
       - name: Sign release builds with the upload key
         if: env.HAS_UPLOAD_KEY == 'true'
         env:
@@ -47,8 +48,9 @@ jobs:
                   upload {
                       storeFile file('upload.jks')
                       storePassword System.getenv('KEYSTORE_PASSWORD')
-                      keyAlias System.getenv('KEY_ALIAS')
-                      keyPassword System.getenv('KEY_PASSWORD')
+                      // Alias and key password are optional secrets; a PKCS12 key uses the store password.
+                      keyAlias System.getenv('KEY_ALIAS') ?: 'upload'
+                      keyPassword System.getenv('KEY_PASSWORD') ?: System.getenv('KEYSTORE_PASSWORD')
                   }
               }
               buildTypes { release { signingConfig signingConfigs.upload } }
@@ -62,6 +64,13 @@ jobs:
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: ./gradlew assembleRelease bundleRelease --no-daemon
+
+      # Compare with the upload key's SHA-256 in Play Console (Setup > App signing).
+      - name: Show signing certificate
+        run: |
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -n 1)
+          "$APKSIGNER" verify --print-certs android/app/build/outputs/apk/release/*.apk | grep -E "certificate (DN|SHA-256)"
+          [ "$HAS_UPLOAD_KEY" = true ] || echo "::warning::No upload key secrets: signed with the debug key, so the Play Store will reject the AAB."
 
       - name: "1. APK (install on phones)"
         uses: actions/upload-artifact@v4

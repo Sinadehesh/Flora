@@ -1,6 +1,6 @@
 # Platform integration: how the lock actually reaches the user
 
-The JS app (quiz, spaced repetition, Herbarium) is platform-neutral. The part that
+The JS app (daily lessons, quiz, plant guide) is platform-neutral. The part that
 intercepts Instagram/TikTok is native and differs a lot between iOS and Android.
 All of it plugs into the `AppBlocker` interface in `src/blocker/index.ts`. The
 challenge screen already calls `blocker.grantTemporaryAccess(source, minutes)`
@@ -76,7 +76,7 @@ friction of its own.
   accessibility tools, and it's the "hacky" route the pitch rightly avoids.
 - **Play Console declarations:** Usage Access and the special-use foreground
   service both require a declaration and a short video of the feature. The
-  Herbarium's standalone study value helps the "core functionality" argument.
+  The daily lessons' standalone study value helps the "core functionality" argument.
 - **Battery optimisation:** some OEMs (Xiaomi, Huawei, Samsung) kill foreground
   services aggressively. Add a "keep FloraLock running" help screen that links
   to the battery optimisation exemption.

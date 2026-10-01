@@ -4,7 +4,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { PlantPhoto } from '../../components/PlantPhoto';
 import { Card, SectionTitle } from '../../components/ui';
-import { MAX_BOX } from '../../core/srs';
+import { learnStatus } from '../../core/daily';
 import { EDIBILITY_LABEL, PLANT_DETAILS, type Edibility } from '../../data/plantDetails';
 import { PLANT_IMAGES } from '../../data/plantImages.generated';
 import { PLANTS_BY_ID } from '../../data/plants';
@@ -20,7 +20,8 @@ export default function PlantDetail() {
 
   if (!plant) return <Text style={{ padding: 16, color: c.text }}>Unknown plant.</Text>;
 
-  const progress = state.progress[plant.id];
+  const stats = state.stats[plant.id];
+  const status = learnStatus(state.learn, plant.id);
   const photoCount = PLANT_IMAGES[plant.id]?.length ?? 0;
   const details = PLANT_DETAILS[plant.id];
 
@@ -85,18 +86,20 @@ export default function PlantDetail() {
       <SectionTitle>Details</SectionTitle>
       <Detail label="Family" value={plant.family} />
       <Detail label="Group" value={CATEGORY_LABEL[plant.category]} />
-      {plant.aliases.length > 0 && <Detail label="Also accepted" value={plant.aliases.join(', ')} />}
+      {plant.aliases.length > 0 && <Detail label="Also called" value={plant.aliases.join(', ')} />}
 
       <SectionTitle>Your record</SectionTitle>
-      {progress ? (
-        <>
-          <Detail label="Correct" value={`${progress.correct} of ${progress.seen}`} />
-          <Detail label="Mastery" value={`${progress.box} / ${MAX_BOX}`} />
-          <Detail label="Next review" value={formatDue(progress.dueAt)} />
-        </>
-      ) : (
-        <Text style={{ color: c.textMuted }}>You haven’t met this plant on the lock screen yet.</Text>
-      )}
+      <Detail
+        label="Status"
+        value={
+          status === 'learned'
+            ? 'Learned ✓'
+            : status === 'learning'
+              ? `In a lesson on ${state.learn[plant.id].learnedOn}, repeat to come`
+              : 'Not in a lesson yet'
+        }
+      />
+      {stats && <Detail label="Correct answers" value={`${stats.correct} of ${stats.seen}`} />}
 
       <Text style={[styles.disclaimer, { color: c.textMuted }]}>
         General information only. Never eat a plant or use it as medicine based on an app. Many plants have toxic
@@ -104,14 +107,6 @@ export default function PlantDetail() {
       </Text>
     </ScrollView>
   );
-}
-
-function formatDue(dueAt: number): string {
-  const mins = Math.round((dueAt - Date.now()) / 60_000);
-  if (mins <= 0) return 'Due now';
-  if (mins < 60) return `In ${mins} min`;
-  if (mins < 48 * 60) return `In ${Math.round(mins / 60)} h`;
-  return `In ${Math.round(mins / 1440)} days`;
 }
 
 function Paragraph({ children }: { children: string }) {

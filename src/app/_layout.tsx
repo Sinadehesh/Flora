@@ -33,6 +33,9 @@ export default function RootLayout() {
         <Stack.Screen name="plant/[id]" options={{ title: '', headerBackTitle: 'Back' }} />
         <Stack.Screen name="credits" options={{ title: 'Photo credits' }} />
         <Stack.Screen name="apps" options={{ title: 'Apps to lock' }} />
+        <Stack.Screen name="privacy" options={{ title: 'Privacy policy' }} />
+        <Stack.Screen name="lesson" options={{ title: 'Today’s lesson' }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false, gestureEnabled: false }} />
         {/* The lock-screen intercept: no swipe-to-dismiss, no back gesture. */}
         <Stack.Screen
           name="challenge"
