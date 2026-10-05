@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 
+import { usePlusSync } from '../billing/usePlusSync';
 import { blocker } from '../blocker';
 
 import { StoreProvider } from '../state/store';
@@ -19,6 +20,7 @@ export default function RootLayout() {
   }, []);
   return (
     <StoreProvider>
+      <PlusSync />
       <StatusBar style="auto" />
       <Stack
         screenOptions={{
@@ -34,6 +36,7 @@ export default function RootLayout() {
         <Stack.Screen name="credits" options={{ title: 'Photo credits' }} />
         <Stack.Screen name="apps" options={{ title: 'Apps to lock' }} />
         <Stack.Screen name="privacy" options={{ title: 'Privacy policy' }} />
+        <Stack.Screen name="upgrade" options={{ title: 'FloraLock Plus' }} />
         <Stack.Screen name="lesson" options={{ title: 'Today’s lesson' }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false, gestureEnabled: false }} />
         {/* The lock-screen intercept: no swipe-to-dismiss, no back gesture. */}
@@ -44,4 +47,9 @@ export default function RootLayout() {
       </Stack>
     </StoreProvider>
   );
+}
+
+function PlusSync() {
+  usePlusSync();
+  return null;
 }

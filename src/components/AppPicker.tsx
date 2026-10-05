@@ -1,12 +1,16 @@
+import { router } from 'expo-router';
 import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { blocker, type LaunchableApp } from '../blocker';
+import { canLockAnother, FREE_APP_LIMIT } from '../core/plus';
+import { useStore } from '../state/store';
 import { useColors } from '../theme';
 
-/** Searchable list of installed apps; ticking one adds it to the lock (Android). */
+/** Searchable list of installed apps; ticking one adds it to the lock (Android). Free: up to FREE_APP_LIMIT. */
 export function AppPicker({ header }: { header?: ReactElement }) {
   const c = useColors();
+  const { plus } = useStore().state;
   const [apps, setApps] = useState<LaunchableApp[] | null>(null);
   const [blocked, setBlocked] = useState(() => new Set(blocker.getBlockedApps()));
   const [query, setQuery] = useState('');
@@ -23,6 +27,7 @@ export function AppPicker({ header }: { header?: ReactElement }) {
   const toggle = (pkg: string) => {
     const next = new Set(blocked);
     if (next.has(pkg)) next.delete(pkg);
+    else if (!canLockAnother(blocked.size, plus)) return router.push('/upgrade');
     else next.add(pkg);
     setBlocked(next);
     blocker.setBlockedApps([...next]);
@@ -44,6 +49,18 @@ export function AppPicker({ header }: { header?: ReactElement }) {
           <Text style={{ color: c.textMuted, fontSize: 15 }}>
             {blocked.size} locked · opening one shows a plant to identify first.
           </Text>
+          {!plus && (
+            <Pressable
+              accessibilityRole="link"
+              onPress={() => router.push('/upgrade')}
+              style={[styles.limit, { borderColor: c.border, backgroundColor: c.surface }]}
+            >
+              <Text style={{ color: c.text, fontSize: 14, flex: 1 }}>
+                Free version: up to {FREE_APP_LIMIT} apps.{' '}
+                <Text style={{ color: c.primary, fontWeight: '700' }}>Get Plus to lock more</Text>
+              </Text>
+            </Pressable>
+          )}
           <TextInput
             value={query}
             onChangeText={setQuery}
@@ -94,5 +111,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  limit: { borderWidth: 1, borderRadius: 12, padding: 12, flexDirection: 'row' },
   box: { width: 26, height: 26, borderRadius: 7, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
 });

@@ -4,7 +4,8 @@ import { Alert, Platform, ScrollView, StyleSheet, Text, View } from 'react-nativ
 
 import { LockSetup } from '../../components/LockSetup';
 import { PlantsPerDay } from '../../components/PlantsPerDay';
-import { Button, Chip, SectionTitle } from '../../components/ui';
+import { Button, Card, Chip, SectionTitle } from '../../components/ui';
+import { deckCategories, FREE_APP_LIMIT, isPlusCategory } from '../../core/plus';
 import type { PlantCategory } from '../../core/types';
 import { useDeck, useStore } from '../../state/store';
 import { CATEGORY_LABEL, useColors } from '../../theme';
@@ -18,10 +19,12 @@ export default function SettingsScreen() {
   const deck = useDeck();
   const update = (patch: Partial<typeof settings>) => dispatch({ type: 'updateSettings', patch });
 
+  const activeCategories = deckCategories(settings.categories, state.plus);
   const toggleCategory = (cat: PlantCategory) => {
-    const next = settings.categories.includes(cat)
-      ? settings.categories.filter((x) => x !== cat)
-      : [...settings.categories, cat];
+    if (isPlusCategory(cat) && !state.plus) return router.push('/upgrade');
+    const next = activeCategories.includes(cat)
+      ? activeCategories.filter((x) => x !== cat)
+      : [...activeCategories, cat];
     if (next.length) update({ categories: next });
   };
 
@@ -41,6 +44,20 @@ export default function SettingsScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <SectionTitle>App lock</SectionTitle>
       <LockSetup />
+
+      <SectionTitle>FloraLock Plus</SectionTitle>
+      <Card style={{ gap: 10 }}>
+        <Text style={{ color: state.plus ? c.success : c.text, fontSize: 16, fontWeight: '600' }}>
+          {state.plus
+            ? '✓ Plus unlocked: unlimited apps and every plant group.'
+            : `Free version: up to ${FREE_APP_LIMIT} locked apps and the flower deck.`}
+        </Text>
+        <Button
+          variant={state.plus ? 'ghost' : 'primary'}
+          label={state.plus ? 'About Plus' : 'See what Plus adds'}
+          onPress={() => router.push('/upgrade')}
+        />
+      </Card>
 
       <SectionTitle>Daily lesson</SectionTitle>
       <PlantsPerDay
@@ -82,12 +99,15 @@ export default function SettingsScreen() {
       </Setting>
 
       <SectionTitle>Deck</SectionTitle>
-      <Setting label="Plants to learn" hint="At least one group stays on">
+      <Setting
+        label="Plants to learn"
+        hint={state.plus ? 'At least one group stays on' : 'Houseplants and trees come with Plus'}
+      >
         {CATEGORIES.map((cat) => (
           <Chip
             key={cat}
-            label={CATEGORY_LABEL[cat]}
-            selected={settings.categories.includes(cat)}
+            label={`${isPlusCategory(cat) && !state.plus ? '🔒 ' : ''}${CATEGORY_LABEL[cat]}`}
+            selected={activeCategories.includes(cat)}
             onPress={() => toggleCategory(cat)}
           />
         ))}

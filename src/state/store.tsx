@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react';
 
 import { dayKey, markStudied, recordRepeat, recordStats } from '../core/daily';
+import { deckCategories } from '../core/plus';
 import { DEFAULT_SETTINGS, type LearnMap, type Settings, type StatsMap } from '../core/types';
 import { PLANTS } from '../data/plants';
 
@@ -17,6 +18,8 @@ interface PersistedState {
   /** Day the user last finished the lesson's exam. */
   examDoneOn: string;
   emergency: { day: string; used: number };
+  /** Owns FloraLock Plus (last answer from Google Play, kept for offline use). */
+  plus: boolean;
 }
 
 interface State extends PersistedState {
@@ -30,6 +33,7 @@ type Action =
   | { type: 'examDone'; now: number }
   | { type: 'updateSettings'; patch: Partial<Settings> }
   | { type: 'useEmergency'; now: number }
+  | { type: 'setPlus'; plus: boolean }
   | { type: 'resetProgress' };
 
 const initialState: State = {
@@ -39,6 +43,7 @@ const initialState: State = {
   today: { day: '', correct: [] },
   examDoneOn: '',
   emergency: { day: '', used: 0 },
+  plus: false,
   hydrated: false,
 };
 
@@ -76,6 +81,8 @@ function reducer(state: State, action: Action): State {
       const used = state.emergency.day === day ? state.emergency.used + 1 : 1;
       return { ...state, emergency: { day, used } };
     }
+    case 'setPlus':
+      return state.plus === action.plus ? state : { ...state, plus: action.plus };
     case 'resetProgress':
       return { ...state, learn: {}, stats: {}, today: { day: '', correct: [] }, examDoneOn: '' };
   }
@@ -108,13 +115,13 @@ export function useStore() {
   return ctx;
 }
 
-/** The plant deck filtered by the categories enabled in Settings. */
+/** The plant deck: the groups enabled in Settings that the user is entitled to (free: flowers). */
 export function useDeck() {
   const { state } = useStore();
-  return useMemo(
-    () => PLANTS.filter((p) => state.settings.categories.includes(p.category)),
-    [state.settings.categories],
-  );
+  return useMemo(() => {
+    const categories = deckCategories(state.settings.categories, state.plus);
+    return PLANTS.filter((p) => categories.includes(p.category));
+  }, [state.settings.categories, state.plus]);
 }
 
 export function correctToday(state: State, now: number): Set<string> {

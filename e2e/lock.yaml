@@ -1,7 +1,7 @@
 # End-to-end check of the Android app (run by .github/scripts/lock-e2e.sh on emulators).
 # Goes through first-launch setup (plants per day, lock the system Settings app, turn the lock on),
 # opens Settings and expects the flower challenge, uses an emergency unlock and expects Settings
-# to stay open, then does today's lesson and exam.
+# to stay open, does today's lesson and exam, then opens the FloraLock Plus screen.
 appId: com.floralock.app
 ---
 - launchApp:
@@ -107,3 +107,16 @@ appId: com.floralock.app
 - extendedWaitUntil:
     visible: "Tomorrow: .*"
     timeout: 10000
+
+# FloraLock Plus: the billing module loads and the screen copes with an emulator that has no
+# Play Store (or, where there is one, shows the price or "not on sale yet").
+- tapOn: "Settings"
+- scrollUntilVisible:
+    element:
+      text: "See what Plus adds"
+    direction: DOWN
+- tapOn: "See what Plus adds"
+- extendedWaitUntil:
+    visible: "Purchases need the Google Play Store.*|Unlock Plus for.*|FloraLock Plus isn.t on sale yet.*"
+    timeout: 20000
+- takeScreenshot: plus-screen

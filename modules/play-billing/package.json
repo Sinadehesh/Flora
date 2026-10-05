@@ -1,0 +1,6 @@
+{
+  "name": "play-billing",
+  "version": "1.0.0",
+  "description": "FloraLock's one-time in-app purchase (FloraLock Plus) through Google Play Billing",
+  "private": true
+}

@@ -24,6 +24,7 @@ Everything runs offline; nothing leaves the phone ([privacy policy](PRIVACY.md))
 | Photos                                                       | ✅ 3 real iNaturalist photos per plant, CC0 / CC BY / CC BY-SA, bundled          |
 | Android app lock (UsageStats + foreground service)           | ✅ Passes the emulator test on Android 8, 10, 13 and 15; needs real phones       |
 | Play Store signing and privacy policy                        | ✅ Ready; see [docs/PLAY_STORE.md](docs/PLAY_STORE.md)                           |
+| FloraLock Plus (one-time purchase, Google Play Billing)      | ✅ Built; product `floralock_plus` must be created in Play Console               |
 | iOS shield (Screen Time API)                                 | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md) |
 
 ## Learning model
@@ -69,7 +70,8 @@ src/
     onboarding.tsx        First launch: plants per day, apps to lock, the lock
     (tabs)/index.tsx      Today: lesson card, Botany IQ, trouble plants
     (tabs)/browse.tsx     Searchable plant guide
-    (tabs)/settings.tsx   Lock, plants per day, unlock window, penalty, emergency unlocks, deck
+    (tabs)/settings.tsx   Lock, Plus, plants per day, unlock window, penalty, emergency unlocks, deck
+    upgrade.tsx           FloraLock Plus: what it adds, purchase and restore
     lesson.tsx            Study cards, then the exam
     challenge.tsx         The lock-screen intercept (floralock://challenge?source=Instagram)
     plant/[id].tsx        Plant page
@@ -79,10 +81,12 @@ src/
     challenge.ts          Lock-screen state machine (question → penalty → unlocked)
     quiz.ts               Multiple-choice distractors (same category first)
     stats.ts              Botany IQ, accuracy, trouble plants
+    plus.ts               What's free and what Plus unlocks
   data/                 Plants, plant details, photos (generated), privacy policy
   blocker/              Bridge to the native Android lock
   state/store.tsx       App state, persisted to AsyncStorage
 modules/app-blocker/    Native Android lock: foreground service, overlay fallback, boot receiver
+modules/play-billing/   Google Play Billing for the one-time Plus purchase
 ```
 
 ## Photos

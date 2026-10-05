@@ -11,11 +11,11 @@ export interface PolicySection {
 
 export const PRIVACY_POLICY = {
   title: 'FloraLock privacy policy',
-  updated: '1 October 2026',
+  updated: '5 October 2026',
   url: 'https://github.com/Sinadehesh/Flora/blob/HEAD/PRIVACY.md',
   summary:
     'FloraLock has no accounts, no ads and no analytics, and it sends nothing off your phone. Everything it ' +
-    'knows about you stays on your device.',
+    'knows about you stays on your device. The optional FloraLock Plus purchase is handled entirely by Google Play.',
   sections: [
     {
       heading: 'What FloraLock uses on your phone',
@@ -46,6 +46,15 @@ export const PRIVACY_POLICY = {
         'Nothing. FloraLock does not collect personal data, does not send data to us or to anyone else, and has ' +
           'no third-party tracking or advertising code. The plant photos are built into the app, so it does not ' +
           'need the internet.',
+      ],
+    },
+    {
+      heading: 'Purchases',
+      paragraphs: [
+        'FloraLock Plus is an optional one-time purchase made through Google Play. Google Play processes the ' +
+          'payment under Google’s own privacy policy; FloraLock never sees your card or payment details. The app ' +
+          'only asks Google Play on your phone whether your Google account owns Plus, and remembers the answer on ' +
+          'your device.',
       ],
     },
     {

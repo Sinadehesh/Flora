@@ -18,6 +18,7 @@ import {
   recordStats,
   todaysNewPlants,
 } from './daily';
+import { allowedLockedApps, canLockAnother, deckCategories, FREE_APP_LIMIT } from './plus';
 import { buildChoices } from './quiz';
 import { botanyIQ, learnedCount, troublePlants } from './stats';
 import { normalizeName } from './text';
@@ -182,6 +183,23 @@ describe('stats', () => {
     stats = recordStats(stats, 'oak', true);
     expect(stats.rose).toEqual({ seen: 2, correct: 1, wrong: 1 });
     expect(troublePlants(PLANTS, stats).map((p) => p.id)).toEqual(['tulip', 'rose']);
+  });
+});
+
+describe('FloraLock Plus', () => {
+  it('keeps the free deck to flowers and never leaves it empty', () => {
+    expect(deckCategories(['flower', 'houseplant', 'tree'], false)).toEqual(['flower']);
+    expect(deckCategories(['tree'], false)).toEqual(['flower']);
+    expect(deckCategories(['houseplant', 'tree'], true)).toEqual(['houseplant', 'tree']);
+    expect(deckCategories([], true)).toEqual(['flower']);
+  });
+
+  it(`locks up to ${FREE_APP_LIMIT} apps for free, any number with Plus`, () => {
+    expect(canLockAnother(FREE_APP_LIMIT - 1, false)).toBe(true);
+    expect(canLockAnother(FREE_APP_LIMIT, false)).toBe(false);
+    expect(canLockAnother(50, true)).toBe(true);
+    expect(allowedLockedApps(['a', 'b', 'c'], false)).toEqual(['a', 'b']);
+    expect(allowedLockedApps(['a', 'b', 'c'], true)).toEqual(['a', 'b', 'c']);
   });
 });
 

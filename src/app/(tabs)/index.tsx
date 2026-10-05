@@ -7,6 +7,7 @@ import { PlantPhoto } from '../../components/PlantPhoto';
 import { Button, Card, SectionTitle } from '../../components/ui';
 import { dayKey, dueRepeats, lessonStudied, todaysNewPlants } from '../../core/daily';
 import { accuracy, botanyIQ, inProgressCount, learnedCount, troublePlants } from '../../core/stats';
+import { PLANTS } from '../../data/plants';
 import { useDeck, useStore } from '../../state/store';
 import { serif, useColors } from '../../theme';
 
@@ -32,6 +33,8 @@ export default function Home() {
   const acc = accuracy(state.stats);
   const trouble = troublePlants(deck, state.stats);
   const nothingLeft = !fresh.length && !repeats.length;
+  // Free users who've met every flower: Plus has more plants to learn.
+  const offerPlus = !state.plus && deck.every((p) => state.learn[p.id]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -67,6 +70,15 @@ export default function Home() {
                 label="Go over today’s lesson again"
                 onPress={() => router.push({ pathname: '/lesson', params: { review: '1' } })}
               />
+            )}
+            {offerPlus && (
+              <>
+                <Text style={[styles.body, { color: c.text }]}>
+                  You’ve met all {deck.length} flowers. FloraLock Plus adds {PLANTS.length - deck.length} houseplants
+                  and trees.
+                </Text>
+                <Button label="See FloraLock Plus" onPress={() => router.push('/upgrade')} />
+              </>
             )}
           </>
         ) : (

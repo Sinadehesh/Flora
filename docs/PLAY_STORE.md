@@ -50,7 +50,33 @@ the build. It should match the upload key, and Play Console → Setup → App si
 4. New personal developer accounts must run a closed test with at least 12 testers for 14 days before
    publishing to production.
 
-## 3. Each release
+## 3. FloraLock Plus (the in-app purchase)
+
+The free version locks up to 2 apps and teaches the 35 flowers. **FloraLock Plus** is a one-time purchase that
+unlocks unlimited apps and the houseplants and trees. The rules live in `src/core/plus.ts`; the purchase goes
+through Google Play Billing in `modules/play-billing`.
+
+1. **Payments profile:** Play Console → Setup → Payments profile. Add your bank and tax details; Google won't
+   let you sell anything without it.
+2. **Upload a build first.** Play Console only allows in-app products once a build that includes Google Play
+   Billing has been uploaded (any testing track is fine).
+3. **Create the product:** Monetize with Play → Products → One-time products → Create:
+   - Product ID: `floralock_plus` (must match exactly; it can never be changed or reused)
+   - Name: FloraLock Plus · Description: Unlimited locked apps and all 70 plants.
+   - Price: for example $5.99 (Play converts it for other countries), then **Activate** it.
+4. **Test without paying:** Setup → License testing → add your Google account. On a phone signed in with that
+   account, install FloraLock from the internal testing link (not the APK from GitHub: purchases only work
+   for installs from Google Play). The purchase sheet then offers test cards that are never charged.
+
+Until the product exists and is active, the Plus screen says "FloraLock Plus isn't on sale yet". On phones
+without the Play Store it explains that purchases need Google Play. Refunds are handled automatically: the next
+time FloraLock opens, Google Play reports Plus as not owned and the extra locked apps are released.
+
+**Data safety:** purchases are processed by Google Play; FloraLock itself doesn't collect or send purchase data.
+If Play Console asks about purchase history, answer according to Google's current guidance for apps that use
+Google Play Billing only.
+
+## 4. Each release
 
 Push to `main` or a `claude/**` branch. The workflow sets `versionCode` from the run number, so every build can
 be uploaded. Download `floralock-aab` from the run and upload it in Play Console.
