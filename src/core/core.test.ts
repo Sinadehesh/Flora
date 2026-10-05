@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import { PLANT_DETAILS } from '../data/plantDetails';
-import { privacyMarkdown } from '../data/privacyPolicy';
+import { privacyHtml, privacyMarkdown } from '../data/privacyPolicy';
 import { PLANTS, PLANTS_BY_ID } from '../data/plants';
 import { challengeReducer, penaltySecondsLeft, startChallenge } from './challenge';
 import {
@@ -207,5 +207,11 @@ describe('privacy policy', () => {
   it('PRIVACY.md matches the in-app policy (run `npm run privacy` after editing it)', () => {
     const file = readFileSync(new URL('../../PRIVACY.md', import.meta.url), 'utf8');
     expect(file).toBe(privacyMarkdown());
+  });
+
+  it('the public web page matches the in-app policy (run `npm run privacy` after editing it)', () => {
+    const page = readFileSync(new URL('../../site/privacy/index.html', import.meta.url), 'utf8');
+    expect(page).toBe(privacyHtml());
+    expect(page).toContain('<a href="https://github.com/Sinadehesh/Flora/issues">');
   });
 });

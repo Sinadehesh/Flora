@@ -33,8 +33,10 @@ the build. It should match the upload key, and Play Console → Setup → App si
 1. Create the app with package name `com.floralock.app`, then upload `floralock-aab` from a workflow run to
    **Testing → Internal testing**.
 2. **App content:**
-   - **Privacy policy:** `https://github.com/Sinadehesh/Flora/blob/HEAD/PRIVACY.md`
-     (generated from `src/data/privacyPolicy.ts` by `npm run privacy`).
+   - **Privacy policy:** `https://sinadehesh.github.io/Flora/privacy/`, published from `site/` by
+     `.github/workflows/pages.yml` (turn on once: GitHub → Settings → Pages → Source: **GitHub Actions**). The
+     page, PRIVACY.md and the in-app screen are all generated from `src/data/privacyPolicy.ts` by
+     `npm run privacy`.
    - **Data safety:** the app collects and shares no user data (everything stays on the device), so answer "No"
      to collecting or sharing data.
    - **Ads:** no ads. **Target audience:** 13+ is simplest. **Content rating:** fill in the questionnaire.
