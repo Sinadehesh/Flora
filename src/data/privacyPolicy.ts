@@ -1,7 +1,7 @@
 /**
  * The privacy policy. One source for three places:
  *  - the app (Settings > Privacy policy),
- *  - the public web page linked from the Play Store listing (site/privacy/index.html, on GitHub Pages),
+ *  - the public web page linked from the Play Store listing (site/privacy/index.html, hosted on Vercel),
  *  - PRIVACY.md in the repository.
  * After editing, run `npm run privacy` to regenerate the page and PRIVACY.md; a test fails if they drift apart.
  */
@@ -14,7 +14,7 @@ export interface PolicySection {
 export const PRIVACY_POLICY = {
   title: 'FloraLock privacy policy',
   updated: '5 October 2026',
-  url: 'https://sinadehesh.github.io/Flora/privacy/',
+  url: 'https://floralock.sinadehesh.com/privacy/',
   summary:
     'FloraLock has no accounts, no ads and no analytics, and it sends nothing off your phone. Everything it ' +
     'knows about you stays on your device. The optional FloraLock Plus purchase is handled entirely by Google Play.',

@@ -1,4 +1,4 @@
-// Writes the privacy policy's public web page (site/privacy/index.html, served by GitHub Pages and linked
+// Writes the privacy policy's public web page (site/privacy/index.html, served by Vercel and linked
 // from the Play Store listing) and PRIVACY.md from src/data/privacyPolicy.ts. Node 22.18+ runs the .ts import.
 import { mkdirSync, writeFileSync } from 'node:fs';
 
