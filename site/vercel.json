@@ -8,6 +8,5 @@
       "destination": "https://sinadehesh.com/:path",
       "permanent": false
     }
-  ],
-  "rewrites": [{ "source": "/floralock/:path*", "destination": "/:path*" }]
+  ]
 }

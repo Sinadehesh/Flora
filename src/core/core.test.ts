@@ -238,8 +238,10 @@ describe('privacy policy', () => {
   });
 
   it('the public web page matches the in-app policy (run `npm run privacy` after editing it)', () => {
-    const page = readFileSync(new URL('../../site/privacy/index.html', import.meta.url), 'utf8');
-    expect(page).toBe(privacyHtml());
+    for (const path of ['privacy/index.html', 'floralock/privacy/index.html']) {
+      expect(readFileSync(new URL(`../../site/${path}`, import.meta.url), 'utf8')).toBe(privacyHtml());
+    }
+    const page = privacyHtml();
     expect(page).toContain('<a href="https://github.com/Sinadehesh/Flora/issues">');
   });
 });
