@@ -50,11 +50,15 @@ appId: com.floralock.app
 - extendedWaitUntil:
     visible: "What is this plant\\?|Identify the plant"
     timeout: 20000
+# If the fallback overlay shows first, tap through it. The challenge screen may replace the
+# overlay a moment later on its own, so the tap is optional.
 - runFlow:
     when:
       visible: "Identify the plant"
     commands:
-      - tapOn: "Identify the plant"
+      - tapOn:
+          text: "Identify the plant"
+          optional: true
 - extendedWaitUntil:
     visible: "What is this plant\\?"
     timeout: 15000

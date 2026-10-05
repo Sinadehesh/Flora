@@ -9,7 +9,16 @@ APK=$(ls apk/*.apk | head -n 1)
 OUT=e2e-output
 mkdir -p "$OUT"
 
-adb install -r "$APK" || exit 1
+# A just-booted emulator can report boot complete before its package manager answers
+# ("Broken pipe" on install). Wait for it, and retry the install a couple of times.
+for _ in $(seq 1 30); do adb shell pm path android >/dev/null 2>&1 && break; sleep 2; done
+installed=0
+for attempt in 1 2 3; do
+  if adb install -r "$APK"; then installed=1; break; fi
+  echo "Install attempt $attempt failed; retrying in 10 s"
+  sleep 10
+done
+[ "$installed" = 1 ] || exit 1
 
 # Usage access and "Display over other apps" are app-ops the user toggles in Settings.
 adb shell appops set "$PKG" GET_USAGE_STATS allow
