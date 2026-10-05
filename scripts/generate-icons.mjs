@@ -48,16 +48,54 @@ async function compose(svg, size, height, background = TRANSPARENT) {
 /** Opaque copy (App Store icons must not have an alpha channel). */
 const opaque = async (image) => sharp(await image.png().toBuffer()).removeAlpha();
 
-/** Play Store feature graphic (1024×500): symbol on the left, name and tagline on the right. */
+/**
+ * Play Store feature graphic (1024×500): logo, name and tagline on the left, and a lock-screen
+ * quiz card on the right with a real plant photo. The photo must be CC0 (no credit needed in
+ * store art): lotus #2, see scripts/plant-photos.json.
+ */
 async function featureGraphic() {
-  const { art } = await renderSymbol(symbol, 340);
-  const text = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500">
-    <text x="400" y="235" font-family="Georgia, 'DejaVu Serif', serif" font-weight="bold" font-size="92" fill="${GREEN}">FloraLock</text>
-    <text x="404" y="300" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="32" fill="#5E6B61">Name the flower. Unlock your app.</text>
+  const W = 1024;
+  const H = 500;
+  const card = { x: 628, y: 38, w: 326, h: 424 };
+  const photo = { x: card.x + 18, y: card.y + 52, w: card.w - 36, h: 200 };
+  const chip = (x, y, label, right) => `
+    <rect x="${x}" y="${y}" width="137" height="42" rx="12" fill="#FFFFFF" stroke="${right ? '#2E7D4F' : '#DCE1D5'}" stroke-width="${right ? 3 : 1.5}" />
+    <text x="${x + 68.5}" y="${y + 27}" text-anchor="middle" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="17" font-weight="bold" fill="${right ? '#2E7D4F' : '#1C2A21'}">${label}</text>`;
+  const cx = card.x + 18;
+  const cy = photo.y + photo.h + 50;
+  const scene = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#2F5D43" />
+        <stop offset="1" stop-color="#1A3526" />
+      </linearGradient>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.35" />
+      </filter>
+    </defs>
+    <rect width="${W}" height="${H}" fill="url(#bg)" />
+    <text x="70" y="262" font-family="Georgia, 'DejaVu Serif', serif" font-weight="bold" font-size="74" fill="${CREAM}">FloraLock</text>
+    <text x="72" y="318" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="31" fill="${CREAM}">Name the plant. Unlock your app.</text>
+    <text x="72" y="362" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="21" fill="#A8CDB4">Learn a few new plants every day</text>
+    <rect x="${card.x}" y="${card.y}" width="${card.w}" height="${card.h}" rx="28" fill="${CREAM}" filter="url(#shadow)" />
+    <text x="${cx}" y="${card.y + 34}" font-family="Helvetica, Arial, 'Liberation Sans', sans-serif" font-size="13" font-weight="bold" letter-spacing="1.5" fill="#5E6B61">YOUR APP IS LOCKED</text>
+    <text x="${cx}" y="${cy - 14}" font-family="Georgia, 'DejaVu Serif', serif" font-size="23" font-weight="bold" fill="#1C2A21">What is this plant?</text>
+    ${chip(cx, cy, 'Peony', false)}${chip(cx + 153, cy, 'Lotus ✓', true)}
+    ${chip(cx, cy + 52, 'Magnolia', false)}${chip(cx + 153, cy + 52, 'Dahlia', false)}
   </svg>`);
-  return sharp({ create: { width: 1024, height: 500, channels: 3, background: CREAM } }).composite([
-    { input: art, left: 110, top: 80 },
-    { input: text, left: 0, top: 0 },
+  const roundMask = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${photo.w}" height="${photo.h}"><rect width="${photo.w}" height="${photo.h}" rx="18" /></svg>`,
+  );
+  const plant = await sharp(join(root, 'assets/plants/lotus-2.jpg'))
+    .resize(photo.w, photo.h, { fit: 'cover', position: 'attention' })
+    .composite([{ input: roundMask, blend: 'dest-in' }])
+    .png()
+    .toBuffer();
+  const { art } = await renderSymbol(recolor(CREAM, '#E58A9B'), 150);
+  return sharp({ create: { width: W, height: H, channels: 3, background: CREAM } }).composite([
+    { input: scene, left: 0, top: 0 },
+    { input: plant, left: photo.x, top: photo.y },
+    { input: art, left: 72, top: 36 },
   ]);
 }
 
