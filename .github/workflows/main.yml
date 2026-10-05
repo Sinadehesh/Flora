@@ -4,6 +4,12 @@ on:
   workflow_dispatch:        # "Run workflow" button in the Actions tab
   push:
     branches: [main, 'claude/**']
+    # The demo video has its own workflow (fgs-video.yml); docs don't change the app.
+    paths-ignore:
+      - e2e/fgs-video/**
+      - .github/scripts/fgs-video*
+      - .github/workflows/fgs-video.yml
+      - docs/**
 
 jobs:
   build:

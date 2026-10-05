@@ -1,0 +1,24 @@
+# Step 3: open the locked app; the foreground service notices and shows the plant question.
+appId: com.floralock.app
+---
+- launchApp:
+    appId: ${LOCK_PKG}
+    stopApp: false
+- extendedWaitUntil:
+    visible: "What is this plant\\?|Identify the plant"
+    timeout: 20000
+# If the fallback overlay shows first, tap through it (the challenge may replace it on its own).
+- runFlow:
+    when:
+      visible: "Identify the plant"
+    commands:
+      - tapOn:
+          text: "Identify the plant"
+          optional: true
+- extendedWaitUntil:
+    visible: "What is this plant\\?"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "__pause__"
+    timeout: 3000
+    optional: true

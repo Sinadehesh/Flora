@@ -45,7 +45,10 @@ the build. It should match the upload key, and Play Console → Setup → App si
    - **Ads:** no ads. **Target audience:** 13+ is simplest. **Content rating:** fill in the questionnaire.
    - **Foreground service permissions:** declare `FOREGROUND_SERVICE_SPECIAL_USE`. Describe it as: "Keeps the
      app lock running: watches which app is in front so FloraLock can show a learning question before an app the
-     user chose to lock." Google may ask for a short screen recording of the lock in action.
+     user chose to lock." For the screen recording Google asks for, run the **Foreground service demo video**
+     workflow (Actions tab): it records the lock on an Android 14 emulator with captions (download
+     `fgs-demo-video`), and `timestamps.txt` lists the chapters for the YouTube description. Upload it to
+     YouTube as **Unlisted**.
 3. **Policy risks to know about:**
    - Usage access and "Display over other apps" are allowed for app blockers, but the listing should say
      clearly that locking apps is the core feature.
