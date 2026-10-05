@@ -27,6 +27,13 @@ interface Question {
  * have been studied today it opens on the exam, unless `?review=1` asks for the cards again.
  */
 export default function Lesson() {
+  // The lesson is fixed when the screen opens, so wait for saved progress (e.g. when Android
+  // reopens this screen directly after closing the app in the background).
+  const { state } = useStore();
+  return state.hydrated ? <LessonScreen /> : null;
+}
+
+function LessonScreen() {
   const c = useColors();
   const { state, dispatch } = useStore();
   const deck = useDeck();
