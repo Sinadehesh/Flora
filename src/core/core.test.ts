@@ -18,7 +18,16 @@ import {
   recordStats,
   todaysNewPlants,
 } from './daily';
-import { allowedLockedApps, canLockAnother, deckCategories, FREE_APP_LIMIT } from './plus';
+import {
+  allowedLockedApps,
+  canLockAnother,
+  deckCategories,
+  FREE_APP_LIMIT,
+  isReviewCode,
+  normalizeCode,
+  REVIEW_CODE_HASHES,
+} from './plus';
+import { sha256Hex } from './sha256';
 import { buildChoices } from './quiz';
 import { botanyIQ, learnedCount, troublePlants } from './stats';
 import { normalizeName } from './text';
@@ -200,6 +209,25 @@ describe('FloraLock Plus', () => {
     expect(canLockAnother(50, true)).toBe(true);
     expect(allowedLockedApps(['a', 'b', 'c'], false)).toEqual(['a', 'b']);
     expect(allowedLockedApps(['a', 'b', 'c'], true)).toEqual(['a', 'b', 'c']);
+  });
+});
+
+describe('review codes', () => {
+  it('computes SHA-256 like the standard test vectors', () => {
+    expect(sha256Hex('')).toBe('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
+    expect(sha256Hex('abc')).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
+    expect(sha256Hex('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq')).toBe(
+      '248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1',
+    );
+  });
+
+  it('accepts a code whatever its case, spaces or dashes, and rejects others', () => {
+    const hashes = [sha256Hex('FLORATEST1234ABCD')];
+    expect(normalizeCode(' flora-test 1234-abcd ')).toBe('FLORATEST1234ABCD');
+    expect(isReviewCode('flora-test-1234-abcd', hashes)).toBe(true);
+    expect(isReviewCode('FLORA-TEST-1234-ABCE', hashes)).toBe(false);
+    expect(isReviewCode('', hashes)).toBe(false);
+    expect(REVIEW_CODE_HASHES.every((h) => /^[0-9a-f]{64}$/.test(h))).toBe(true);
   });
 });
 

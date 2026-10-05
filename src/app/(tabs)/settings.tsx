@@ -7,7 +7,7 @@ import { PlantsPerDay } from '../../components/PlantsPerDay';
 import { Button, Card, Chip, SectionTitle } from '../../components/ui';
 import { deckCategories, FREE_APP_LIMIT, isPlusCategory } from '../../core/plus';
 import type { PlantCategory } from '../../core/types';
-import { useDeck, useStore } from '../../state/store';
+import { hasPlus, useDeck, useStore } from '../../state/store';
 import { CATEGORY_LABEL, useColors } from '../../theme';
 
 const CATEGORIES: PlantCategory[] = ['flower', 'houseplant', 'tree'];
@@ -17,11 +17,12 @@ export default function SettingsScreen() {
   const { state, dispatch } = useStore();
   const { settings } = state;
   const deck = useDeck();
+  const plus = hasPlus(state);
   const update = (patch: Partial<typeof settings>) => dispatch({ type: 'updateSettings', patch });
 
-  const activeCategories = deckCategories(settings.categories, state.plus);
+  const activeCategories = deckCategories(settings.categories, plus);
   const toggleCategory = (cat: PlantCategory) => {
-    if (isPlusCategory(cat) && !state.plus) return router.push('/upgrade');
+    if (isPlusCategory(cat) && !plus) return router.push('/upgrade');
     const next = activeCategories.includes(cat)
       ? activeCategories.filter((x) => x !== cat)
       : [...activeCategories, cat];
@@ -47,14 +48,14 @@ export default function SettingsScreen() {
 
       <SectionTitle>FloraLock Plus</SectionTitle>
       <Card style={{ gap: 10 }}>
-        <Text style={{ color: state.plus ? c.success : c.text, fontSize: 16, fontWeight: '600' }}>
-          {state.plus
+        <Text style={{ color: plus ? c.success : c.text, fontSize: 16, fontWeight: '600' }}>
+          {plus
             ? '✓ Plus unlocked: unlimited apps and every plant group.'
             : `Free version: up to ${FREE_APP_LIMIT} locked apps and the flower deck.`}
         </Text>
         <Button
-          variant={state.plus ? 'ghost' : 'primary'}
-          label={state.plus ? 'About Plus' : 'See what Plus adds'}
+          variant={plus ? 'ghost' : 'primary'}
+          label={plus ? 'About Plus' : 'See what Plus adds'}
           onPress={() => router.push('/upgrade')}
         />
       </Card>
@@ -101,12 +102,12 @@ export default function SettingsScreen() {
       <SectionTitle>Deck</SectionTitle>
       <Setting
         label="Plants to learn"
-        hint={state.plus ? 'At least one group stays on' : 'Houseplants and trees come with Plus'}
+        hint={plus ? 'At least one group stays on' : 'Houseplants and trees come with Plus'}
       >
         {CATEGORIES.map((cat) => (
           <Chip
             key={cat}
-            label={`${isPlusCategory(cat) && !state.plus ? '🔒 ' : ''}${CATEGORY_LABEL[cat]}`}
+            label={`${isPlusCategory(cat) && !plus ? '🔒 ' : ''}${CATEGORY_LABEL[cat]}`}
             selected={activeCategories.includes(cat)}
             onPress={() => toggleCategory(cat)}
           />

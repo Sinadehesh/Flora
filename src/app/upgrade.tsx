@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import {
   billingAvailable,
@@ -11,9 +11,9 @@ import {
   type StoreProduct,
 } from '../billing';
 import { Button, Card } from '../components/ui';
-import { FREE_APP_LIMIT } from '../core/plus';
+import { FREE_APP_LIMIT, isReviewCode } from '../core/plus';
 import { PLANTS } from '../data/plants';
-import { useStore } from '../state/store';
+import { hasPlus, useStore } from '../state/store';
 import { serif, useColors } from '../theme';
 
 type Shop =
@@ -31,6 +31,9 @@ export default function Upgrade() {
   const [shop, setShop] = useState<Shop>({ status: 'loading' });
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<{ text: string; tone: 'info' | 'error' } | null>(null);
+  const [codeOpen, setCodeOpen] = useState(false);
+  const [code, setCode] = useState('');
+  const plus = hasPlus(state);
 
   useEffect(() => {
     let live = true;
@@ -95,8 +98,18 @@ export default function Upgrade() {
     }
   };
 
+  const redeem = () => {
+    if (isReviewCode(code)) {
+      dispatch({ type: 'unlockWithCode' });
+      setCodeOpen(false);
+      setNote({ text: 'Code accepted. Plus is unlocked on this phone. 🌸', tone: 'info' });
+    } else {
+      setNote({ text: 'That code isn’t valid. Check it and try again.', tone: 'error' });
+    }
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       <Text style={styles.hero}>🌸</Text>
       <Text style={[styles.title, { color: c.text, fontFamily: serif }]}>FloraLock Plus</Text>
       <Text style={[styles.subtitle, { color: c.textMuted }]}>
@@ -113,7 +126,7 @@ export default function Upgrade() {
       </Card>
 
       <View style={{ marginTop: 24, gap: 10 }}>
-        {state.plus ? (
+        {plus ? (
           <Text style={[styles.owned, { color: c.success }]}>✓ You have FloraLock Plus</Text>
         ) : shop.status === 'loading' ? (
           <ActivityIndicator color={c.primary} />
@@ -133,9 +146,32 @@ export default function Upgrade() {
           </Text>
         )}
 
-        {!state.plus && billingBuiltIn && shop.status !== 'loading' && (
+        {!plus && billingBuiltIn && shop.status !== 'loading' && (
           <Button variant="ghost" label="Restore purchase" disabled={busy} onPress={restore} />
         )}
+
+        {!plus &&
+          (codeOpen ? (
+            <View style={{ gap: 8 }}>
+              <TextInput
+                value={code}
+                onChangeText={setCode}
+                placeholder="FLORA-XXXX-XXXX-XXXX-XXXX"
+                placeholderTextColor={c.textMuted}
+                autoCapitalize="characters"
+                autoCorrect={false}
+                autoFocus
+                onSubmitEditing={redeem}
+                accessibilityLabel="Review code"
+                style={[styles.input, { color: c.text, borderColor: c.border, backgroundColor: c.surface }]}
+              />
+              <Button variant="secondary" label="Apply code" disabled={!code.trim()} onPress={redeem} />
+            </View>
+          ) : (
+            <Pressable accessibilityRole="button" onPress={() => setCodeOpen(true)} hitSlop={8}>
+              <Text style={[styles.codeLink, { color: c.textMuted }]}>Have a review code?</Text>
+            </Pressable>
+          ))}
 
         {__DEV__ && (
           <Button
@@ -174,5 +210,7 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 16, textAlign: 'center', marginTop: 6 },
   body: { fontSize: 15, lineHeight: 22 },
   owned: { fontSize: 18, fontWeight: '700', textAlign: 'center' },
+  input: { minHeight: 48, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, fontSize: 16, letterSpacing: 1 },
+  codeLink: { fontSize: 14, textAlign: 'center', textDecorationLine: 'underline', paddingVertical: 6 },
   small: { fontSize: 13, lineHeight: 19, textAlign: 'center', marginTop: 24 },
 });

@@ -20,6 +20,8 @@ interface PersistedState {
   emergency: { day: string; used: number };
   /** Owns FloraLock Plus (last answer from Google Play, kept for offline use). */
   plus: boolean;
+  /** Plus unlocked on this phone with a review code (for Google Play's app review). */
+  codeUnlock: boolean;
 }
 
 interface State extends PersistedState {
@@ -34,6 +36,7 @@ type Action =
   | { type: 'updateSettings'; patch: Partial<Settings> }
   | { type: 'useEmergency'; now: number }
   | { type: 'setPlus'; plus: boolean }
+  | { type: 'unlockWithCode' }
   | { type: 'resetProgress' };
 
 const initialState: State = {
@@ -44,6 +47,7 @@ const initialState: State = {
   examDoneOn: '',
   emergency: { day: '', used: 0 },
   plus: false,
+  codeUnlock: false,
   hydrated: false,
 };
 
@@ -83,6 +87,8 @@ function reducer(state: State, action: Action): State {
     }
     case 'setPlus':
       return state.plus === action.plus ? state : { ...state, plus: action.plus };
+    case 'unlockWithCode':
+      return { ...state, codeUnlock: true };
     case 'resetProgress':
       return { ...state, learn: {}, stats: {}, today: { day: '', correct: [] }, examDoneOn: '' };
   }
@@ -119,9 +125,14 @@ export function useStore() {
 export function useDeck() {
   const { state } = useStore();
   return useMemo(() => {
-    const categories = deckCategories(state.settings.categories, state.plus);
+    const categories = deckCategories(state.settings.categories, hasPlus(state));
     return PLANTS.filter((p) => categories.includes(p.category));
-  }, [state.settings.categories, state.plus]);
+  }, [state.settings.categories, state.plus, state.codeUnlock]);
+}
+
+/** Plus is on: bought through Google Play, or unlocked with a review code. */
+export function hasPlus(state: Pick<State, 'plus' | 'codeUnlock'>): boolean {
+  return state.plus || state.codeUnlock;
 }
 
 export function correctToday(state: State, now: number): Set<string> {

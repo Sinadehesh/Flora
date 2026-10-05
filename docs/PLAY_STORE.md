@@ -74,6 +74,12 @@ Until the product exists and is active, the Plus screen says "FloraLock Plus isn
 without the Play Store it explains that purchases need Google Play. Refunds are handled automatically: the next
 time FloraLock opens, Google Play reports Plus as not owned and the extra locked apps are released.
 
+**App access (for Google's reviewers):** answer **Yes, part of the app is restricted** (Plus is paid) and
+give the review code with these steps: open FloraLock → Settings → "See what Plus adds" → "Have a review code?"
+→ enter the code → "Apply code". The code is kept out of this repository: `src/core/plus.ts` holds only its
+SHA-256 hash in `REVIEW_CODE_HASHES`. To replace a code, generate a new random one, add the hash of its
+normalized form (uppercase, letters and digits only), and update the answer in Play Console.
+
 **Data safety:** purchases are processed by Google Play; FloraLock itself doesn't collect or send purchase data.
 If Play Console asks about purchase history, answer according to Google's current guidance for apps that use
 Google Play Billing only.

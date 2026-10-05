@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 
 import { blocker } from '../blocker';
@@ -15,6 +15,9 @@ import { onPurchaseUpdate, plusOwnership } from '.';
 export function usePlusSync() {
   const { state, dispatch } = useStore();
   const { hydrated } = state;
+  // Read at check time: a review-code unlock means no locked apps get released.
+  const codeUnlock = useRef(state.codeUnlock);
+  codeUnlock.current = state.codeUnlock;
 
   useEffect(() => {
     if (!hydrated) return;
@@ -23,7 +26,7 @@ export function usePlusSync() {
         if (owned === null || owned === 'pending') return;
         const plus = owned === 'owned';
         dispatch({ type: 'setPlus', plus });
-        if (!plus) {
+        if (!plus && !codeUnlock.current) {
           const locked = blocker.getBlockedApps();
           const allowed = allowedLockedApps(locked, false);
           if (allowed.length < locked.length) blocker.setBlockedApps(allowed);

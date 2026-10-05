@@ -4,13 +4,13 @@ import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, Vi
 
 import { blocker, type LaunchableApp } from '../blocker';
 import { canLockAnother, FREE_APP_LIMIT } from '../core/plus';
-import { useStore } from '../state/store';
+import { hasPlus, useStore } from '../state/store';
 import { useColors } from '../theme';
 
 /** Searchable list of installed apps; ticking one adds it to the lock (Android). Free: up to FREE_APP_LIMIT. */
 export function AppPicker({ header }: { header?: ReactElement }) {
   const c = useColors();
-  const { plus } = useStore().state;
+  const plus = hasPlus(useStore().state);
   const [apps, setApps] = useState<LaunchableApp[] | null>(null);
   const [blocked, setBlocked] = useState(() => new Set(blocker.getBlockedApps()));
   const [query, setQuery] = useState('');

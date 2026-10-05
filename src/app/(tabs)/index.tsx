@@ -8,7 +8,7 @@ import { Button, Card, SectionTitle } from '../../components/ui';
 import { dayKey, dueRepeats, lessonStudied, todaysNewPlants } from '../../core/daily';
 import { accuracy, botanyIQ, inProgressCount, learnedCount, troublePlants } from '../../core/stats';
 import { PLANTS } from '../../data/plants';
-import { useDeck, useStore } from '../../state/store';
+import { hasPlus, useDeck, useStore } from '../../state/store';
 import { serif, useColors } from '../../theme';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -34,7 +34,7 @@ export default function Home() {
   const trouble = troublePlants(deck, state.stats);
   const nothingLeft = !fresh.length && !repeats.length;
   // Free users who've met every flower: Plus has more plants to learn.
-  const offerPlus = !state.plus && deck.every((p) => state.learn[p.id]);
+  const offerPlus = !hasPlus(state) && deck.every((p) => state.learn[p.id]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
