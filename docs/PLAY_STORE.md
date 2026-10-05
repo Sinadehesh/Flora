@@ -90,4 +90,8 @@ Google Play Billing only.
 ## 4. Each release
 
 Push to `main` or a `claude/**` branch. The workflow sets `versionCode` from the run number, so every build can
-be uploaded. Download `floralock-aab` from the run and upload it in Play Console.
+be uploaded. Release builds are optimized with R8 (code shrinking and optimization, "DEX code optimization" in
+Play Console) and resource shrinking, set in `app.json` through `expo-build-properties`; R8's mapping file is
+embedded in the AAB, so Play Console gets deobfuscated crash reports without a separate upload. When the
+emulator tests pass, the run's only download is **floralock-aab**: upload it in Play Console. (The APK and
+test reports are kept only when a test fails, for debugging.)

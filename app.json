@@ -44,6 +44,16 @@
             "backgroundColor": "#101612"
           }
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "extraProguardRules": "# FloraLock native modules (app lock, Play Billing): keep as-is for the Expo module registry.\n-keep class expo.modules.appblocker.** { *; }\n-keep class expo.modules.playbilling.** { *; }\n"
+          }
+        }
       ]
     ],
     "scheme": "floralock",

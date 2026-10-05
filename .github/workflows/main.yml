@@ -72,13 +72,15 @@ jobs:
           "$APKSIGNER" verify --print-certs android/app/build/outputs/apk/release/*.apk | grep -E "certificate (DN|SHA-256)"
           [ "$HAS_UPLOAD_KEY" = true ] || echo "::warning::No upload key secrets: signed with the debug key, so the Play Store will reject the AAB."
 
-      - name: "1. APK (install on phones)"
+      # Only for the emulator tests below; deleted once they pass, so a green run leaves just the AAB.
+      - name: APK for the emulator tests
         uses: actions/upload-artifact@v4
         with:
           name: floralock-apk
           path: android/app/build/outputs/apk/release/*.apk
+          retention-days: 3
 
-      - name: "2. AAB (Play Store)"
+      - name: AAB for the Play Store
         uses: actions/upload-artifact@v4
         with:
           name: floralock-aab
@@ -129,9 +131,20 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: bash .github/scripts/lock-e2e.sh
 
-      - name: Upload test output
-        if: always()
+      - name: Upload test output (only when the test fails)
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: lock-test-api-${{ matrix.api-level }}
           path: e2e-output
+
+  # After every emulator test passes, remove the APK so the run's only download is the Play Store AAB.
+  keep-only-aab:
+    needs: lock-test
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+          name: floralock-apk

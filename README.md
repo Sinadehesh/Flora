@@ -56,11 +56,11 @@ isn't available; **Preview the lock screen** on the Today tab shows the challeng
 Every push to `main` or a `claude/**` branch runs [.github/workflows/main.yml](.github/workflows/main.yml) on
 GitHub Actions:
 
-1. **build:** typecheck and tests, then the APK (install on phones) and the AAB (Play Store), as the
-   `floralock-apk` and `floralock-aab` artifacts. They're signed with your upload key once its secrets are set
-   ([docs/PLAY_STORE.md](docs/PLAY_STORE.md)), otherwise with a debug key.
+1. **build:** typecheck and tests, then a signed, R8-optimized AAB for the Play Store (`floralock-aab`) and an
+   APK for the emulator tests.
 2. **lock-test:** installs the APK on Android 8, 10, 13 and 15 emulators and runs [e2e/lock.yaml](e2e/lock.yaml):
-   setup, locking the Settings app, the challenge appearing over it, an emergency unlock, and the daily lesson.
+   setup, locking the Settings app, the challenge appearing over it, an emergency unlock, the daily lesson and
+   the Plus screen. When all pass, the APK is deleted, so the run's only download is the AAB.
 
 ## Layout
 
