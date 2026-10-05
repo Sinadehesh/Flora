@@ -14,7 +14,7 @@ export interface PolicySection {
 export const PRIVACY_POLICY = {
   title: 'FloraLock privacy policy',
   updated: '5 October 2026',
-  url: 'https://floralock.sinadehesh.com/privacy/',
+  url: 'https://www.sinadehesh.com/floralock/privacy/',
   summary:
     'FloraLock has no accounts, no ads and no analytics, and it sends nothing off your phone. Everything it ' +
     'knows about you stays on your device. The optional FloraLock Plus purchase is handled entirely by Google Play.',

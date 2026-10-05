@@ -33,10 +33,13 @@ the build. It should match the upload key, and Play Console → Setup → App si
 1. Create the app with package name `com.floralock.app`, then upload `floralock-aab` from a workflow run to
    **Testing → Internal testing**.
 2. **App content:**
-   - **Privacy policy:** `https://floralock.sinadehesh.com/privacy/`. Vercel project `floralock` serves `site/`
-     from this repo and redeploys on every push to the production branch. The page, PRIVACY.md and the in-app
-     screen are all generated from `src/data/privacyPolicy.ts` by `npm run privacy`. The domain needs a DNS
-     record in Cloudflare: `CNAME floralock → cname.vercel-dns.com` (proxy off, "DNS only").
+   - **Privacy policy:** `https://www.sinadehesh.com/floralock/privacy/` (also served at
+     `https://floralock.sinadehesh.com/privacy/` and `https://floralock.vercel.app/privacy/`). Vercel project
+     `floralock` serves `site/` from this repo and redeploys on every push to the production branch;
+     `site/vercel.json` maps `www.sinadehesh.com/floralock/…` to it and redirects every other
+     `www.sinadehesh.com` address to `https://sinadehesh.com`. The page, PRIVACY.md and the in-app screen are all
+     generated from `src/data/privacyPolicy.ts` by `npm run privacy`. DNS (Cloudflare, "DNS only"):
+     `CNAME www → cname.vercel-dns.com` and `CNAME floralock → cname.vercel-dns.com`.
    - **Data safety:** the app collects and shares no user data (everything stays on the device), so answer "No"
      to collecting or sharing data.
    - **Ads:** no ads. **Target audience:** 13+ is simplest. **Content rating:** fill in the questionnaire.

@@ -1,6 +1,6 @@
 # FloraLock privacy policy
 
-_Last updated: 5 October 2026_ · Web version: https://floralock.sinadehesh.com/privacy/
+_Last updated: 5 October 2026_ · Web version: https://www.sinadehesh.com/floralock/privacy/
 
 FloraLock has no accounts, no ads and no analytics, and it sends nothing off your phone. Everything it knows about you stays on your device. The optional FloraLock Plus purchase is handled entirely by Google Play.
 
