@@ -24,6 +24,16 @@
         }
       ],
       "destination": "/shroomlock/:path"
+    },
+    {
+      "source": "/:path((?!shroomlock|floralock|cloudlock|app-lockers|robots\\.txt|sitemap\\.xml).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "cloudlock.sinadehesh.com"
+        }
+      ],
+      "destination": "/cloudlock/:path"
     }
   ]
 }
