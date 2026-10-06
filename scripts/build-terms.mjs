@@ -1,6 +1,7 @@
-// Writes the Terms of Service pages for both apps:
+// Writes the Terms of Service pages for the apps:
 //   site/floralock/terms/index.html   https://www.sinadehesh.com/floralock/terms/
 //   site/shroomlock/terms/index.html  https://www.sinadehesh.com/shroomlock/terms/
+//   site/cloudlock/terms/index.html   https://www.sinadehesh.com/cloudlock/terms/
 // One text, with each app's own details and colours. Run `npm run terms` after editing.
 import { mkdirSync, writeFileSync } from 'node:fs';
 
@@ -13,6 +14,8 @@ const apps = {
     things: 'plants',
     thing: 'plant',
     plus: 'FloraLock Plus',
+    photos: 'iNaturalist observers and are used under CC0, CC BY and CC BY-SA licences',
+    harm: 'eating, using or handling a plant, or from relying on the app’s identification, edibility or toxicity information',
     repo: 'https://github.com/Sinadehesh/Flora/issues',
     safety:
       'FloraLock teaches you to recognise plants. Its information about edibility, toxicity, uses and folklore is general background only, not medical, foraging or veterinary advice. Never eat a plant, use it as medicine or give it to an animal because of the app. Many plants have toxic look-alikes, and many garden plants and houseplants are harmful to children and pets.',
@@ -26,12 +29,30 @@ const apps = {
     things: 'mushrooms',
     thing: 'mushroom',
     plus: 'ShroomLock Plus',
+    photos: 'iNaturalist observers and are used under CC0, CC BY and CC BY-SA licences',
+    harm: 'eating, using or handling a mushroom, or from relying on the app’s identification, edibility or toxicity information',
     repo: 'https://github.com/Sinadehesh/mushroom/issues',
     safety:
       'ShroomLock teaches you to recognise mushrooms; it does not teach foraging. Never eat a wild mushroom, or give one to anyone, because of the app, a photo, a clue or an edibility label. Photos cannot show smell, spore print or what grows underground, and some deadly mushrooms look like edible ones. Have every find checked in person by a qualified expert. Mushroom poisoning can be fatal.',
     colors: { bg: '#F6F1EA', text: '#2A211B', muted: '#6E6259', accent: '#8A4B2A', card: '#FFFFFF', border: '#E2D8CB' },
     dark: { bg: '#15110E', text: '#EFE7DF', muted: '#A8998C', accent: '#E0A27A', card: '#1F1915', border: '#382E27' },
     font: '"Alegreya", Georgia, serif',
+  },
+  cloudlock: {
+    name: 'CloudLock',
+    pkg: 'com.cloudlock.app',
+    things: 'clouds',
+    thing: 'cloud',
+    plus: 'CloudLock Plus',
+    photos:
+      'Flickr photographers (found through Openverse) and are used under CC0, the Public Domain Mark, CC BY and CC BY-SA',
+    harm: 'weather, or from relying on the app’s identification or weather information',
+    repo: 'https://github.com/Sinadehesh/cloudes/issues',
+    safety:
+      'CloudLock teaches you to recognise clouds and what weather they usually bring. It is not a weather forecast or a warning service. In stormy weather, follow your local weather service and emergency instructions and take shelter; never stay outside to watch or photograph a funnel, wall or shelf cloud because of the app.',
+    colors: { bg: '#EEF4FA', text: '#17293D', muted: '#5B6B7D', accent: '#2F6FA8', card: '#FFFFFF', border: '#D3DEEA' },
+    dark: { bg: '#0E1621', text: '#E6EEF7', muted: '#96A6B8', accent: '#8EC1F0', card: '#16212F', border: '#2A3949' },
+    font: '"Nunito", system-ui, sans-serif',
   },
 };
 
@@ -66,7 +87,7 @@ const sections = (a) => [
   [
     'Photos and content',
     [
-      `The ${a.thing} photos come from iNaturalist observers and are used under CC0, CC BY and CC BY-SA licences; each photographer is credited in the app under Settings > Photo credits and in the store images. Those licences, not these terms, govern the photos. The rest of the app’s text, design and code belong to us.`,
+      `The ${a.thing} photos come from ${a.photos}; each photographer is credited in the app under Settings > Photo credits and in the store images. Those licences, not these terms, govern the photos. The rest of the app’s text, design and code belong to us.`,
       `We work to keep names, facts and clues accurate, but nature is variable and mistakes happen. If you spot one, please tell us.`,
     ],
   ],
@@ -85,7 +106,7 @@ const sections = (a) => [
   [
     'Limitation of liability',
     [
-      `To the extent the law allows, we are not liable for indirect or consequential losses, or for any harm that comes from eating, using or handling a ${a.thing}, or from relying on the app’s identification, edibility or toxicity information. Our total liability for anything related to ${a.name} is limited to the amount you paid for ${a.plus}, if anything. Nothing in these terms limits rights you have as a consumer that the law says cannot be limited.`,
+      `To the extent the law allows, we are not liable for indirect or consequential losses, or for any harm that comes from ${a.harm}. Our total liability for anything related to ${a.name} is limited to the amount you paid for ${a.plus}, if anything. Nothing in these terms limits rights you have as a consumer that the law says cannot be limited.`,
     ],
   ],
   [
@@ -157,4 +178,8 @@ for (const [slug, a] of Object.entries(apps)) {
   mkdirSync(dir, { recursive: true });
   writeFileSync(new URL('index.html', dir), page(slug, a));
 }
-console.log('Wrote site/floralock/terms/ and site/shroomlock/terms/');
+console.log(
+  `Wrote ${Object.keys(apps)
+    .map((slug) => `site/${slug}/terms/`)
+    .join(', ')}`,
+);

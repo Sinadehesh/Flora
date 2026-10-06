@@ -3,7 +3,7 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/:path((?!floralock|shroomlock|app-lockers|robots\\.txt|sitemap\\.xml).*)",
+      "source": "/:path((?!floralock|shroomlock|cloudlock|app-lockers|robots\\.txt|sitemap\\.xml).*)",
       "has": [
         {
           "type": "host",
@@ -16,7 +16,7 @@
   ],
   "rewrites": [
     {
-      "source": "/:path((?!shroomlock|floralock|app-lockers|robots\\.txt|sitemap\\.xml).*)",
+      "source": "/:path((?!shroomlock|floralock|cloudlock|app-lockers|robots\\.txt|sitemap\\.xml).*)",
       "has": [
         {
           "type": "host",
