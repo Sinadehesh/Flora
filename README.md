@@ -60,7 +60,9 @@ GitHub Actions:
    APK for the emulator tests.
 2. **lock-test:** installs the APK on Android 8, 10, 13 and 15 emulators and runs [e2e/lock.yaml](e2e/lock.yaml):
    setup, locking the Settings app, the challenge appearing over it, an emergency unlock, the daily lesson and
-   the Plus screen. When all pass, the APK is deleted, so the run's only download is the AAB.
+   the Plus screen. Then it reinstalls the app over itself, as an update does, and checks that the lock
+   restarts on its own and the user's progress is kept ([e2e/update.yaml](e2e/update.yaml)). When all pass,
+   the APK is deleted, so the run's only download is the AAB.
 
 ## Layout
 
@@ -82,6 +84,7 @@ src/
     quiz.ts               Multiple-choice distractors (same category first)
     stats.ts              Botany IQ, accuracy, trouble plants
     plus.ts               What's free and what Plus unlocks
+    saved.ts              Saved progress: reading older saves after an app update
   data/                 Plants, plant details, photos (generated), privacy policy
   blocker/              Bridge to the native Android lock
   state/store.tsx       App state, persisted to AsyncStorage

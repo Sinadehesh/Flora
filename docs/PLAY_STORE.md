@@ -98,3 +98,18 @@ Play Console) and resource shrinking, set in `app.json` through `expo-build-prop
 embedded in the AAB, so Play Console gets deobfuscated crash reports without a separate upload. When the
 emulator tests pass, the run's only download is **floralock-aab**: upload it in Play Console. (The APK and
 test reports are kept only when a test fails, for debugging.)
+
+**Updates keep users' data.** Android keeps an app's storage when Google Play updates it, provided the
+package name stays `com.floralock.app`, every release is signed with the same upload key and the
+`versionCode` goes up (the workflow handles the last two). In the code:
+
+- Progress and settings are saved under the key `floralock/v2` (`src/core/saved.ts`); the locked apps and
+  the lock's on/off state live in the native `floralock_blocker` preferences (`BlockerStore.kt`). Never
+  rename either: a new name reads as empty, so every user would start over.
+- When the saved shape changes, bump `SAVE_VERSION` and convert older saves in `migrate()`, with a test.
+  Values that fail validation fall back to defaults one by one, and the app never saves over a save it
+  couldn't read (an unreadable one is copied to `floralock/v2-unreadable` first).
+- Every build's emulator test reinstalls the app over itself, as an update does, and checks that the lock
+  restarts on its own and that setup and progress are still there (`e2e/update.yaml`).
+- Never tell users to reinstall or clear storage to fix a problem: that is the one thing that does erase
+  their progress.

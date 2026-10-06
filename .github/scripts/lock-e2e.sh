@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Runs inside reactivecircus/android-emulator-runner: installs the APK, grants the lock's
-# permissions the way a user would in system settings, then drives the app with Maestro.
+# permissions the way a user would in system settings, then drives the app with Maestro, then
+# checks that an update (a reinstall over the top) keeps the lock running and the user's progress.
 # On failure it prints what's needed to diagnose it straight into the job log.
 set -uxo pipefail
 
@@ -35,12 +36,31 @@ adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS >/dev/null 
 status=0
 maestro test e2e/lock.yaml --format junit --output "$OUT/report.xml" --debug-output "$OUT/debug" || status=$?
 
+# Updating must keep everything. Reinstall over the top (as a Play Store update does) and, without
+# opening FloraLock, check the lock restarts on its own; then that setup and progress survived.
+if [ "$status" -eq 0 ]; then
+  adb install -r "$APK" || status=1
+  restarted=0
+  for _ in $(seq 1 30); do
+    adb shell dumpsys activity services "$PKG" | grep -q BlockerService && { restarted=1; break; }
+    sleep 1
+  done
+  if [ "$restarted" = 0 ]; then
+    echo "::error::The lock did not restart by itself after the update"
+    status=1
+  fi
+fi
+if [ "$status" -eq 0 ]; then
+  maestro test e2e/update.yaml --format junit --output "$OUT/update-report.xml" --debug-output "$OUT/debug-update" \
+    || status=$?
+fi
+
 adb logcat -d -v time > "$OUT/logcat.txt" 2>/dev/null || true
 
 if [ "$status" -ne 0 ]; then
   set +x
   echo "::group::Maestro steps"
-  python3 - "$OUT/debug" <<'PY' || true
+  python3 - "$OUT" <<'PY' || true
 import json, pathlib, sys
 for f in sorted(pathlib.Path(sys.argv[1]).rglob('commands-*.json')):
     for c in json.load(open(f)):

@@ -1,35 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
 
 import { dayKey, markStudied, recordRepeat, recordStats } from '../core/daily';
 import { deckCategories } from '../core/plus';
-import { DEFAULT_SETTINGS, type LearnMap, type Settings, type StatsMap } from '../core/types';
+import { readSaved, SAVE_KEY, serializeSaved, type SavedState } from '../core/saved';
+import { DEFAULT_SETTINGS, type Settings } from '../core/types';
 import { PLANTS } from '../data/plants';
 
-// v2: daily lessons with one repeat replaced the Leitner boxes of v1.
-const STORAGE_KEY = 'floralock/v2';
-
-interface PersistedState {
-  settings: Settings;
-  learn: LearnMap;
-  stats: StatsMap;
-  /** Plants answered right today, so the lock screen moves on to the others. */
-  today: { day: string; correct: string[] };
-  /** Day the user last finished the lesson's exam. */
-  examDoneOn: string;
-  emergency: { day: string; used: number };
-  /** Owns FloraLock Plus (last answer from Google Play, kept for offline use). */
-  plus: boolean;
-  /** Plus unlocked on this phone with a review code (for Google Play's app review). */
-  codeUnlock: boolean;
-}
-
-interface State extends PersistedState {
+interface State extends SavedState {
   hydrated: boolean;
 }
 
 type Action =
-  | { type: 'hydrate'; state: Partial<PersistedState> | null }
+  | { type: 'hydrate'; state: Partial<SavedState> }
   | { type: 'studied'; plantIds: string[]; now: number }
   | { type: 'answer'; plantId: string; correct: boolean; now: number }
   | { type: 'examDone'; now: number }
@@ -57,7 +40,7 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         ...action.state,
-        settings: { ...DEFAULT_SETTINGS, ...action.state?.settings },
+        settings: { ...DEFAULT_SETTINGS, ...action.state.settings },
         hydrated: true,
       };
     case 'studied':
@@ -98,17 +81,25 @@ const StoreContext = createContext<{ state: State; dispatch: (a: Action) => void
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  // Saving starts only once the save was read, so a failed read never writes defaults over progress.
+  const canSave = useRef(false);
 
   useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEY)
-      .then((raw) => dispatch({ type: 'hydrate', state: raw ? JSON.parse(raw) : null }))
-      .catch(() => dispatch({ type: 'hydrate', state: null }));
+    AsyncStorage.getItem(SAVE_KEY)
+      .then(async (raw) => {
+        const { state: saved, unreadable } = readSaved(raw);
+        // Keep a copy of anything that isn't a save rather than lose it to the next write.
+        if (unreadable && raw) await AsyncStorage.setItem(`${SAVE_KEY}-unreadable`, raw);
+        canSave.current = true;
+        dispatch({ type: 'hydrate', state: saved });
+      })
+      .catch(() => dispatch({ type: 'hydrate', state: {} }));
   }, []);
 
   useEffect(() => {
-    if (!state.hydrated) return;
-    const { hydrated: _, ...persisted } = state;
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(persisted)).catch(() => {});
+    if (!state.hydrated || !canSave.current) return;
+    const { hydrated: _, ...saved } = state;
+    AsyncStorage.setItem(SAVE_KEY, serializeSaved(saved)).catch(() => {});
   }, [state]);
 
   const value = useMemo(() => ({ state, dispatch }), [state]);

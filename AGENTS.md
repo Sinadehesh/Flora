@@ -45,4 +45,5 @@ Docs: https://docs.expo.dev/eas/index.md
 - Pure logic lives in `src/core/` (no React imports) and is covered by `npm test` (vitest). Keep new learning/quiz rules there, with tests.
 - In this sandbox, `npx expo install` needs `EXPO_OFFLINE=1` because the Expo API host is unreachable.
 - The OS-level blocker is abstracted behind `src/blocker/index.ts`; see `docs/PLATFORM_INTEGRATION.md` before touching native code.
+- Saved progress must survive app updates: never rename the storage key in `src/core/saved.ts` or the native `floralock_blocker` preferences; change the saved shape only with a `SAVE_VERSION` bump, a step in `migrate()` and a test.
 - `src/data/plantImages.generated.ts` is written by `scripts/download-plant-photos.mjs` from `scripts/plant-photos.json` — don't edit it by hand.

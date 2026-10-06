@@ -27,11 +27,12 @@ import {
   normalizeCode,
   REVIEW_CODE_HASHES,
 } from './plus';
+import { readSaved, SAVE_KEY, serializeSaved, type SavedState } from './saved';
 import { sha256Hex } from './sha256';
 import { buildChoices } from './quiz';
 import { botanyIQ, learnedCount, troublePlants } from './stats';
 import { normalizeName } from './text';
-import type { LearnMap, StatsMap } from './types';
+import { DEFAULT_SETTINGS, type LearnMap, type StatsMap } from './types';
 
 /** Deterministic PRNG so tests don't flake. */
 function seeded(seed = 42) {
@@ -243,5 +244,60 @@ describe('privacy policy', () => {
     }
     const page = privacyHtml();
     expect(page).toContain('<a href="https://github.com/Sinadehesh/Flora/issues">');
+  });
+});
+
+describe('saved progress across app updates', () => {
+  const saved: SavedState = {
+    settings: { ...DEFAULT_SETTINGS, plantsPerDay: 3, categories: ['flower'], onboarded: true },
+    learn: { peony: { learnedOn: '2026-10-01', repeated: true }, lotus: { learnedOn: '2026-10-02', repeated: false } },
+    stats: { peony: { seen: 4, correct: 3, wrong: 1 } },
+    today: { day: '2026-10-02', correct: ['peony'] },
+    examDoneOn: '2026-10-02',
+    emergency: { day: '2026-10-02', used: 1 },
+    plus: true,
+    codeUnlock: false,
+  };
+
+  it('keeps the storage key (a new key would start every user from scratch)', () => {
+    expect(SAVE_KEY).toBe('floralock/v2');
+  });
+
+  it('reads back what it saves', () => {
+    expect(readSaved(serializeSaved(saved))).toEqual({ state: saved, unreadable: false });
+  });
+
+  it('reads saves from releases before versioning', () => {
+    expect(readSaved(JSON.stringify(saved)).state).toEqual(saved);
+  });
+
+  it('fills settings added in later releases with defaults', () => {
+    const { onboarded: _, ...older } = saved.settings;
+    const { state } = readSaved(JSON.stringify({ ...saved, settings: older }));
+    expect(state.settings).toEqual({ ...saved.settings, onboarded: DEFAULT_SETTINGS.onboarded });
+    expect(state.learn).toEqual(saved.learn);
+  });
+
+  it('drops only the values that are invalid', () => {
+    const { state } = readSaved(
+      JSON.stringify({
+        ...saved,
+        settings: { ...saved.settings, plantsPerDay: 99, unlockMinutes: 'ten', categories: ['cactus', 'tree'] },
+        learn: { ...saved.learn, broken: { learnedOn: 5 } },
+        stats: { ...saved.stats, broken: { seen: -1, correct: 0, wrong: 0 } },
+        plus: 'yes',
+      }),
+    );
+    expect(state.settings).toEqual({ ...saved.settings, plantsPerDay: 20, categories: ['tree'] });
+    expect(state.learn).toEqual(saved.learn);
+    expect(state.stats).toEqual(saved.stats);
+    expect(state.plus).toBeUndefined();
+    expect(state.examDoneOn).toBe(saved.examDoneOn);
+  });
+
+  it('reports storage that holds something other than a save', () => {
+    expect(readSaved(null)).toEqual({ state: {}, unreadable: false });
+    expect(readSaved('{not json')).toEqual({ state: {}, unreadable: true });
+    expect(readSaved('[1,2]')).toEqual({ state: {}, unreadable: true });
   });
 });

@@ -5,6 +5,7 @@ import android.content.Context
 /**
  * Blocker settings shared between the JS module, the watcher service and the boot receiver.
  * SharedPreferences are cached in memory, so the service can read them on every poll.
+ * App updates keep this file: never rename it or its keys, or users lose their locked apps.
  */
 internal class BlockerStore(context: Context) {
   private val prefs = context.applicationContext.getSharedPreferences("floralock_blocker", Context.MODE_PRIVATE)
