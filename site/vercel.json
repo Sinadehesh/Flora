@@ -13,5 +13,17 @@
       "destination": "https://sinadehesh.com/:path",
       "permanent": false
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/:path((?!shroomlock|floralock|app-lockers|robots\\.txt|sitemap\\.xml).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "shroomlock.sinadehesh.com"
+        }
+      ],
+      "destination": "/shroomlock/:path"
+    }
   ]
 }

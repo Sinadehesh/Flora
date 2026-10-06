@@ -40,7 +40,8 @@
     "build:playstore": "npx eas-cli@latest build --platform android --profile production",
     "submit:playstore": "npx eas-cli@latest submit --platform android --profile production",
     "icons": "node scripts/generate-icons.mjs",
-    "privacy": "node scripts/build-privacy.mjs"
+    "privacy": "node scripts/build-privacy.mjs",
+    "terms": "node scripts/build-terms.mjs"
   },
   "private": true
 }
