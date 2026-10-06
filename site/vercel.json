@@ -3,8 +3,13 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/:path((?!floralock).*)",
-      "has": [{ "type": "host", "value": "www.sinadehesh.com" }],
+      "source": "/:path((?!floralock|shroomlock|app-lockers|robots\\.txt|sitemap\\.xml).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.sinadehesh.com"
+        }
+      ],
       "destination": "https://sinadehesh.com/:path",
       "permanent": false
     }

@@ -3,25 +3,316 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FloraLock</title>
-<meta name="description" content="Lock distracting apps. To open one, name a plant from its photo.">
-<link rel="icon" href="favicon.png">
+<title>FloraLock – App Locker That Teaches You Plants | Android</title>
+<meta name="description" content="FloraLock is an app locker for Android: to open Instagram, TikTok or YouTube, name the plant in the photo. Learn 70 flowers, houseplants and trees with spaced review. Free, offline, no ads.">
+<link rel="canonical" href="https://www.sinadehesh.com/floralock/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#2F5D43">
+<link rel="icon" href="/floralock/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/floralock/img/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FloraLock">
+<meta property="og:title" content="FloraLock – the app locker that teaches you plants">
+<meta property="og:description" content="Name the plant to unlock your app. Learn a few flowers, houseplants and trees every day instead of scrolling.">
+<meta property="og:url" content="https://www.sinadehesh.com/floralock/">
+<meta property="og:image" content="https://www.sinadehesh.com/floralock/img/social.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="FloraLock: a locked app asks “What is this plant?” with four answers">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FloraLock – the app locker that teaches you plants">
+<meta name="twitter:description" content="Name the plant to unlock your app. 70 plants, real photos, spaced review. Free on Android.">
+<meta name="twitter:image" content="https://www.sinadehesh.com/floralock/img/social.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MobileApplication",
+      "@id": "https://www.sinadehesh.com/floralock/#app",
+      "name": "FloraLock",
+      "alternateName": "FloraLock: Learn Plants",
+      "description": "An app locker for Android that asks you to name a plant from a photo before a locked app opens. Learn 70 flowers, houseplants and trees with daily lessons and spaced review.",
+      "url": "https://www.sinadehesh.com/floralock/",
+      "applicationCategory": "EducationalApplication",
+      "applicationSubCategory": "App blocker",
+      "operatingSystem": "Android 8.0 or later",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "image": "https://www.sinadehesh.com/floralock/img/social.jpg",
+      "screenshot": [
+        "https://www.sinadehesh.com/floralock/img/screenshot-1.webp",
+        "https://www.sinadehesh.com/floralock/img/screenshot-2.webp",
+        "https://www.sinadehesh.com/floralock/img/screenshot-3.webp",
+        "https://www.sinadehesh.com/floralock/img/screenshot-4.webp"
+      ],
+      "featureList": ["App locker for any Android app", "70 plants with real photos", "Look-alike quiz answers", "Spaced review after 1, 3, 7, 14 and 30 days", "Daily streaks and milestones", "Works offline, no ads, no tracking"],
+      "publisher": { "@type": "Organization", "name": "sinadehesh.com", "url": "https://sinadehesh.com" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "App lockers", "item": "https://www.sinadehesh.com/app-lockers/" },
+        { "@type": "ListItem", "position": 2, "name": "FloraLock", "item": "https://www.sinadehesh.com/floralock/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is FloraLock?", "acceptedAnswer": { "@type": "Answer", "text": "FloraLock is an app locker for Android. You choose the apps that eat your time; when you open one, FloraLock shows a plant photo with four names. Name it correctly and the app opens for 10 minutes." } },
+        { "@type": "Question", "name": "Is FloraLock free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The free version locks up to 2 apps and teaches 35 flowers. FloraLock Plus is an optional one-time purchase that adds unlimited apps, houseplants and trees. There are no ads and no subscription." } },
+        { "@type": "Question", "name": "Can I still use my apps in an emergency?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. You get a few emergency unlocks every day (2 by default), and you can always choose “I don’t need this app right now”." } },
+        { "@type": "Question", "name": "Does FloraLock collect my data?", "acceptedAnswer": { "@type": "Answer", "text": "No. Everything stays on your phone: no account, no analytics and no ads. FloraLock works offline." } },
+        { "@type": "Question", "name": "Which phones does FloraLock work on?", "acceptedAnswer": { "@type": "Answer", "text": "Android phones running Android 8.0 or later. An iPhone version is planned." } }
+      ]
+    }
+  ]
+}
+</script>
 <style>
-:root { --bg: #F6F4EE; --text: #1C2A21; --muted: #5E6B61; --accent: #2F5D43; }
-@media (prefers-color-scheme: dark) { :root { --bg: #101612; --text: #E8EDE6; --muted: #9AA79D; --accent: #8CC9A0; } }
-body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-main { max-width: 640px; margin: 0 auto; padding: 56px 20px; text-align: center; }
-h1 { font-family: Georgia, "Times New Roman", serif; font-size: 2.4rem; margin: 8px 0; }
-p { color: var(--muted); }
-a { color: var(--accent); font-weight: 600; }
+:root {
+  --bg: #F6F4EE; --surface: #FFFFFF; --ink: #1C2A21; --muted: #5E6B61; --green: #2F5D43; --deep: #1A3526;
+  --pink: #DC6A7C; --blush: #F3B8C3; --line: #DCE1D5; --leaf: #A8CDB4;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
+h1, h2, h3 { font-family: "Fraunces", Georgia, serif; line-height: 1.12; margin: 0; letter-spacing: -0.01em; }
+a { color: var(--green); }
+img { max-width: 100%; height: auto; display: block; }
+.wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 16px; top: 16px; background: #fff; padding: 8px 12px; z-index: 9; }
+
+/* Header */
+header.top { position: sticky; top: 0; z-index: 5; background: rgba(246, 244, 238, 0.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: "Fraunces", Georgia, serif; font-weight: 700; font-size: 1.3rem; color: var(--ink); text-decoration: none; }
+.brand img { width: 34px; height: 34px; border-radius: 9px; }
+.top nav { display: flex; gap: 20px; font-size: 0.95rem; }
+.top nav a { color: var(--muted); text-decoration: none; }
+.top nav a:hover { color: var(--green); }
+
+/* Hero */
+.hero { position: relative; padding: 64px 0 40px; overflow: hidden; }
+.hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.55; z-index: -1; }
+.hero::before { width: 460px; height: 460px; background: var(--blush); top: -120px; right: -80px; }
+.hero::after { width: 380px; height: 380px; background: var(--leaf); bottom: -140px; left: -120px; }
+.hero .wrap { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); background: #E6EFE8; padding: 6px 12px; border-radius: 999px; }
+.hero h1 { font-size: clamp(2.4rem, 5.6vw, 4.2rem); margin: 18px 0 16px; }
+.hero h1 em { font-style: italic; color: var(--pink); font-weight: 500; }
+.lead { font-size: 1.2rem; color: var(--muted); max-width: 34em; margin: 0 0 28px; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn { display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; border-radius: 14px; font-weight: 700; text-decoration: none; border: 0; font-size: 1rem; }
+.btn-soon { background: var(--deep); color: #fff; cursor: default; }
+.btn-soon small { display: block; font-weight: 500; font-size: 0.72rem; opacity: 0.8; letter-spacing: 0.06em; text-transform: uppercase; }
+.btn-soon b { display: block; font-size: 1.05rem; }
+.btn-ghost { color: var(--green); background: transparent; border: 1.5px solid var(--green); }
+.note { font-size: 0.9rem; color: var(--muted); margin-top: 14px; }
+.phone { position: relative; justify-self: center; width: min(340px, 82vw); transform: rotate(3deg); }
+.phone img { border-radius: 28px; box-shadow: 0 30px 60px -20px rgba(26, 53, 38, 0.55); }
+.petal { position: absolute; width: 54px; height: 54px; border-radius: 0 60% 0 60%; background: var(--pink); opacity: 0.85; }
+.petal.p1 { top: -18px; left: -26px; transform: rotate(-20deg); }
+.petal.p2 { bottom: 40px; right: -30px; width: 38px; height: 38px; background: var(--green); transform: rotate(30deg); }
+
+/* Sections */
+section { padding: 72px 0; }
+.section-title { font-size: clamp(1.9rem, 3.6vw, 2.7rem); margin-bottom: 14px; }
+.section-lead { color: var(--muted); max-width: 40em; margin: 0 0 36px; font-size: 1.1rem; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: s; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 26px; }
+.step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--green); color: #fff; font-weight: 800; margin-bottom: 14px; }
+.step h3 { font-size: 1.3rem; margin-bottom: 6px; }
+.step p { margin: 0; color: var(--muted); }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.feature { padding: 24px; border-radius: 20px; background: linear-gradient(160deg, #FFFFFF, #F1F5EE); border: 1px solid var(--line); }
+.feature .ico { font-size: 1.8rem; }
+.feature h3 { font-size: 1.2rem; margin: 10px 0 6px; }
+.feature p { margin: 0; color: var(--muted); font-size: 0.98rem; }
+.band { background: var(--deep); color: #F6F4EE; }
+.band .section-lead { color: var(--leaf); }
+.gallery { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 4px 24px; scrollbar-width: thin; }
+.gallery figure { margin: 0; flex: 0 0 min(260px, 70vw); scroll-snap-align: start; }
+.gallery img { border-radius: 20px; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.6); }
+.feature-graphic { margin-top: 30px; border-radius: 22px; overflow: hidden; box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.6); }
+.deck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.deck .card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px; }
+.deck h3 { font-size: 1.25rem; }
+.deck .count { color: var(--pink); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.deck p { margin: 8px 0 0; color: var(--muted); font-size: 0.97rem; }
+.compare { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); }
+.compare th, .compare td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.compare th { background: #EEF3EC; font-size: 0.95rem; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; margin-bottom: 12px; }
+.faq summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; }
+.faq p { margin: 10px 0 0; color: var(--muted); }
+.final { text-align: center; background: radial-gradient(circle at 50% 0, #FBE3E8, transparent 60%), var(--bg); }
+.final .cta { justify-content: center; }
+.sister { display: flex; gap: 18px; align-items: center; background: #2A211B; color: #F6F1EA; border-radius: 22px; padding: 22px; text-decoration: none; max-width: 640px; margin: 40px auto 0; text-align: left; }
+.sister img { width: 64px; height: 64px; border-radius: 16px; }
+.sister b { font-family: "Fraunces", Georgia, serif; font-size: 1.25rem; }
+.sister span { color: #E8B866; display: block; font-size: 0.95rem; }
+footer { padding: 36px 0 48px; color: var(--muted); font-size: 0.92rem; border-top: 1px solid var(--line); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 14px 28px; justify-content: space-between; }
+footer a { color: var(--muted); }
+@media (max-width: 860px) {
+  .compare th, .compare td { padding: 10px 8px; font-size: 0.9rem; overflow-wrap: anywhere; hyphens: auto; }
+  .hero .wrap, .steps, .features, .deck { grid-template-columns: 1fr; }
+  .hero { padding-top: 36px; }
+  .phone { transform: none; width: min(300px, 80vw); }
+  .top nav { display: none; }
+  section { padding: 56px 0; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 </style>
 </head>
 <body>
-<main>
-<img src="favicon.png" alt="" width="72" height="72">
-<h1>FloraLock</h1>
-<p>Lock the apps that eat your time. To open one, name a plant from its photo, and learn a few new plants every day.</p>
-<p><a href="privacy/">Privacy policy</a></p>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/floralock/"><img src="/floralock/img/icon-192.png" alt="" width="34" height="34">FloraLock</a>
+    <nav aria-label="Page sections">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#faq">FAQ</a>
+      <a href="/app-lockers/">All app lockers</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">🌷 App locker for Android</span>
+        <h1>Name the plant.<br><em>Unlock your app.</em></h1>
+        <p class="lead">FloraLock turns the moment you reach for Instagram, TikTok or YouTube into a tiny botany lesson. A locked app shows a plant photo with four names. Get it right and the app opens; get it wrong and you learn its name.</p>
+        <div class="cta">
+          <span class="btn btn-soon" role="img" aria-label="Coming soon on Google Play">
+            <svg width="26" height="28" viewBox="0 0 26 28" aria-hidden="true"><path fill="#A8CDB4" d="M1 1.5 15 14 1 26.5c-.6-.3-1-1-1-1.8V3.3c0-.8.4-1.5 1-1.8Z"/><path fill="#F3B8C3" d="m19.3 9.8 4.6 2.6c1.5.8 1.5 2.4 0 3.2l-4.6 2.6L15 14Z"/><path fill="#DCE1D5" d="M1 1.5 15 14l4.3-4.2L3.6.6C2.6 0 1.7.9 1 1.5Z"/><path fill="#8CC9A0" d="M1 26.5 15 14l4.3 4.2-15.7 9.2c-1 .6-1.9.1-2.6-.9Z"/></svg>
+            <span><small>Coming soon on</small><b>Google Play</b></span>
+          </span>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <p class="note">Free · no ads · works offline · Android 8 and later</p>
+      </div>
+      <div class="phone">
+        <span class="petal p1" aria-hidden="true"></span>
+        <img src="/floralock/img/screenshot-1.webp" width="540" height="960" alt="FloraLock lock screen: Instagram is locked, a photo of a rose and four answers: Ranunculus, Carnation, Camellia and Rose" fetchpriority="high">
+        <span class="petal p2" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <h2 class="section-title">How FloraLock works</h2>
+      <p class="section-lead">An app blocker that doesn’t just say “no”. Every time you open a distracting app, you spend five seconds learning something real.</p>
+      <div class="steps">
+        <div class="step"><h3>Pick the apps that eat your time</h3><p>Choose any Android app to lock: social media, video, games, shopping. Set how many new plants you want to learn a day.</p></div>
+        <div class="step"><h3>Learn a few plants every day</h3><p>Each lesson shows a handful of plants once, with real photos, how to recognise them and what they’re mistaken for, then a quick quiz.</p></div>
+        <div class="step"><h3>Name the plant to get in</h3><p>Open a locked app and FloraLock asks about one of your plants. Right answer: the app opens for 10 minutes. Wrong: a short pause to learn its name.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" style="padding-top: 0">
+    <div class="wrap">
+      <h2 class="section-title">Built to make it stick</h2>
+      <p class="section-lead">Everything in FloraLock is designed around one idea: the few seconds before you scroll are perfect for learning.</p>
+      <div class="features">
+        <article class="feature"><div class="ico" aria-hidden="true">🌹</div><h3>Real look-alikes</h3><p>The wrong answers are the plants people actually confuse: peony, rose, ranunculus. Pick a look-alike and FloraLock shows how to tell them apart.</p></article>
+        <article class="feature"><div class="ico" aria-hidden="true">🔎</div><h3>Field clues</h3><p>Every plant comes with its flowers, leaves, season and the one feature that gives it away, plus whether it’s edible or toxic.</p></article>
+        <article class="feature"><div class="ico" aria-hidden="true">🗓️</div><h3>Spaced review</h3><p>Plants come back after 1, 3, 7, 14 and 30 days, the schedule memory research recommends. Miss one and it starts again tomorrow.</p></article>
+        <article class="feature"><div class="ico" aria-hidden="true">🔥</div><h3>Streaks and milestones</h3><p>Build a daily streak, grow your Botany IQ from 60 to 160 and fill your collection of 70 plants.</p></article>
+        <article class="feature"><div class="ico" aria-hidden="true">🆘</div><h3>Fair escape hatches</h3><p>A few emergency unlocks a day and an “I don’t need this right now” button, so FloraLock helps instead of trapping you.</p></article>
+        <article class="feature"><div class="ico" aria-hidden="true">🔒</div><h3>Private by design</h3><p>No account, no ads, no analytics. Everything stays on your phone and works without internet.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="screenshots" class="band">
+    <div class="wrap">
+      <h2 class="section-title">See it in action</h2>
+      <p class="section-lead">From the lock screen to your growing collection. Photos come from iNaturalist observers and are credited in every image.</p>
+      <div class="gallery" tabindex="0" aria-label="FloraLock screenshots">
+        <figure><img src="/floralock/img/screenshot-1.webp" width="540" height="960" loading="lazy" alt="Open a locked app and name the plant to get in"></figure>
+        <figure><img src="/floralock/img/screenshot-2.webp" width="540" height="960" loading="lazy" alt="A wrong answer that was a look-alike explains how to tell rose and ranunculus apart"></figure>
+        <figure><img src="/floralock/img/screenshot-3.webp" width="540" height="960" loading="lazy" alt="A lesson card for the bluebell with a real photo"></figure>
+        <figure><img src="/floralock/img/screenshot-4.webp" width="540" height="960" loading="lazy" alt="Field clues for the bluebell and its look-alike, the hyacinth"></figure>
+        <figure><img src="/floralock/img/screenshot-5.webp" width="540" height="960" loading="lazy" alt="Today screen with a 9-day streak and a Botany IQ of 86"></figure>
+        <figure><img src="/floralock/img/screenshot-6.webp" width="540" height="960" loading="lazy" alt="The collection: 27 of 70 plants collected, with milestones"></figure>
+        <figure><img src="/floralock/img/screenshot-7.webp" width="540" height="960" loading="lazy" alt="Calla lily page in dark mode: how to recognise it and its look-alike, the peace lily"></figure>
+      </div>
+      <img class="feature-graphic" src="/floralock/img/feature-graphic.webp" width="1024" height="500" loading="lazy" alt="FloraLock: Name the plant. Unlock your app.">
+    </div>
+  </section>
+
+  <section id="learn">
+    <div class="wrap">
+      <h2 class="section-title">70 plants to learn</h2>
+      <p class="section-lead">Three real photos of each, identified by the iNaturalist community, with what it is, where it grows, whether it’s edible, its uses and its lore.</p>
+      <div class="deck">
+        <div class="card"><span class="count">35 flowers</span><h3>From peony to protea</h3><p>Rose, tulip, sunflower, lavender, lily, iris, poppy, lotus, dahlia, foxglove, bluebell, hyacinth, daffodil, calla lily, lilac and more.</p></div>
+        <div class="card"><span class="count">18 houseplants</span><h3>The ones on your shelf</h3><p>Monstera, pothos, snake plant, fiddle-leaf fig, peace lily, aloe vera, ZZ plant, jade plant, moth orchid, Venus flytrap and more.</p></div>
+        <div class="card"><span class="count">17 trees</span><h3>Oaks to baobabs</h3><p>Oak, sugar maple, silver birch, ginkgo, weeping willow, coast redwood, olive, jacaranda, cherry blossom, magnolia, Scots pine and more.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top: 0">
+    <div class="wrap">
+      <h2 class="section-title">Free, with an optional upgrade</h2>
+      <p class="section-lead">No subscription. Pay once if you want more, or never.</p>
+      <table class="compare">
+        <thead><tr><th scope="col"></th><th scope="col">Free</th><th scope="col">FloraLock Plus (one-time)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Locked apps</th><td>Up to 2</td><td>Unlimited</td></tr>
+          <tr><th scope="row">Plants</th><td>35 flowers</td><td>All 70: flowers, houseplants and trees</td></tr>
+          <tr><th scope="row">Lessons, reviews, streaks</th><td>✓</td><td>✓</td></tr>
+          <tr><th scope="row">Ads or tracking</th><td>None</td><td>None</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="faq" class="faq" style="padding-top: 0">
+    <div class="wrap">
+      <h2 class="section-title">Questions</h2>
+      <details open><summary>What is FloraLock?</summary><p>FloraLock is an app locker for Android. You choose the apps that eat your time; when you open one, FloraLock shows a plant photo with four names. Name it correctly and the app opens for 10 minutes.</p></details>
+      <details><summary>Is FloraLock free?</summary><p>Yes. The free version locks up to 2 apps and teaches 35 flowers. FloraLock Plus is an optional one-time purchase that adds unlimited apps, houseplants and trees. There are no ads and no subscription.</p></details>
+      <details><summary>Can I still use my apps in an emergency?</summary><p>Yes. You get a few emergency unlocks every day (2 by default), and you can always choose “I don’t need this app right now”.</p></details>
+      <details><summary>Does FloraLock collect my data?</summary><p>No. Everything stays on your phone: no account, no analytics and no ads. FloraLock works offline. Read the <a href="/floralock/privacy/">privacy policy</a>.</p></details>
+      <details><summary>Which phones does FloraLock work on?</summary><p>Android phones running Android 8.0 or later. An iPhone version is planned.</p></details>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2 class="section-title">Trade a scroll for a flower</h2>
+      <p class="section-lead" style="margin-inline: auto">FloraLock is almost ready for Google Play.</p>
+      <div class="cta">
+        <span class="btn btn-soon" role="img" aria-label="Coming soon on Google Play"><span><small>Coming soon on</small><b>Google Play</b></span></span>
+      </div>
+      <a class="sister" href="/shroomlock/">
+        <img src="/shroomlock/img/icon-192.png" alt="" width="64" height="64">
+        <div><b>Into mushrooms instead?</b><span>Meet ShroomLock, FloraLock’s sister app for fungi and their look-alikes →</span></div>
+      </a>
+    </div>
+  </section>
 </main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 FloraLock · <a href="https://sinadehesh.com">sinadehesh.com</a></span>
+    <span><a href="/app-lockers/">App lockers</a> · <a href="/shroomlock/">ShroomLock</a> · <a href="/floralock/privacy/">Privacy policy</a></span>
+  </div>
+</footer>
 </body>
 </html>

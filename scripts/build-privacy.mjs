@@ -10,7 +10,7 @@ for (const dir of ['privacy/', 'floralock/privacy/']) {
   mkdirSync(site(dir), { recursive: true });
   writeFileSync(site(`${dir}index.html`), privacyHtml());
 }
-copyFileSync(site('index.html'), site('floralock/index.html'));
-copyFileSync(site('favicon.png'), site('floralock/favicon.png'));
+// The FloraLock landing page also serves the site root (floralock.sinadehesh.com/); its canonical URL is /floralock/.
+copyFileSync(site('floralock/index.html'), site('index.html'));
 writeFileSync(new URL('../PRIVACY.md', import.meta.url), privacyMarkdown());
-console.log('Wrote site/privacy/, site/floralock/ and PRIVACY.md');
+console.log('Wrote site/privacy/, site/floralock/privacy/, site/index.html and PRIVACY.md');
