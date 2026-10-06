@@ -25,7 +25,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Today', tabBarIcon: icon('🌿') }} />
-      <Tabs.Screen name="browse" options={{ title: 'Plants', tabBarIcon: icon('📖') }} />
+      <Tabs.Screen name="browse" options={{ title: 'Collection', tabBarIcon: icon('💐') }} />
       <Tabs.Screen name="settings" options={{ title: 'Settings', tabBarIcon: icon('⚙️') }} />
     </Tabs>
   );

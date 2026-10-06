@@ -19,7 +19,8 @@ Everything runs offline; nothing leaves the phone ([privacy policy](PRIVACY.md))
 | Piece                                                        | State                                                                            |
 | ------------------------------------------------------------ | -------------------------------------------------------------------------------- |
 | First-launch setup: plants per day, apps to lock, the lock   | ✅ Built                                                                         |
-| Daily lesson + exam, one repeat per plant, lock-screen quiz  | ✅ Built and unit-tested                                                         |
+| Daily lesson + exam, spaced reviews, lock-screen quiz        | ✅ Built and unit-tested                                                         |
+| Look-alikes, field clues, streaks and milestones             | ✅ Built and unit-tested                                                         |
 | Plant browser and plant pages (about, edibility, uses, lore) | ✅ All 70 plants                                                                 |
 | Photos                                                       | ✅ 3 real iNaturalist photos per plant, CC0 / CC BY / CC BY-SA, bundled          |
 | Android app lock (UsageStats + foreground service)           | ✅ Passes the emulator test on Android 8, 10, 13 and 15; needs real phones       |
@@ -29,15 +30,21 @@ Everything runs offline; nothing leaves the phone ([privacy policy](PRIVACY.md))
 
 ## Learning model
 
-Pure rules in `src/core/daily.ts`, covered by `npm test`:
+Pure rules in `src/core/`, covered by `npm test`:
 
-- **Lesson:** each day brings the next _n_ plants you haven't learned (1–20, set in setup or Settings). Each is
-  shown once on a study card, then the exam asks one question per plant.
-- **One repeat:** every plant comes back once on a later day, in that day's exam and on the lock screen. A right
-  answer there completes it; a miss brings it back the next day until you get it.
+- **Lesson** (`daily.ts`): each day brings the next _n_ plants you haven't learned (1–20, set in setup or
+  Settings). Each is shown once on a study card (photos, how to recognise it, edibility, and the plants it's
+  mistaken for), then the exam asks one question per plant.
+- **Spaced reviews** (`daily.ts`): a plant comes back 1 day after its lesson, then 3, 7, 14 and 30 days after each
+  right answer. A miss, in an exam or on the lock screen, starts it over from tomorrow. After the fifth review
+  it's mastered. A day's exam asks at most 15 reviews, the most overdue first.
 - **Lock screen:** asks about today's exam plants first (those not yet answered right today), then anything
   you've learned.
-- **Botany IQ** goes from 60 to 160: a plant counts half once introduced and fully once it passes its repeat.
+- **Look-alikes** (`quiz.ts`, `LOOKALIKE_PAIRS` in `src/data/plants.ts`): wrong choices are a plant's real
+  look-alikes first (peony, rose, ranunculus…), then the same group. A wrong pick of a look-alike shows how to
+  tell the two apart.
+- **Progress** (`progress.ts`, `stats.ts`): a streak of days with the exam done; collected and mastered counts;
+  milestones; and Botany IQ from 60 to 160 (a fifth for meeting a plant, the rest grows with each review).
 
 ## Run it
 
@@ -70,8 +77,8 @@ GitHub Actions:
 src/
   app/                  Expo Router screens
     onboarding.tsx        First launch: plants per day, apps to lock, the lock
-    (tabs)/index.tsx      Today: lesson card, Botany IQ, trouble plants
-    (tabs)/browse.tsx     Searchable plant guide
+    (tabs)/index.tsx      Today: lesson card, streak, next goal, Botany IQ, trouble plants
+    (tabs)/browse.tsx     Collection: collected and mastered, milestones, searchable guide
     (tabs)/settings.tsx   Lock, Plus, plants per day, unlock window, penalty, emergency unlocks, deck
     upgrade.tsx           FloraLock Plus: what it adds, purchase and restore
     lesson.tsx            Study cards, then the exam
@@ -79,9 +86,10 @@ src/
     plant/[id].tsx        Plant page
     privacy.tsx, credits.tsx
   core/                 Pure TypeScript, no React, unit-tested
-    daily.ts              Daily lessons, the one repeat, lock-screen plant picker
+    daily.ts              Daily lessons, spaced reviews, lock-screen plant picker
+    progress.ts           Streaks, collection, milestones
     challenge.ts          Lock-screen state machine (question → penalty → unlocked)
-    quiz.ts               Multiple-choice distractors (same category first)
+    quiz.ts               Look-alike distractors
     stats.ts              Botany IQ, accuracy, trouble plants
     plus.ts               What's free and what Plus unlocks
     saved.ts              Saved progress: reading older saves after an app update

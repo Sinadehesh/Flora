@@ -45,12 +45,15 @@ export default function Onboarding() {
             <Text style={styles.hero}>🌷</Text>
             <Title>Learn a plant instead of scrolling</Title>
             <Bullet n="1">Choose the apps that eat your time.</Bullet>
-            <Bullet n="2">Each day, learn a few new plants in a short lesson, then take a quick exam.</Bullet>
-            <Bullet n="3">
-              Opening a locked app asks you to name one of your plants from four choices. Get it right and the app
-              opens.
+            <Bullet n="2">
+              Each day, learn a few plants in a short lesson: how to recognise them and what they’re mistaken for.
+              Then take a quick exam.
             </Bullet>
-            <Bullet n="4">Every plant comes back once the next day, so it sticks.</Bullet>
+            <Bullet n="3">
+              Opening a locked app asks you to name one of your plants from four choices, next to its real
+              look-alikes. Get it right and the app opens.
+            </Bullet>
+            <Bullet n="4">Plants come back for review after 1, 3, 7, 14 and 30 days, so they stick.</Bullet>
           </Page>
         )}
 

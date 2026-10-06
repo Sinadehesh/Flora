@@ -5,6 +5,7 @@ import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { blocker } from '../blocker';
+import { EdibilityBadge, isToxic } from '../components/EdibilityBadge';
 import { PlantPhoto } from '../components/PlantPhoto';
 import { Button } from '../components/ui';
 import {
@@ -15,9 +16,10 @@ import {
   type ChallengeState,
 } from '../core/challenge';
 import { dayKey, lockScreenPool, pickLockPlant } from '../core/daily';
-import { buildChoices } from '../core/quiz';
+import { areLookalikes, buildChoices } from '../core/quiz';
 import type { Plant } from '../core/types';
-import { PLANTS_BY_ID } from '../data/plants';
+import { PLANT_CLUES } from '../data/plantClues';
+import { PLANTS, PLANTS_BY_ID } from '../data/plants';
 import { correctToday, emergencyLeft, useDeck, useStore } from '../state/store';
 import { serif, useColors } from '../theme';
 
@@ -34,7 +36,7 @@ function haptic(success: boolean) {
  * The lock-screen intercept. Opened by the native blocker as
  * `floralock://challenge?source=Instagram`, or from the home screen with
  * `?practice=1` for extra practice (no unlock, no emergency exit).
- * Questions come from today's exam: the plants learned today and the ones due their repeat.
+ * Questions come from today's exam: the plants learned today and the ones due for review.
  */
 export default function ChallengeScreen() {
   // `package` is set when the Android blocker opened this screen over a locked app.
@@ -75,7 +77,7 @@ export default function ChallengeScreen() {
 
   const plant: Plant | undefined = challenge ? PLANTS_BY_ID[challenge.plantId] : undefined;
   const choices = useMemo(
-    () => (plant ? buildChoices(plant, deck) : []),
+    () => (plant ? buildChoices(plant, deck, PLANTS) : []),
     // Re-deal only when the plant changes, not on every progress update.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [plant?.id],
@@ -125,6 +127,10 @@ export default function ChallengeScreen() {
     if (lockedPackage) blocker.goHome();
   };
   const secondsLeft = penaltySecondsLeft(challenge, now);
+  // A wrong guess that was one of the plant's real look-alikes gets a how-to-tell note.
+  const guess = challenge.phase === 'penalty' ? challenge.guess : undefined;
+  const guessed = PLANTS.find((p) => p.commonName === guess);
+  const lookalikeGuess = guessed && areLookalikes(plant, guessed) ? guessed : undefined;
   const emergencies = emergencyLeft(store, now);
   const appName = source ?? 'your app';
 
@@ -219,6 +225,15 @@ export default function ChallengeScreen() {
             <Text style={[styles.sci, { color: c.textMuted, fontFamily: serif }]}>
               {plant.scientificName} · {plant.family}
             </Text>
+            <EdibilityBadge plant={plant} />
+            {lookalikeGuess && (
+              <View style={[styles.note, { borderColor: c.warning }]}>
+                <Text style={[styles.noteTitle, { color: c.text }]}>
+                  {lookalikeGuess.commonName} is a real look-alike{isToxic(lookalikeGuess) ? ', and toxic' : ''}.
+                </Text>
+                <Text style={[styles.noteBody, { color: c.text }]}>How to tell: {PLANT_CLUES[plant.id]?.key}</Text>
+              </View>
+            )}
             <Text style={[styles.fact, { color: c.text }]}>{plant.fact}</Text>
             <Button
               label={secondsLeft ? `Try again in ${secondsLeft}s` : 'Try another plant'}
@@ -258,6 +273,7 @@ function Result({
         )}
         <View style={styles.panel}>
           <Text style={[styles.answerName, { color: c.success, fontFamily: serif }]}>{title}</Text>
+          {plant && <EdibilityBadge plant={plant} />}
           {plant && (
             <Text style={[styles.sci, { color: c.textMuted, fontFamily: serif }]}>
               {plant.scientificName} · {plant.family}
@@ -290,4 +306,7 @@ const styles = StyleSheet.create({
   answerName: { fontSize: 32, fontWeight: '700' },
   sci: { fontSize: 16, fontStyle: 'italic' },
   fact: { fontSize: 17, lineHeight: 25, marginVertical: 8 },
+  note: { borderWidth: 1.5, borderRadius: 14, padding: 12, gap: 6 },
+  noteTitle: { fontSize: 16, fontWeight: '700', lineHeight: 22 },
+  noteBody: { fontSize: 16, lineHeight: 22 },
 });

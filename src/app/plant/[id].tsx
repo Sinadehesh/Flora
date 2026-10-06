@@ -2,14 +2,17 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { EdibilityBadge } from '../../components/EdibilityBadge';
+import { CluesList, Lookalikes } from '../../components/PlantFacts';
 import { PlantPhoto } from '../../components/PlantPhoto';
 import { Card, SectionTitle } from '../../components/ui';
-import { learnStatus } from '../../core/daily';
-import { EDIBILITY_LABEL, PLANT_DETAILS, type Edibility } from '../../data/plantDetails';
+import { MASTERED_STEP } from '../../core/daily';
+import { lookalikesOf } from '../../core/quiz';
+import { PLANT_DETAILS } from '../../data/plantDetails';
 import { PLANT_IMAGES } from '../../data/plantImages.generated';
-import { PLANTS_BY_ID } from '../../data/plants';
+import { PLANTS, PLANTS_BY_ID } from '../../data/plants';
 import { useStore } from '../../state/store';
-import { CATEGORY_LABEL, serif, useColors, type Colors } from '../../theme';
+import { CATEGORY_LABEL, serif, useColors } from '../../theme';
 
 export default function PlantDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -21,7 +24,7 @@ export default function PlantDetail() {
   if (!plant) return <Text style={{ padding: 16, color: c.text }}>Unknown plant.</Text>;
 
   const stats = state.stats[plant.id];
-  const status = learnStatus(state.learn, plant.id);
+  const record = state.learn[plant.id];
   const photoCount = PLANT_IMAGES[plant.id]?.length ?? 0;
   const details = PLANT_DETAILS[plant.id];
 
@@ -55,6 +58,16 @@ export default function PlantDetail() {
         <Text style={[styles.fact, { color: c.text }]}>{plant.fact}</Text>
       </Card>
 
+      <SectionTitle>How to recognise it</SectionTitle>
+      <CluesList plant={plant} />
+
+      {lookalikesOf(plant, PLANTS).length > 0 && (
+        <>
+          <SectionTitle>Often confused with</SectionTitle>
+          <Lookalikes plant={plant} />
+        </>
+      )}
+
       {details && (
         <>
           <SectionTitle>About</SectionTitle>
@@ -64,7 +77,9 @@ export default function PlantDetail() {
           <Paragraph>{details.where}</Paragraph>
 
           <SectionTitle>Edible?</SectionTitle>
-          <EdibilityBadge edibility={details.edibility} />
+          <View style={{ marginBottom: 8 }}>
+            <EdibilityBadge plant={plant} />
+          </View>
           <Paragraph>{details.edibilityNote}</Paragraph>
 
           {details.uses && (
@@ -89,16 +104,15 @@ export default function PlantDetail() {
       {plant.aliases.length > 0 && <Detail label="Also called" value={plant.aliases.join(', ')} />}
 
       <SectionTitle>Your record</SectionTitle>
-      <Detail
-        label="Status"
-        value={
-          status === 'learned'
-            ? 'Learned ✓'
-            : status === 'learning'
-              ? `In a lesson on ${state.learn[plant.id].learnedOn}, repeat to come`
-              : 'Not in a lesson yet'
-        }
-      />
+      {record ? (
+        <>
+          <Detail label="Collected" value={formatDay(record.learnedOn)} />
+          <Detail label="Reviews passed" value={`${Math.min(record.step, MASTERED_STEP)} of ${MASTERED_STEP}`} />
+          <Detail label="Next review" value={record.step >= MASTERED_STEP ? 'Mastered' : formatDay(record.dueOn)} />
+        </>
+      ) : (
+        <Detail label="Status" value="Not in a lesson yet" />
+      )}
       {stats && <Detail label="Correct answers" value={`${stats.correct} of ${stats.seen}`} />}
 
       <Text style={[styles.disclaimer, { color: c.textMuted }]}>
@@ -114,17 +128,9 @@ function Paragraph({ children }: { children: string }) {
   return <Text style={[styles.paragraph, { color: c.text }]}>{children}</Text>;
 }
 
-const edibilityColor = (e: Edibility, c: Colors) =>
-  ({ edible: c.success, caution: c.warning, toxic: c.danger, inedible: c.textMuted })[e];
-
-function EdibilityBadge({ edibility }: { edibility: Edibility }) {
-  const c = useColors();
-  const color = edibilityColor(edibility, c);
-  return (
-    <View style={[styles.badge, { borderColor: color }]}>
-      <Text style={{ color, fontWeight: '700', fontSize: 14 }}>{EDIBILITY_LABEL[edibility]}</Text>
-    </View>
-  );
+function formatDay(day: string): string {
+  const [y, m, d] = day.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 function Detail({ label, value }: { label: string; value: string }) {
@@ -146,14 +152,6 @@ const styles = StyleSheet.create({
   sci: { fontSize: 18, fontStyle: 'italic' },
   fact: { fontSize: 17, lineHeight: 25 },
   paragraph: { fontSize: 16, lineHeight: 24 },
-  badge: {
-    alignSelf: 'flex-start',
-    borderWidth: 1.5,
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    marginBottom: 8,
-  },
   disclaimer: { fontSize: 13, lineHeight: 19, marginTop: 24 },
   detail: {
     flexDirection: 'row',

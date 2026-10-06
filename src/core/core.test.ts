@@ -3,19 +3,25 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import { PLANT_DETAILS } from '../data/plantDetails';
+import { PLANT_CLUES } from '../data/plantClues';
 import { privacyHtml, privacyMarkdown } from '../data/privacyPolicy';
-import { PLANTS, PLANTS_BY_ID } from '../data/plants';
+import { LOOKALIKE_PAIRS, PLANTS, PLANTS_BY_ID } from '../data/plants';
 import { challengeReducer, penaltySecondsLeft, startChallenge } from './challenge';
 import {
+  addDays,
   dayKey,
-  dueRepeats,
+  dueReviews,
   examPlants,
   lessonStudied,
   lockScreenPool,
   markStudied,
+  MASTERED_STEP,
+  MAX_REVIEWS_PER_DAY,
   pickLockPlant,
-  recordRepeat,
+  recordReview,
   recordStats,
+  REVIEW_DAYS,
+  reviewsDueOn,
   todaysNewPlants,
 } from './daily';
 import {
@@ -27,10 +33,19 @@ import {
   normalizeCode,
   REVIEW_CODE_HASHES,
 } from './plus';
+import {
+  collectedCount,
+  currentStreak,
+  extendStreak,
+  masteredCount,
+  milestones,
+  nextMilestone,
+  NO_STREAK,
+} from './progress';
+import { areLookalikes, buildChoices, lookalikesOf } from './quiz';
 import { readSaved, SAVE_KEY, serializeSaved, type SavedState } from './saved';
 import { sha256Hex } from './sha256';
-import { buildChoices } from './quiz';
-import { botanyIQ, learnedCount, troublePlants } from './stats';
+import { botanyIQ, troublePlants } from './stats';
 import { normalizeName } from './text';
 import { DEFAULT_SETTINGS, type LearnMap, type StatsMap } from './types';
 
@@ -41,6 +56,7 @@ function seeded(seed = 42) {
 }
 
 const plant = (id: string) => PLANTS_BY_ID[id];
+const ids = (list: { id: string }[]) => list.map((p) => p.id);
 
 describe('plant data', () => {
   it('has unique ids and complete entries', () => {
@@ -54,6 +70,23 @@ describe('plant data', () => {
     expect(Object.keys(PLANT_DETAILS).sort()).toEqual(PLANTS.map((p) => p.id).sort());
     for (const d of Object.values(PLANT_DETAILS)) {
       expect(d.about && d.where && d.edibilityNote).toBeTruthy();
+    }
+  });
+
+  it('has field clues for exactly the plants in the deck', () => {
+    expect(Object.keys(PLANT_CLUES).sort()).toEqual(ids(PLANTS).sort());
+    for (const clues of Object.values(PLANT_CLUES)) {
+      expect(Object.values(clues).every((v) => v.trim().length > 0)).toBe(true);
+    }
+  });
+
+  it('only pairs look-alikes that exist, each pair once', () => {
+    const seen = new Set<string>();
+    for (const [a, b] of LOOKALIKE_PAIRS) {
+      expect(PLANTS_BY_ID[a] && PLANTS_BY_ID[b], `${a} / ${b}`).toBeTruthy();
+      const key = [a, b].sort().join('|');
+      expect(seen.has(key), key).toBe(false);
+      seen.add(key);
     }
   });
 
@@ -71,72 +104,125 @@ describe('text', () => {
   });
 });
 
-describe('quiz choices', () => {
-  it('returns 4 unique options including the answer, same category first', () => {
-    const answer = plant('peony');
-    const choices = buildChoices(answer, PLANTS, 4, seeded());
-    expect(choices).toHaveLength(4);
-    expect(new Set(choices.map((c) => c.id)).size).toBe(4);
-    expect(choices).toContain(answer);
-    expect(choices.every((c) => c.category === 'flower')).toBe(true);
+describe('text', () => {
+  it('normalizes case, accents and punctuation for search', () => {
+    expect(normalizeName('  Bird-of-Paradise! ')).toBe('bird of paradise');
+    expect(normalizeName('Cempasúchil')).toBe('cempasuchil');
+    expect(normalizeName("Devil's Ivy")).toBe('devils ivy');
   });
 });
 
-describe('daily plan', () => {
+describe('look-alikes', () => {
+  it('matches pairs listed on either side', () => {
+    expect(areLookalikes(plant('peony'), plant('rose'))).toBe(true);
+    expect(areLookalikes(plant('rose'), plant('peony'))).toBe(true);
+    expect(areLookalikes(plant('peony'), plant('oak'))).toBe(false);
+    expect(ids(lookalikesOf(plant('rose'), PLANTS)).sort()).toEqual(['camellia', 'carnation', 'peony', 'ranunculus']);
+  });
+
+  it('deals real look-alikes first, from outside the deck too', () => {
+    const deck = PLANTS.filter((p) => p.category === 'flower');
+    const choices = buildChoices(plant('calla-lily'), deck, PLANTS, 4, seeded());
+    expect(choices).toHaveLength(4);
+    expect(new Set(ids(choices)).size).toBe(4);
+    expect(choices).toContain(plant('calla-lily'));
+    expect(choices).toContain(plant('peace-lily')); // a houseplant, outside the flower deck
+  });
+
+  it('tops up from the same group in the deck', () => {
+    const deck = PLANTS.filter((p) => p.category === 'houseplant');
+    for (let seed = 1; seed < 10; seed++) {
+      const choices = buildChoices(plant('boston-fern'), deck, PLANTS, 4, seeded(seed));
+      expect(choices.every((p) => p.category === 'houseplant')).toBe(true);
+    }
+  });
+});
+
+describe('daily plan and spaced reviews', () => {
   const deck = PLANTS.slice(0, 6);
-  const ids = (plants: { id: string }[]) => plants.map((p) => p.id);
   const DAY1 = '2026-10-01';
   const DAY2 = '2026-10-02';
-  const DAY3 = '2026-10-03';
 
-  it('writes zero-padded local days that sort as strings', () => {
+  it('writes zero-padded local days that sort as strings, and adds days across months', () => {
     expect(dayKey(new Date(2026, 8, 30, 23, 59).getTime())).toBe('2026-09-30');
     expect(dayKey(new Date(2026, 9, 1, 0, 1).getTime())).toBe('2026-10-01');
-    expect('2026-09-30' < '2026-10-01').toBe(true);
+    expect(addDays('2026-09-30', 1)).toBe('2026-10-01');
+    expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
+    expect(addDays('2026-03-01', -1)).toBe('2026-02-28');
   });
 
   it("offers the next unlearned plants as today's lesson, and keeps them once studied", () => {
     expect(ids(todaysNewPlants(deck, {}, DAY1, 2))).toEqual(ids(deck.slice(0, 2)));
     const learn = markStudied({}, ids(deck.slice(0, 2)), DAY1);
     expect(lessonStudied(deck, learn, DAY1)).toBe(true);
-    // Same day: still today's two, even if the daily number changes afterwards.
     expect(ids(todaysNewPlants(deck, learn, DAY1, 4))).toEqual(ids(deck.slice(0, 2)));
-    // Next day: the next two.
     expect(ids(todaysNewPlants(deck, learn, DAY2, 2))).toEqual(ids(deck.slice(2, 4)));
     expect(lessonStudied(deck, learn, DAY2)).toBe(false);
   });
 
-  it('repeats each plant once on a later day; a right answer there completes it', () => {
-    let learn = markStudied({}, ids(deck.slice(0, 2)), DAY1);
-    const [a, b] = deck;
-    // Answers on the lesson day are not the repeat.
-    expect(recordRepeat(learn, a.id, true, DAY1)).toBe(learn);
-    expect(ids(dueRepeats(deck, learn, DAY1))).toEqual([]);
-
-    expect(ids(dueRepeats(deck, learn, DAY2))).toEqual([a.id, b.id]);
-    learn = recordRepeat(learn, a.id, true, DAY2);
-    learn = recordRepeat(learn, b.id, false, DAY2); // missed: comes back again
-    expect(learn[a.id].repeated).toBe(true);
-    expect(ids(dueRepeats(deck, learn, DAY3))).toEqual([b.id]);
-    expect(learnedCount(deck, learn)).toBe(1);
+  it('reviews after 1, 3, 7, 14 and 30 days, then counts the plant as mastered', () => {
+    const [a] = deck;
+    let learn = markStudied({}, [a.id], DAY1);
+    let day = DAY1;
+    expect(learn[a.id]).toEqual({ learnedOn: DAY1, step: 0, dueOn: DAY2 });
+    // Right answers on the lesson day, or before a review is due, change nothing.
+    expect(recordReview(learn, a.id, true, DAY1)).toBe(learn);
+    for (const gap of REVIEW_DAYS) {
+      day = addDays(day, gap);
+      expect(learn[a.id].dueOn).toBe(day);
+      expect(recordReview(learn, a.id, true, addDays(day, -1))).toBe(learn);
+      expect(ids(dueReviews(deck, learn, day))).toEqual([a.id]);
+      learn = recordReview(learn, a.id, true, day);
+    }
+    expect(learn[a.id].step).toBe(MASTERED_STEP);
+    expect(masteredCount(deck, learn)).toBe(1);
+    expect(dueReviews(deck, learn, addDays(day, 365))).toEqual([]);
   });
 
-  it("examines today's new plants and today's repeats", () => {
+  it('starts the schedule over from tomorrow after a miss, at any time', () => {
+    const [a] = deck;
+    let learn = markStudied({}, [a.id], DAY1);
+    learn = recordReview(learn, a.id, true, DAY2); // step 1, due in 3 days
+    expect(learn[a.id]).toMatchObject({ step: 1, dueOn: addDays(DAY2, 3) });
+    learn = recordReview(learn, a.id, false, addDays(DAY2, 1)); // missed on the lock screen
+    expect(learn[a.id]).toMatchObject({ step: 0, dueOn: addDays(DAY2, 2) });
+  });
+
+  it('reviews a late plant on the day it is opened, not on every missed day', () => {
+    const [a] = deck;
+    let learn = markStudied({}, [a.id], DAY1);
+    const late = addDays(DAY1, 10);
+    expect(ids(dueReviews(deck, learn, late))).toEqual([a.id]);
+    learn = recordReview(learn, a.id, true, late);
+    expect(learn[a.id]).toMatchObject({ step: 1, dueOn: addDays(late, 3) });
+  });
+
+  it('caps a day of reviews, most overdue first', () => {
+    const many = PLANTS.slice(0, MAX_REVIEWS_PER_DAY + 5);
+    const learn: LearnMap = Object.fromEntries(
+      many.map((m, i) => [m.id, { learnedOn: DAY1, step: 0, dueOn: addDays(DAY2, i % 3) }]),
+    );
+    const today = addDays(DAY2, 5);
+    const due = dueReviews(many, learn, today);
+    expect(due).toHaveLength(MAX_REVIEWS_PER_DAY);
+    expect(due.map((m) => learn[m.id].dueOn)).toEqual([...due.map((m) => learn[m.id].dueOn)].sort());
+    expect(reviewsDueOn(many, learn, today)).toBe(MAX_REVIEWS_PER_DAY);
+  });
+
+  it("examines today's new plants and today's reviews", () => {
     let learn = markStudied({}, ids(deck.slice(0, 2)), DAY1);
     expect(ids(examPlants(deck, learn, DAY1, 2))).toEqual(ids(deck.slice(0, 2)));
-    // Day 2 before the lesson: only the repeats.
     expect(ids(examPlants(deck, learn, DAY2, 2))).toEqual(ids(deck.slice(0, 2)));
     learn = markStudied(learn, ids(deck.slice(2, 4)), DAY2);
     expect(ids(examPlants(deck, learn, DAY2, 2))).toEqual(ids([deck[2], deck[3], deck[0], deck[1]]));
   });
 
   it('keeps the lock screen on what is due, then on anything learned', () => {
-    // Day one, nothing studied: today's new plants.
     expect(ids(lockScreenPool(deck, {}, DAY1, 2))).toEqual(ids(deck.slice(0, 2)));
     let learn = markStudied({}, [deck[0].id], DAY1);
     expect(ids(lockScreenPool(deck, learn, DAY1, 1))).toEqual([deck[0].id]);
-    learn = recordRepeat(learn, deck[0].id, true, DAY2);
-    // Day 2, repeat done, lesson not studied yet: nothing due, so anything learned.
+    learn = recordReview(learn, deck[0].id, true, DAY2);
+    // Day 2, review done, lesson not studied yet: nothing due, so anything learned.
     expect(ids(lockScreenPool(deck, learn, DAY2, 1))).toEqual([deck[0].id]);
   });
 
@@ -147,6 +233,35 @@ describe('daily plan', () => {
       expect(pickLockPlant(pool, new Set(), seeded(i + 1), pool[0].id).id).not.toBe(pool[0].id);
     }
     expect(pickLockPlant([pool[0]], new Set(), seeded(), pool[0].id).id).toBe(pool[0].id);
+  });
+});
+
+describe('streaks and milestones', () => {
+  it('grows a streak day by day and restarts it after a missed day', () => {
+    let streak = extendStreak(NO_STREAK, '2026-10-01');
+    expect(streak).toEqual({ last: '2026-10-01', count: 1, best: 1 });
+    expect(extendStreak(streak, '2026-10-01')).toBe(streak);
+    streak = extendStreak(streak, '2026-10-02');
+    streak = extendStreak(streak, '2026-10-03');
+    expect(streak).toEqual({ last: '2026-10-03', count: 3, best: 3 });
+    expect(currentStreak(streak, '2026-10-04')).toBe(3); // still alive until today's exam
+    expect(currentStreak(streak, '2026-10-05')).toBe(0);
+    streak = extendStreak(streak, '2026-10-05');
+    expect(streak).toEqual({ last: '2026-10-05', count: 1, best: 3 });
+  });
+
+  it('marks milestones done and points at the closest next one', () => {
+    const list = milestones({ collected: 8, mastered: 0, bestStreak: 3, total: 69 });
+    expect(list.find((m) => m.id === 'collect-1')?.done).toBe(true);
+    expect(list.find((m) => m.id === 'streak-3')?.done).toBe(true);
+    expect(list.find((m) => m.id === 'collect-10')).toMatchObject({ done: false, value: 8, target: 10 });
+    expect(nextMilestone(list)?.id).toBe('collect-10');
+  });
+
+  it('counts the collection', () => {
+    const learn = markStudied({}, ['peony', 'oak'], '2026-10-01');
+    expect(collectedCount(PLANTS, learn)).toBe(2);
+    expect(masteredCount(PLANTS, learn)).toBe(0);
   });
 });
 
@@ -174,15 +289,17 @@ describe('challenge (Genius Penalty)', () => {
 });
 
 describe('stats', () => {
-  it('scores Botany IQ from 60 to 160: half for introduced, full once repeated', () => {
+  it('scores Botany IQ from 60 to 160: a fifth for collected, the rest grows with each review', () => {
     const subset = [plant('rose'), plant('tulip')];
     expect(botanyIQ(subset, {})).toBe(60);
-    const done: LearnMap = {
-      rose: { learnedOn: '2026-10-01', repeated: true },
-      tulip: { learnedOn: '2026-10-01', repeated: true },
+    const mastered: LearnMap = {
+      rose: { learnedOn: '2026-10-01', step: MASTERED_STEP, dueOn: '' },
+      tulip: { learnedOn: '2026-10-01', step: MASTERED_STEP, dueOn: '' },
     };
-    expect(botanyIQ(subset, done)).toBe(160);
-    expect(botanyIQ(subset, { ...done, tulip: { learnedOn: '2026-10-01', repeated: false } })).toBe(135);
+    expect(botanyIQ(subset, mastered)).toBe(160);
+    expect(botanyIQ(subset, { ...mastered, tulip: { learnedOn: '2026-10-01', step: 0, dueOn: '2026-10-02' } })).toBe(
+      120,
+    );
   });
 
   it('ranks trouble plants by miss rate', () => {
@@ -250,10 +367,14 @@ describe('privacy policy', () => {
 describe('saved progress across app updates', () => {
   const saved: SavedState = {
     settings: { ...DEFAULT_SETTINGS, plantsPerDay: 3, categories: ['flower'], onboarded: true },
-    learn: { peony: { learnedOn: '2026-10-01', repeated: true }, lotus: { learnedOn: '2026-10-02', repeated: false } },
+    learn: {
+      peony: { learnedOn: '2026-10-01', step: 1, dueOn: '2026-10-05' },
+      lotus: { learnedOn: '2026-10-02', step: 0, dueOn: '2026-10-03' },
+    },
     stats: { peony: { seen: 4, correct: 3, wrong: 1 } },
     today: { day: '2026-10-02', correct: ['peony'] },
     examDoneOn: '2026-10-02',
+    streak: { last: '2026-10-02', count: 2, best: 5 },
     emergency: { day: '2026-10-02', used: 1 },
     plus: true,
     codeUnlock: false,
@@ -267,13 +388,41 @@ describe('saved progress across app updates', () => {
     expect(readSaved(serializeSaved(saved))).toEqual({ state: saved, unreadable: false });
   });
 
-  it('reads saves from releases before versioning', () => {
-    expect(readSaved(JSON.stringify(saved)).state).toEqual(saved);
+  it('converts saves from releases with one repeat per plant (version 1) to spaced reviews', () => {
+    // Exactly what FloraLock up to version code 21 wrote (no version field).
+    const v1 = {
+      settings: saved.settings,
+      learn: {
+        peony: { learnedOn: '2026-10-01', repeated: true },
+        lotus: { learnedOn: '2026-10-02', repeated: false },
+        broken: { learnedOn: 'yesterday', repeated: true },
+      },
+      stats: saved.stats,
+      today: saved.today,
+      examDoneOn: '2026-10-02',
+      emergency: saved.emergency,
+      plus: true,
+      codeUnlock: false,
+    };
+    const { state } = readSaved(JSON.stringify(v1));
+    expect(state.learn).toEqual({
+      // Passed its repeat: first review passed, next due 3 days after the earliest repeat day.
+      peony: { learnedOn: '2026-10-01', step: 1, dueOn: '2026-10-05' },
+      // Still owed its repeat: due the day after its lesson (so due now).
+      lotus: { learnedOn: '2026-10-02', step: 0, dueOn: '2026-10-03' },
+    });
+    expect(state.streak).toEqual({ last: '2026-10-02', count: 1, best: 1 });
+    expect(state.stats).toEqual(saved.stats);
+    expect(state.settings).toEqual(saved.settings);
+    expect(state.plus).toBe(true);
+    // And the converted save is read back unchanged.
+    const again = readSaved(serializeSaved({ ...saved, ...state } as SavedState)).state;
+    expect(again.learn).toEqual(state.learn);
   });
 
   it('fills settings added in later releases with defaults', () => {
     const { onboarded: _, ...older } = saved.settings;
-    const { state } = readSaved(JSON.stringify({ ...saved, settings: older }));
+    const { state } = readSaved(JSON.stringify({ version: 2, ...saved, settings: older }));
     expect(state.settings).toEqual({ ...saved.settings, onboarded: DEFAULT_SETTINGS.onboarded });
     expect(state.learn).toEqual(saved.learn);
   });
@@ -281,9 +430,10 @@ describe('saved progress across app updates', () => {
   it('drops only the values that are invalid', () => {
     const { state } = readSaved(
       JSON.stringify({
+        version: 2,
         ...saved,
         settings: { ...saved.settings, plantsPerDay: 99, unlockMinutes: 'ten', categories: ['cactus', 'tree'] },
-        learn: { ...saved.learn, broken: { learnedOn: 5 } },
+        learn: { ...saved.learn, broken: { learnedOn: '2026-10-01', step: 'one', dueOn: '2026-10-02' } },
         stats: { ...saved.stats, broken: { seen: -1, correct: 0, wrong: 0 } },
         plus: 'yes',
       }),

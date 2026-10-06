@@ -10,8 +10,59 @@ function rows(category: PlantCategory, list: Row[]): Plant[] {
     family,
     category,
     aliases,
+    lookalikes: lookalikesOf(id),
     fact,
   }));
+}
+
+/**
+ * Plants people commonly mix up. The quiz deals these as wrong answers first, and a wrong pick
+ * explains how to tell the two apart. Each pair is listed once; it works both ways.
+ */
+export const LOOKALIKE_PAIRS: [string, string][] = [
+  ['peony', 'rose'],
+  ['peony', 'ranunculus'],
+  ['rose', 'ranunculus'],
+  ['rose', 'camellia'],
+  ['camellia', 'gardenia'],
+  ['carnation', 'rose'],
+  ['dahlia', 'chrysanthemum'],
+  ['dahlia', 'zinnia'],
+  ['zinnia', 'marigold'],
+  ['marigold', 'chrysanthemum'],
+  ['daisy', 'chrysanthemum'],
+  ['daisy', 'cosmos'],
+  ['sunflower', 'daisy'],
+  ['anemone', 'poppy'],
+  ['poppy', 'cosmos'],
+  ['tulip', 'lily'],
+  ['tulip', 'daffodil'],
+  ['bluebell', 'hyacinth'],
+  ['foxglove', 'snapdragon'],
+  ['sweet-pea', 'wisteria'],
+  ['lilac', 'lavender'],
+  ['hibiscus', 'morning-glory'],
+  ['bird-of-paradise', 'protea'],
+  ['calla-lily', 'peace-lily'],
+  ['lotus', 'magnolia'],
+  ['magnolia', 'tulip'],
+  ['monstera', 'pothos'],
+  ['fiddle-leaf-fig', 'rubber-plant'],
+  ['snake-plant', 'aloe-vera'],
+  ['jade-plant', 'zz-plant'],
+  ['jade-plant', 'chinese-money-plant'],
+  ['silver-birch', 'weeping-willow'],
+  ['silver-birch', 'eucalyptus'],
+  ['olive', 'eucalyptus'],
+  ['jacaranda', 'wisteria'],
+  ['cherry-blossom', 'dogwood'],
+  ['cherry-blossom', 'magnolia'],
+  ['coast-redwood', 'scots-pine'],
+  ['oak', 'horse-chestnut'],
+];
+
+function lookalikesOf(id: string): string[] {
+  return LOOKALIKE_PAIRS.flatMap(([a, b]) => (a === id ? [b] : b === id ? [a] : []));
 }
 
 const flowers = rows('flower', [

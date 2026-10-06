@@ -1,15 +1,22 @@
-import type { LearnMap, Plant, StatsMap } from './types';
+import type { LearnMap, LearnRecord, Plant, StatsMap } from './types';
 
 /**
  * The daily plan:
  *  - each day's lesson introduces `plantsPerDay` new plants, shown once each, then examined;
- *  - every plant comes back exactly once on a later day (in that day's exam and on the
- *    lock screen); answering it right there completes it, a miss brings it back next day.
+ *  - then each plant comes back for review on a widening schedule (REVIEW_DAYS): 1 day later,
+ *    then 3, 7, 14 and 30 days after each right answer. A miss, in an exam or on the lock screen,
+ *    starts its schedule over from tomorrow. After the last review it's mastered.
  *
  * Days are local calendar days as "YYYY-MM-DD", so they sort as strings.
  */
 
 export type Rng = () => number;
+
+/** Days until the next review, by step. Passing the last one masters the plant. */
+export const REVIEW_DAYS = [1, 3, 7, 14, 30] as const;
+export const MASTERED_STEP = REVIEW_DAYS.length;
+/** A day's exam asks at most this many reviews (the most overdue first); the rest wait a day. */
+export const MAX_REVIEWS_PER_DAY = 15;
 
 export function dayKey(now: number): string {
   const d = new Date(now);
@@ -17,43 +24,61 @@ export function dayKey(now: number): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
+export function addDays(day: string, days: number): string {
+  const [y, m, d] = day.split('-').map(Number);
+  return dayKey(new Date(y, m - 1, d + days).getTime());
+}
+
 /** Today's new plants: the ones already studied today, or else the next unlearned ones in deck order. */
 export function todaysNewPlants(deck: Plant[], learn: LearnMap, today: string, perDay: number): Plant[] {
-  const studied = deck.filter((p) => learn[p.id]?.learnedOn === today);
+  const studied = deck.filter((m) => learn[m.id]?.learnedOn === today);
   if (studied.length) return studied;
-  return deck.filter((p) => !learn[p.id]).slice(0, perDay);
+  return deck.filter((m) => !learn[m.id]).slice(0, perDay);
 }
 
 export function lessonStudied(deck: Plant[], learn: LearnMap, today: string): boolean {
-  return deck.some((p) => learn[p.id]?.learnedOn === today);
+  return deck.some((m) => learn[m.id]?.learnedOn === today);
 }
 
-/** Plants learned on an earlier day that still owe their one repeat. */
-export function dueRepeats(deck: Plant[], learn: LearnMap, today: string): Plant[] {
-  return deck.filter((p) => {
-    const r = learn[p.id];
-    return r && r.learnedOn < today && !r.repeated;
-  });
+const isDue = (r: LearnRecord | undefined, today: string): r is LearnRecord =>
+  !!r && r.step < MASTERED_STEP && r.learnedOn < today && r.dueOn <= today;
+
+/** Plants due for review today, the most overdue first, at most MAX_REVIEWS_PER_DAY. */
+export function dueReviews(deck: Plant[], learn: LearnMap, today: string): Plant[] {
+  return deck
+    .filter((m) => isDue(learn[m.id], today))
+    .sort((a, b) => learn[a.id].dueOn.localeCompare(learn[b.id].dueOn) || learn[a.id].step - learn[b.id].step)
+    .slice(0, MAX_REVIEWS_PER_DAY);
 }
 
-/** Today's exam: the new plants just studied, then the repeats due today. */
+/** Today's exam: the new plants just studied, then the reviews due today. */
 export function examPlants(deck: Plant[], learn: LearnMap, today: string, perDay: number): Plant[] {
   const fresh = lessonStudied(deck, learn, today) ? todaysNewPlants(deck, learn, today, perDay) : [];
-  return [...fresh, ...dueRepeats(deck, learn, today)];
+  return [...fresh, ...dueReviews(deck, learn, today)];
 }
 
 /** Mark today's new plants as learned (the lesson's study cards were shown). */
 export function markStudied(learn: LearnMap, plantIds: string[], today: string): LearnMap {
   const next = { ...learn };
-  for (const id of plantIds) next[id] ??= { learnedOn: today, repeated: false };
+  for (const id of plantIds) next[id] ??= { learnedOn: today, step: 0, dueOn: addDays(today, REVIEW_DAYS[0]) };
   return next;
 }
 
-/** A right answer on a later day than the lesson is the plant's repeat; anything else changes nothing. */
-export function recordRepeat(learn: LearnMap, plantId: string, correct: boolean, today: string): LearnMap {
+/**
+ * An answer about a learned plant. Right on or after its due day: one step further out.
+ * Wrong at any time: back to step 0, due tomorrow. Right before it's due: no change.
+ */
+export function recordReview(learn: LearnMap, plantId: string, correct: boolean, today: string): LearnMap {
   const r = learn[plantId];
-  if (!r || r.repeated || !correct || r.learnedOn >= today) return learn;
-  return { ...learn, [plantId]: { ...r, repeated: true } };
+  if (!r) return learn;
+  if (!correct) {
+    const restart = { ...r, step: 0, dueOn: addDays(today, REVIEW_DAYS[0]) };
+    return r.step === restart.step && r.dueOn === restart.dueOn ? learn : { ...learn, [plantId]: restart };
+  }
+  if (!isDue(r, today)) return learn;
+  const step = r.step + 1;
+  const dueOn = step < MASTERED_STEP ? addDays(today, REVIEW_DAYS[step]) : '';
+  return { ...learn, [plantId]: { ...r, step, dueOn } };
 }
 
 /**
@@ -64,7 +89,7 @@ export function recordRepeat(learn: LearnMap, plantId: string, correct: boolean,
 export function lockScreenPool(deck: Plant[], learn: LearnMap, today: string, perDay: number): Plant[] {
   const exam = examPlants(deck, learn, today, perDay);
   if (exam.length) return exam;
-  const learned = deck.filter((p) => learn[p.id]);
+  const learned = deck.filter((m) => learn[m.id]);
   if (learned.length) return learned;
   const fresh = todaysNewPlants(deck, learn, today, perDay);
   return fresh.length ? fresh : deck;
@@ -81,8 +106,8 @@ export function pickLockPlant(
   excludeId?: string,
 ): Plant {
   if (!pool.length) throw new Error('pickLockPlant: empty pool');
-  const options = pool.length > 1 ? pool.filter((p) => p.id !== excludeId) : pool;
-  const open = options.filter((p) => !correctToday.has(p.id));
+  const options = pool.length > 1 ? pool.filter((m) => m.id !== excludeId) : pool;
+  const open = options.filter((m) => !correctToday.has(m.id));
   const from = open.length ? open : options;
   return from[Math.floor(rng() * from.length)];
 }
@@ -95,10 +120,14 @@ export function recordStats(stats: StatsMap, plantId: string, correct: boolean):
   };
 }
 
-export type LearnStatus = 'new' | 'learning' | 'learned';
+export type LearnStatus = 'new' | 'learning' | 'mastered';
 
-/** "learning" = introduced in a lesson, still owes its repeat. */
 export function learnStatus(learn: LearnMap, plantId: string): LearnStatus {
   const r = learn[plantId];
-  return !r ? 'new' : r.repeated ? 'learned' : 'learning';
+  return !r ? 'new' : r.step >= MASTERED_STEP ? 'mastered' : 'learning';
+}
+
+/** How many reviews are due on `day` (for "Tomorrow: …" on the Today screen). */
+export function reviewsDueOn(deck: Plant[], learn: LearnMap, day: string): number {
+  return Math.min(MAX_REVIEWS_PER_DAY, deck.filter((m) => isDue(learn[m.id], day)).length);
 }

@@ -1,5 +1,5 @@
-import type { Plant } from './types';
 import type { Rng } from './daily';
+import type { Plant } from './types';
 
 export function shuffle<T>(items: T[], rng: Rng = Math.random): T[] {
   const out = [...items];
@@ -10,20 +10,49 @@ export function shuffle<T>(items: T[], rng: Rng = Math.random): T[] {
   return out;
 }
 
+/** True if either plant lists the other as a look-alike, so the data only needs one direction. */
+export function areLookalikes(a: Plant, b: Plant): boolean {
+  return a.id !== b.id && (a.lookalikes.includes(b.id) || b.lookalikes.includes(a.id));
+}
+
+/** Everything `plant` is commonly mistaken for, from `all`. */
+export function lookalikesOf(plant: Plant, all: Plant[]): Plant[] {
+  return all.filter((m) => areLookalikes(plant, m));
+}
+
 /**
- * Multiple-choice options: the answer plus distractors drawn from the same category
- * first (a tulip next to three trees is too easy), topping up from the rest.
+ * Multiple-choice options: the answer plus distractors drawn from its real look-alikes first,
+ * from anywhere in `all` (a peony next to a rose and a ranunculus is the lesson that matters),
+ * then the same group in the user's deck (a tulip next to three trees is too easy), then
+ * the rest of the deck, then anything.
  */
-export function buildChoices(answer: Plant, allPlants: Plant[], count = 4, rng: Rng = Math.random): Plant[] {
-  const others = allPlants.filter((p) => p.id !== answer.id && p.commonName !== answer.commonName);
+export function buildChoices(
+  answer: Plant,
+  deck: Plant[],
+  all: Plant[] = deck,
+  count = 4,
+  rng: Rng = Math.random,
+): Plant[] {
+  const usable = (m: Plant) => m.id !== answer.id && m.commonName !== answer.commonName;
+  const lookalikes = shuffle(
+    all.filter((m) => usable(m) && areLookalikes(answer, m)),
+    rng,
+  );
+  const taken = new Set(lookalikes.map((m) => m.id));
+  const fromDeck = deck.filter((m) => usable(m) && !taken.has(m.id));
   const sameCategory = shuffle(
-    others.filter((p) => p.category === answer.category),
+    fromDeck.filter((m) => m.category === answer.category),
     rng,
   );
-  const rest = shuffle(
-    others.filter((p) => p.category !== answer.category),
+  const restOfDeck = shuffle(
+    fromDeck.filter((m) => m.category !== answer.category),
     rng,
   );
-  const distractors = [...sameCategory, ...rest].slice(0, count - 1);
+  const inDeck = new Set(deck.map((m) => m.id));
+  const anything = shuffle(
+    all.filter((m) => usable(m) && !taken.has(m.id) && !inDeck.has(m.id)),
+    rng,
+  );
+  const distractors = [...lookalikes, ...sameCategory, ...restOfDeck, ...anything].slice(0, count - 1);
   return shuffle([answer, ...distractors], rng);
 }

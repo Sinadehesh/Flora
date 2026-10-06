@@ -5,13 +5,12 @@ import { blocker } from '../../blocker';
 import { useLockState } from '../../components/LockSetup';
 import { PlantPhoto } from '../../components/PlantPhoto';
 import { Button, Card, SectionTitle } from '../../components/ui';
-import { dayKey, dueRepeats, lessonStudied, todaysNewPlants } from '../../core/daily';
-import { accuracy, botanyIQ, inProgressCount, learnedCount, troublePlants } from '../../core/stats';
+import { addDays, dayKey, dueReviews, lessonStudied, reviewsDueOn, todaysNewPlants } from '../../core/daily';
+import { collectedCount, currentStreak, masteredCount, milestones, nextMilestone } from '../../core/progress';
+import { accuracy, botanyIQ, troublePlants } from '../../core/stats';
 import { PLANTS } from '../../data/plants';
 import { hasPlus, useDeck, useStore } from '../../state/store';
 import { serif, useColors } from '../../theme';
-
-const DAY_MS = 24 * 60 * 60 * 1000;
 
 export default function Home() {
   const c = useColors();
@@ -23,18 +22,22 @@ export default function Home() {
   const today = dayKey(now);
   const perDay = state.settings.plantsPerDay;
   const fresh = todaysNewPlants(deck, state.learn, today, perDay);
-  const repeats = dueRepeats(deck, state.learn, today);
+  const repeats = dueReviews(deck, state.learn, today);
   const studied = lessonStudied(deck, state.learn, today);
   const examDone = state.examDoneOn === today;
-  const tomorrow = dayKey(now + DAY_MS);
-  const tomorrowRepeats = dueRepeats(deck, state.learn, tomorrow).length;
+  const tomorrow = addDays(today, 1);
+  const tomorrowRepeats = reviewsDueOn(deck, state.learn, tomorrow);
   const tomorrowNew = todaysNewPlants(deck, state.learn, tomorrow, perDay).length;
 
   const acc = accuracy(state.stats);
   const trouble = troublePlants(deck, state.stats);
   const nothingLeft = !fresh.length && !repeats.length;
   // Free users who've met every flower: Plus has more plants to learn.
-  const offerPlus = !hasPlus(state) && deck.every((p) => state.learn[p.id]);
+  const offerPlus = !hasPlus(state) && deck.every((m) => state.learn[m.id]);
+  const streak = currentStreak(state.streak, today);
+  const collected = collectedCount(deck, state.learn);
+  const mastered = masteredCount(deck, state.learn);
+  const goal = nextMilestone(milestones({ collected, mastered, bestStreak: state.streak.best, total: PLANTS.length }));
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -62,7 +65,7 @@ export default function Home() {
             <Text style={[styles.body, { color: c.textMuted }]}>
               {tomorrowNew + tomorrowRepeats === 0
                 ? 'You’ve learned every plant in your deck. Your locked apps keep quizzing you on them.'
-                : `Tomorrow: ${plural(tomorrowNew, 'new plant')}${tomorrowRepeats ? ` and ${plural(tomorrowRepeats, 'repeat')}` : ''}.`}
+                : `Tomorrow: ${plural(tomorrowNew, 'new plant')}${tomorrowRepeats ? ` and ${plural(tomorrowRepeats, 'review')}` : ''}.`}
             </Text>
             {examDone && !nothingLeft && (
               <Button
@@ -84,20 +87,20 @@ export default function Home() {
         ) : (
           <>
             <Text style={[styles.headline, { color: c.text, fontFamily: serif }]}>
-              {studied ? 'Take today’s exam' : fresh.length ? plural(fresh.length, 'new plant') : 'Repeat day'}
+              {studied ? 'Take today’s exam' : fresh.length ? plural(fresh.length, 'new plant') : 'Review day'}
             </Text>
             {fresh.length > 0 && (
               <View style={styles.thumbs}>
-                {fresh.map((p) => (
-                  <View key={p.id} style={[styles.thumb, { backgroundColor: c.surfaceMuted }]}>
-                    <PlantPhoto plant={p} compact />
+                {fresh.map((m) => (
+                  <View key={m.id} style={[styles.thumb, { backgroundColor: c.surfaceMuted }]}>
+                    <PlantPhoto plant={m} compact />
                   </View>
                 ))}
               </View>
             )}
             <Text style={[styles.body, { color: c.textMuted }]}>
               {fresh.length && !studied ? 'See each plant once, then a short multiple-choice exam. ' : ''}
-              {repeats.length ? `Plus ${plural(repeats.length, 'plant')} from earlier coming back once.` : ''}
+              {repeats.length ? `Plus ${plural(repeats.length, 'review')} of plants from earlier.` : ''}
             </Text>
             <Button
               label={studied || !fresh.length ? 'Start the exam' : 'Start today’s lesson'}
@@ -107,12 +110,36 @@ export default function Home() {
         )}
       </Card>
 
+      <Card style={styles.streakCard}>
+        <Text style={styles.streakEmoji}>{streak ? '🔥' : '🌱'}</Text>
+        <View style={{ flex: 1, gap: 2 }}>
+          <Text style={[styles.rowTitle, { color: c.text }]}>
+            {streak ? `${plural(streak, 'day')} in a row` : 'Start a streak today'}
+          </Text>
+          <Text style={{ color: c.textMuted }}>
+            {streak && !examDone
+              ? 'Finish today’s exam to keep it going.'
+              : state.streak.best > 1
+                ? `Best: ${plural(state.streak.best, 'day')}`
+                : 'Do the exam each day to build one.'}
+          </Text>
+          {goal && (
+            <Text
+              style={{ color: c.textMuted }}
+              accessibilityLabel={`Next goal: ${goal.label}, ${goal.value} of ${goal.target}`}
+            >
+              Next goal: {goal.emoji} {goal.label} ({goal.value}/{goal.target})
+            </Text>
+          )}
+        </View>
+      </Card>
+
       <Card style={styles.iqCard}>
         <Text style={[styles.cardLabel, { color: c.textMuted }]}>Botany IQ</Text>
         <Text style={[styles.iq, { color: c.primary, fontFamily: serif }]}>{botanyIQ(deck, state.learn)}</Text>
         <View style={styles.statsRow}>
-          <Stat label="Learned" value={`${learnedCount(deck, state.learn)}/${deck.length}`} />
-          <Stat label="Repeat to come" value={String(inProgressCount(deck, state.learn))} />
+          <Stat label="Collected" value={`${collected}/${deck.length}`} />
+          <Stat label="Mastered" value={String(mastered)} />
           <Stat label="Accuracy" value={acc === null ? '—' : `${Math.round(acc * 100)}%`} />
         </View>
       </Card>
@@ -133,20 +160,20 @@ export default function Home() {
       {trouble.length > 0 && (
         <>
           <SectionTitle>Keeps tripping you up</SectionTitle>
-          {trouble.map((p) => {
-            const s = state.stats[p.id];
+          {trouble.map((m) => {
+            const s = state.stats[m.id];
             return (
               <Pressable
-                key={p.id}
+                key={m.id}
                 accessibilityRole="link"
-                onPress={() => router.push({ pathname: '/plant/[id]', params: { id: p.id } })}
+                onPress={() => router.push({ pathname: '/plant/[id]', params: { id: m.id } })}
                 style={[styles.row, { borderColor: c.border, backgroundColor: c.surface }]}
               >
                 <View style={styles.rowThumb}>
-                  <PlantPhoto plant={p} compact />
+                  <PlantPhoto plant={m} compact />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={[styles.rowTitle, { color: c.text }]}>{p.commonName}</Text>
+                  <Text style={[styles.rowTitle, { color: c.text }]}>{m.commonName}</Text>
                   <Text style={{ color: c.textMuted }}>
                     Missed {s.wrong} of {s.seen}
                   </Text>
@@ -180,6 +207,8 @@ const styles = StyleSheet.create({
   body: { fontSize: 15, lineHeight: 21 },
   thumbs: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   thumb: { width: 52, height: 52, borderRadius: 12, overflow: 'hidden' },
+  streakCard: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  streakEmoji: { fontSize: 40 },
   iqCard: { alignItems: 'center', paddingVertical: 20 },
   iq: { fontSize: 64, fontWeight: '700', lineHeight: 76 },
   statsRow: { flexDirection: 'row', marginTop: 8, alignSelf: 'stretch' },

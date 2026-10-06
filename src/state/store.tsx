@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
 
-import { dayKey, markStudied, recordRepeat, recordStats } from '../core/daily';
+import { dayKey, markStudied, recordReview, recordStats } from '../core/daily';
 import { deckCategories } from '../core/plus';
+import { extendStreak, NO_STREAK } from '../core/progress';
 import { readSaved, SAVE_KEY, serializeSaved, type SavedState } from '../core/saved';
 import { DEFAULT_SETTINGS, type Settings } from '../core/types';
 import { PLANTS } from '../data/plants';
@@ -28,6 +29,7 @@ const initialState: State = {
   stats: {},
   today: { day: '', correct: [] },
   examDoneOn: '',
+  streak: NO_STREAK,
   emergency: { day: '', used: 0 },
   plus: false,
   codeUnlock: false,
@@ -51,7 +53,7 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         stats: recordStats(state.stats, action.plantId, action.correct),
-        learn: recordRepeat(state.learn, action.plantId, action.correct, day),
+        learn: recordReview(state.learn, action.plantId, action.correct, day),
         today: {
           day,
           correct:
@@ -59,8 +61,10 @@ function reducer(state: State, action: Action): State {
         },
       };
     }
-    case 'examDone':
-      return { ...state, examDoneOn: dayKey(action.now) };
+    case 'examDone': {
+      const day = dayKey(action.now);
+      return { ...state, examDoneOn: day, streak: extendStreak(state.streak, day) };
+    }
     case 'updateSettings':
       return { ...state, settings: { ...state.settings, ...action.patch } };
     case 'useEmergency': {
@@ -73,7 +77,7 @@ function reducer(state: State, action: Action): State {
     case 'unlockWithCode':
       return { ...state, codeUnlock: true };
     case 'resetProgress':
-      return { ...state, learn: {}, stats: {}, today: { day: '', correct: [] }, examDoneOn: '' };
+      return { ...state, learn: {}, stats: {}, today: { day: '', correct: [] }, examDoneOn: '', streak: NO_STREAK };
   }
 }
 

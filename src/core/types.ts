@@ -8,8 +8,20 @@ export interface Plant {
   category: PlantCategory;
   /** Other names the plant goes by (synonyms, old genus names, regional names). */
   aliases: string[];
+  /** Ids of plants it is commonly mistaken for (see LOOKALIKE_PAIRS in data/plants.ts). */
+  lookalikes: string[];
   /** One-sentence micro-fact shown during the Genius Penalty. */
   fact: string;
+}
+
+/** How to recognise a plant, for the lesson cards and plant pages. */
+export interface Clues {
+  flower: string;
+  leaves: string;
+  /** When it flowers, or what it does through the year. */
+  season: string;
+  /** The one feature that tells it apart from its look-alikes. */
+  key: string;
 }
 
 /** Answer history for one plant, keyed by plant id. */
@@ -22,15 +34,25 @@ export interface PlantStats {
 export type StatsMap = Record<string, PlantStats>;
 
 /**
- * Where a plant is in the daily plan. It's introduced in a lesson on `learnedOn`,
- * then comes back once on a later day; answering it right there sets `repeated`.
+ * Where a plant is in the review schedule (see daily.ts). It's introduced in a lesson on
+ * `learnedOn`; each right answer on or after its due day moves it one `step` further out, and a
+ * miss starts the schedule over from tomorrow.
  */
 export interface LearnRecord {
   learnedOn: string;
-  repeated: boolean;
+  step: number;
+  dueOn: string;
 }
 
 export type LearnMap = Record<string, LearnRecord>;
+
+/** Days in a row with the lesson's exam done. */
+export interface Streak {
+  /** Last day the exam was done ("" if never). */
+  last: string;
+  count: number;
+  best: number;
+}
 
 export interface Settings {
   /** New plants introduced in each day's lesson. */

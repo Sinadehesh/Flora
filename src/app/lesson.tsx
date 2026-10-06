@@ -3,12 +3,16 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState, type ReactNode } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { EdibilityBadge, isToxic } from '../components/EdibilityBadge';
+import { CluesList, Lookalikes, SafetyNote } from '../components/PlantFacts';
 import { PlantPhoto } from '../components/PlantPhoto';
 import { Button } from '../components/ui';
-import { dayKey, dueRepeats, lessonStudied, todaysNewPlants } from '../core/daily';
-import { buildChoices, shuffle } from '../core/quiz';
+import { dayKey, dueReviews, lessonStudied, REVIEW_DAYS, todaysNewPlants } from '../core/daily';
+import { areLookalikes, buildChoices, lookalikesOf, shuffle } from '../core/quiz';
 import type { Plant } from '../core/types';
+import { PLANT_CLUES } from '../data/plantClues';
 import { PLANT_IMAGES } from '../data/plantImages.generated';
+import { PLANTS, PLANTS_BY_ID } from '../data/plants';
 import { useDeck, useStore } from '../state/store';
 import { serif, useColors } from '../theme';
 
@@ -23,7 +27,7 @@ interface Question {
 
 /**
  * Today's lesson: each new plant shown once on a study card, then an exam with one
- * multiple-choice question per new plant plus each plant due its repeat. Once the cards
+ * multiple-choice question per new plant plus each plant due for review. Once the cards
  * have been studied today it opens on the exam, unless `?review=1` asks for the cards again.
  */
 export default function Lesson() {
@@ -44,7 +48,7 @@ function LessonScreen() {
     const today = dayKey(Date.now());
     return {
       fresh: todaysNewPlants(deck, state.learn, today, state.settings.plantsPerDay),
-      repeats: dueRepeats(deck, state.learn, today),
+      repeats: dueReviews(deck, state.learn, today),
       studied: lessonStudied(deck, state.learn, today),
     };
   });
@@ -57,7 +61,11 @@ function LessonScreen() {
       [
         ...shuffle(fresh).map((plant) => ({ plant, repeat: false })),
         ...shuffle(repeats).map((plant) => ({ plant, repeat: true })),
-      ].map((q) => ({ ...q, choices: buildChoices(q.plant, deck), photo: Math.floor(Math.random() * 1000) })),
+      ].map((q) => ({
+        ...q,
+        choices: buildChoices(q.plant, deck, PLANTS),
+        photo: Math.floor(Math.random() * 1000),
+      })),
     [fresh, repeats, deck],
   );
   const [qIndex, setQIndex] = useState(0);
@@ -71,8 +79,8 @@ function LessonScreen() {
       <Centered>
         <Text style={[styles.title, { color: c.text, fontFamily: serif }]}>Nothing to learn today</Text>
         <Text style={[styles.body, { color: c.textMuted }]}>
-          You’ve met every plant in your deck and none are due a repeat. Add more plant groups in Settings, or practise
-          from the home screen.
+          You’ve met every plant in your deck and none are due for review. Add more plant groups in Settings, or
+          practise from the home screen.
         </Text>
         <Button label="Back" onPress={close} />
       </Centered>
@@ -84,53 +92,69 @@ function LessonScreen() {
     const photos = PLANT_IMAGES[plant.id]?.length ?? 0;
     const lastCard = card === fresh.length - 1;
     const startExam = () => {
-      if (!studied) dispatch({ type: 'studied', plantIds: fresh.map((p) => p.id), now: Date.now() });
+      if (!studied) dispatch({ type: 'studied', plantIds: fresh.map((m) => m.id), now: Date.now() });
       setPhase('exam');
     };
     return (
-      <ScrollView contentContainerStyle={styles.scroll}>
-        <Text style={[styles.kicker, { color: c.textMuted }]}>
-          New plant {card + 1} of {fresh.length}
-        </Text>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityHint={photos > 1 ? 'Shows another photo' : undefined}
-          onPress={() => setPhoto((p) => p + 1)}
-          style={[styles.photo, { backgroundColor: c.surfaceMuted }]}
-        >
-          <PlantPhoto plant={plant} photo={photo} />
-          {photos > 1 && (
-            <Text style={[styles.photoCount, { backgroundColor: c.overlay }]}>
-              {(photo % photos) + 1}/{photos} · tap for more
-            </Text>
+      <View style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.scroll}>
+          <Text style={[styles.kicker, { color: c.textMuted }]}>
+            New plant {card + 1} of {fresh.length}
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityHint={photos > 1 ? 'Shows another photo' : undefined}
+            onPress={() => setPhoto((p) => p + 1)}
+            style={[styles.photo, { backgroundColor: c.surfaceMuted }]}
+          >
+            <PlantPhoto plant={plant} photo={photo} />
+            {photos > 1 && (
+              <Text style={[styles.photoCount, { backgroundColor: c.overlay }]}>
+                {(photo % photos) + 1}/{photos} · tap for more
+              </Text>
+            )}
+          </Pressable>
+          <Text style={[styles.name, { color: c.text, fontFamily: serif }]}>{plant.commonName}</Text>
+          <Text style={[styles.sci, { color: c.textMuted, fontFamily: serif }]}>
+            {plant.scientificName} · {plant.family}
+          </Text>
+          <View style={{ marginVertical: 8 }}>
+            <EdibilityBadge plant={plant} />
+          </View>
+          <Text style={[styles.body, { color: c.text }]}>{plant.fact}</Text>
+          <Text style={[styles.section, { color: c.textMuted }]}>How to recognise it</Text>
+          <CluesList plant={plant} />
+          {lookalikesOf(plant, PLANTS).length > 0 && (
+            <>
+              <Text style={[styles.section, { color: c.textMuted }]}>Don’t confuse it with</Text>
+              <Lookalikes plant={plant} linked={false} />
+            </>
           )}
-        </Pressable>
-        <Text style={[styles.name, { color: c.text, fontFamily: serif }]}>{plant.commonName}</Text>
-        <Text style={[styles.sci, { color: c.textMuted, fontFamily: serif }]}>
-          {plant.scientificName} · {plant.family}
-        </Text>
-        <Text style={[styles.body, { color: c.text }]}>{plant.fact}</Text>
-        <View style={styles.actions}>
-          <Button
-            label={lastCard ? 'Start the exam' : 'Next plant'}
-            onPress={() => {
-              setPhoto(0);
-              if (lastCard) startExam();
-              else setCard(card + 1);
-            }}
-          />
+          <SafetyNote />
+        </ScrollView>
+        <View style={[styles.footer, { borderColor: c.border, backgroundColor: c.background }]}>
           {card > 0 && (
             <Button
               variant="ghost"
-              label="Previous plant"
+              label="Previous"
+              style={{ flex: 1 }}
               onPress={() => {
                 setPhoto(0);
                 setCard(card - 1);
               }}
             />
           )}
+          <Button
+            label={lastCard ? 'Start the exam' : 'Next plant'}
+            style={{ flex: 2 }}
+            onPress={() => {
+              setPhoto(0);
+              if (lastCard) startExam();
+              else setCard(card + 1);
+            }}
+          />
         </View>
-      </ScrollView>
+      </View>
     );
   }
 
@@ -143,10 +167,10 @@ function LessonScreen() {
           {score} of {questions.length} right
         </Text>
         <Text style={[styles.body, { color: c.textMuted, textAlign: 'center' }]}>
-          {fresh.length > 0 && 'Today’s plants come back once tomorrow. '}
+          {fresh.length > 0 && `Today’s plants come back for review in ${REVIEW_DAYS[0]} day. `}
           {missed > 0
-            ? 'Plants you missed keep coming back until you get them.'
-            : 'Your locked apps will quiz you on these today.'}
+            ? 'Plants you missed start their reviews again tomorrow.'
+            : 'Each right review pushes the next one further out.'}
         </Text>
         <Button label="Done for today" onPress={close} />
       </Centered>
@@ -182,7 +206,7 @@ function LessonScreen() {
     <ScrollView contentContainerStyle={styles.scroll}>
       <Text style={[styles.kicker, { color: c.textMuted }]}>
         Exam · question {qIndex + 1} of {questions.length}
-        {q.repeat ? ' · repeat' : ''}
+        {q.repeat ? ' · review' : ''}
       </Text>
       <View style={[styles.photo, { backgroundColor: c.surfaceMuted }]}>
         <PlantPhoto plant={q.plant} photo={q.photo} showHint={!answered} />
@@ -217,11 +241,28 @@ function LessonScreen() {
           <Text style={[styles.feedback, { color: right ? c.success : c.danger }]}>
             {right ? 'Right!' : `It’s ${q.plant.commonName}.`}
           </Text>
+          <EdibilityBadge plant={q.plant} />
+          {!right && picked && <LookalikeNote answer={q.plant} pickedId={picked} />}
           <Text style={[styles.body, { color: c.text }]}>{q.plant.fact}</Text>
           <Button label={qIndex === questions.length - 1 ? 'See my score' : 'Next question'} onPress={nextQuestion} />
         </View>
       )}
     </ScrollView>
+  );
+}
+
+/** After a wrong pick that was a real look-alike: how to tell the two apart. */
+function LookalikeNote({ answer, pickedId }: { answer: Plant; pickedId: string }) {
+  const c = useColors();
+  const picked = PLANTS_BY_ID[pickedId];
+  if (!picked || !areLookalikes(answer, picked)) return null;
+  return (
+    <View style={[styles.note, { borderColor: c.warning }]}>
+      <Text style={[styles.body, { color: c.text, fontWeight: '700' }]}>
+        {picked.commonName} is a real look-alike{isToxic(picked) ? ', and toxic' : ''}.
+      </Text>
+      <Text style={[styles.body, { color: c.text }]}>How to tell: {PLANT_CLUES[answer.id]?.key}</Text>
+    </View>
   );
 }
 
@@ -255,4 +296,22 @@ const styles = StyleSheet.create({
   actions: { gap: 10, marginTop: 8 },
   choice: { minHeight: 52, borderRadius: 14, paddingHorizontal: 16, justifyContent: 'center' },
   feedback: { fontSize: 18, fontWeight: '700' },
+  section: {
+    fontSize: 13,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    marginTop: 20,
+    marginBottom: 8,
+  },
+  note: { borderWidth: 1.5, borderRadius: 14, padding: 12, gap: 6 },
+  footer: {
+    flexDirection: 'row',
+    gap: 10,
+    padding: 16,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    maxWidth: 560,
+    width: '100%',
+    alignSelf: 'center',
+  },
 });

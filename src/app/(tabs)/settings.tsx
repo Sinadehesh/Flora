@@ -35,7 +35,7 @@ export default function SettingsScreen() {
       if (window.confirm('Reset all learning progress?')) reset();
       return;
     }
-    Alert.alert('Reset progress?', 'Your lessons, repeats and Botany IQ will start over.', [
+    Alert.alert('Reset progress?', 'Your collection, reviews, streak and Botany IQ will start over.', [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Reset', style: 'destructive', onPress: reset },
     ]);

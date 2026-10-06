@@ -107,6 +107,7 @@ package name stays `com.floralock.app`, every release is signed with the same up
   the lock's on/off state live in the native `floralock_blocker` preferences (`BlockerStore.kt`). Never
   rename either: a new name reads as empty, so every user would start over.
 - When the saved shape changes, bump `SAVE_VERSION` and convert older saves in `migrate()`, with a test.
+  Version 2 (spaced reviews and streaks) converts version 1 saves this way: no plant or answer is lost.
   Values that fail validation fall back to defaults one by one, and the app never saves over a save it
   couldn't read (an unreadable one is copied to `floralock/v2-unreadable` first).
 - Every build's emulator test reinstalls the app over itself, as an update does, and checks that the lock
