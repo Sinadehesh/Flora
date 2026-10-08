@@ -80,8 +80,9 @@ const sections = (a) => [
   [
     `${a.plus} and payments`,
     [
-      `${a.name} is free to download. ${a.plus} is an optional one-time purchase made through Google Play, which processes the payment under Google’s terms. Plus is tied to your Google account and stays unlocked on any phone signed in to it.`,
-      `Refunds follow Google Play’s refund policy; you can request one through Google Play. If a purchase is refunded or reversed, Plus is removed and the extra locked apps are released. Prices are shown in Google Play before you buy, including any taxes Google collects.`,
+      `${a.name} is free to download. ${a.plus} is optional and sold through Google Play, which processes the payment under Google’s terms, in two ways: a one-time purchase that keeps Plus for good, or a monthly subscription. Plus is tied to your Google account and is unlocked on any phone signed in to it.`,
+      `The monthly subscription renews automatically each month, at the price shown when you subscribed, until you cancel it. You can cancel at any time in Google Play (Payments & subscriptions); Plus then stays until the end of the month you have paid for. If the price changes, Google Play tells you beforehand.`,
+      `Refunds follow Google Play’s refund policy; you can request one through Google Play. If a purchase is refunded or reversed, or a subscription ends, Plus is removed and the extra locked apps are released. Prices are shown in Google Play before you buy, including any taxes Google collects.`,
     ],
   ],
   [

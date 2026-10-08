@@ -25,7 +25,7 @@ Everything runs offline; nothing leaves the phone ([privacy policy](PRIVACY.md))
 | Photos                                                       | ✅ 3 real iNaturalist photos per plant, CC0 / CC BY / CC BY-SA, bundled          |
 | Android app lock (UsageStats + foreground service)           | ✅ Passes the emulator test on Android 8, 10, 13 and 15; needs real phones       |
 | Play Store signing and privacy policy                        | ✅ Ready; see [docs/PLAY_STORE.md](docs/PLAY_STORE.md)                           |
-| FloraLock Plus (one-time purchase, Google Play Billing)      | ✅ Built; product `floralock_plus` must be created in Play Console               |
+| FloraLock Plus (one-time or monthly, Google Play Billing)    | ✅ Built; `floralock_plus` and `floralock_plus_monthly` must be created in Play  |
 | iOS shield (Screen Time API)                                 | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md) |
 
 ## Learning model
@@ -97,7 +97,7 @@ src/
   blocker/              Bridge to the native Android lock
   state/store.tsx       App state, persisted to AsyncStorage
 modules/app-blocker/    Native Android lock: foreground service, overlay fallback, boot receiver
-modules/play-billing/   Google Play Billing for the one-time Plus purchase
+modules/play-billing/   Google Play Billing for Plus (one-time purchase and monthly subscription)
 ```
 
 ## Photos

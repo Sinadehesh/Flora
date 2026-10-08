@@ -41,7 +41,7 @@ WHAT'S INSIDE
 
 FREE, WITH AN OPTIONAL UPGRADE
 • Free: Lock up to 2 apps and learn all 35 flowers.
-• FloraLock Plus (one-time purchase, no subscription): Unlimited locked apps and all 70 plants, including houseplants and trees.
+• FloraLock Plus: Unlimited locked apps and all 70 plants, including houseplants and trees. Buy it once, or pay monthly and cancel anytime.
 
 PRIVATE AND OFFLINE
 No account, no ads, no analytics. Everything stays on your phone and works offline.
