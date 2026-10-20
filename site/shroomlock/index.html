@@ -62,6 +62,7 @@
     {
       "@type": "FAQPage",
       "mainEntity": [
+        { "@type": "Question", "name": "How can I try ShroomLock before it launches?", "acceptedAnswer": { "@type": "Answer", "text": "Join the closed test: join our testers group at https://groups.google.com/g/sinadehesh-testers, open https://play.google.com/apps/testing/com.shroomlock.app with the same Google account and tap “Become a tester”, then install ShroomLock from Google Play. Keep it for 14 days and tell us what you think." } },
         { "@type": "Question", "name": "What is ShroomLock?", "acceptedAnswer": { "@type": "Answer", "text": "ShroomLock is an app locker for Android. When you open an app you locked, it shows a mushroom photo with four names, usually including its real look-alikes. Name it correctly and the app opens for 10 minutes." } },
         { "@type": "Question", "name": "Can I use ShroomLock to decide which mushrooms are safe to eat?", "acceptedAnswer": { "@type": "Answer", "text": "No. ShroomLock teaches recognition, not foraging. Photos can’t show smell, spore print or what grows underground, and some deadly mushrooms look like edible ones. Never eat a wild mushroom because of an app; have every find checked in person by an expert." } },
         { "@type": "Question", "name": "Is ShroomLock free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The free version locks up to 2 apps and teaches 35 gilled mushrooms. ShroomLock Plus is an optional upgrade that adds unlimited apps and 36 more fungi: boletes, brackets, chanterelles, morels, puffballs and more. Buy it once, or pay monthly and cancel anytime. No ads." } },
@@ -129,6 +130,10 @@ section { padding: 72px 0; }
 .step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--rust); color: #fff; font-weight: 800; margin-bottom: 14px; }
 .step h3 { font-size: 1.4rem; margin-bottom: 6px; }
 .step p { margin: 0; color: var(--muted); }
+ol.steps { list-style: none; padding: 0; margin: 0; }
+.step .btn { margin-top: 18px; padding: 11px 18px; }
+a.btn-soon { cursor: pointer; }
+.test-note { color: var(--muted); font-size: 0.95rem; margin: 22px 0 0; }
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .feature { padding: 24px; border-radius: 20px; background: linear-gradient(160deg, rgba(196, 106, 60, 0.14), rgba(255, 255, 255, 0.02)); border: 1px solid var(--line); }
 .feature .ico { font-size: 1.8rem; }
@@ -182,6 +187,7 @@ footer a { color: var(--muted); }
   <div class="wrap">
     <a class="brand" href="/shroomlock/"><img src="/shroomlock/img/icon-192.png" alt="" width="34" height="34">ShroomLock</a>
     <nav aria-label="Page sections">
+      <a href="#test">Become a tester</a>
       <a href="#how">How it works</a>
       <a href="#lookalikes">Look-alikes</a>
       <a href="#screenshots">Screenshots</a>
@@ -199,10 +205,10 @@ footer a { color: var(--muted); }
         <h1>Name the mushroom.<br><em>Unlock your app.</em></h1>
         <p class="lead">ShroomLock swaps mindless scrolling for a walk in the woods. A locked app shows a mushroom photo and four names, and the wrong ones are its real look-alikes. Get it right and you’re in; get it wrong and you learn how to tell them apart.</p>
         <div class="cta">
-          <span class="btn btn-soon" role="img" aria-label="Coming soon on Google Play">
+          <a class="btn btn-soon" href="#test">
             <svg width="26" height="28" viewBox="0 0 26 28" aria-hidden="true"><path fill="#2A1810" d="M1 1.5 15 14 1 26.5c-.6-.3-1-1-1-1.8V3.3c0-.8.4-1.5 1-1.8Z"/><path fill="#7A4527" d="m19.3 9.8 4.6 2.6c1.5.8 1.5 2.4 0 3.2l-4.6 2.6L15 14Z"/><path fill="#5A3420" d="M1 1.5 15 14l4.3-4.2L3.6.6C2.6 0 1.7.9 1 1.5Z"/><path fill="#3E2416" d="M1 26.5 15 14l4.3 4.2-15.7 9.2c-1 .6-1.9.1-2.6-.9Z"/></svg>
-            <span><small>Coming soon on</small><b>Google Play</b></span>
-          </span>
+            <span><small>Help us launch</small><b>Become a tester</b></span>
+          </a>
           <a class="btn btn-ghost" href="#how">See how it works</a>
         </div>
         <p class="note">Free · no ads · works offline · Android 8 and later · <a href="/shroomlock/privacy/">Privacy</a> · <a href="/shroomlock/terms/">Terms</a></p>
@@ -222,6 +228,31 @@ footer a { color: var(--muted); }
           <p>Never eat a wild mushroom because an app or a photo says it’s edible. Photos can’t show smell, spore print or what grows underground, and some deadly mushrooms look like edible ones. ShroomLock says this in setup, on every lesson card and on every mushroom page. Have every find checked in person by an expert.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="test">
+    <div class="wrap">
+      <h2 class="section-title">Help us test ShroomLock</h2>
+      <p class="section-lead">ShroomLock is in its closed test on Google Play. Before an app can go public, Google needs real people to try it for 14 days. It’s free and takes about two minutes to join.</p>
+      <ol class="steps">
+        <li class="step">
+          <h3>Join the testers group</h3>
+          <p>Sign in with the Google account on your Android phone and tap “Join group”. One group covers all three of our app lockers.</p>
+          <a class="btn btn-ghost" href="https://groups.google.com/g/sinadehesh-testers" target="_blank" rel="noopener">Join the group</a>
+        </li>
+        <li class="step">
+          <h3>Become a tester</h3>
+          <p>Open ShroomLock’s test page with the same Google account and tap “Become a tester”.</p>
+          <a class="btn btn-ghost" href="https://play.google.com/apps/testing/com.shroomlock.app" target="_blank" rel="noopener">Open the test page</a>
+        </li>
+        <li class="step">
+          <h3>Install and use it</h3>
+          <p>Install ShroomLock from Google Play, keep it for 14 days and answer a few mushroom quizzes now and then. Spot something odd? Use “Send feedback” on its Play page.</p>
+          <a class="btn btn-ghost" href="https://play.google.com/store/apps/details?id=com.shroomlock.app" target="_blank" rel="noopener">Install from Google Play</a>
+        </li>
+      </ol>
+      <p class="test-note">If the test page says you can’t join yet, wait a few minutes after joining the group and try again. Testing is free; you don’t need to buy anything. Testing more than one app? Our <a href="/testers/">testers page</a> has all three.</p>
     </div>
   </section>
 
@@ -312,6 +343,7 @@ footer a { color: var(--muted); }
   <section id="faq" class="faq" style="padding-top: 0">
     <div class="wrap">
       <h2 class="section-title">Questions</h2>
+      <details><summary>How can I try ShroomLock before it launches?</summary><p>Join the closed test: join our <a href="https://groups.google.com/g/sinadehesh-testers" target="_blank" rel="noopener">testers group</a>, open <a href="https://play.google.com/apps/testing/com.shroomlock.app" target="_blank" rel="noopener">ShroomLock’s test page</a> with the same Google account and tap “Become a tester”, then install ShroomLock from Google Play. Keep it for 14 days and tell us what you think.</p></details>
       <details open><summary>What is ShroomLock?</summary><p>ShroomLock is an app locker for Android. When you open an app you locked, it shows a mushroom photo with four names, usually including its real look-alikes. Name it correctly and the app opens for 10 minutes.</p></details>
       <details><summary>Can I use ShroomLock to decide which mushrooms are safe to eat?</summary><p>No. ShroomLock teaches recognition, not foraging. Photos can’t show smell, spore print or what grows underground, and some deadly mushrooms look like edible ones. Never eat a wild mushroom because of an app; have every find checked in person by an expert.</p></details>
       <details><summary>Is ShroomLock free?</summary><p>Yes. The free version locks up to 2 apps and teaches 35 gilled mushrooms. ShroomLock Plus is an optional upgrade that adds unlimited apps and 36 more fungi: boletes, brackets, chanterelles, morels, puffballs and more. Buy it once, or pay monthly and cancel anytime. No ads.</p></details>
@@ -323,8 +355,8 @@ footer a { color: var(--muted); }
   <section class="final">
     <div class="wrap">
       <h2 class="section-title">Trade a scroll for a chanterelle</h2>
-      <p class="section-lead" style="margin-inline: auto">ShroomLock is almost ready for Google Play.</p>
-      <div class="cta"><span class="btn btn-soon" role="img" aria-label="Coming soon on Google Play"><span><small>Coming soon on</small><b>Google Play</b></span></span></div>
+      <p class="section-lead" style="margin-inline: auto">ShroomLock is almost ready for Google Play. Help it get there.</p>
+      <div class="cta"><a class="btn btn-soon" href="#test"><span><small>Try it before launch</small><b>Become a tester</b></span></a></div>
       <a class="sister" href="/floralock/">
         <img src="/floralock/img/icon-192.png" alt="" width="64" height="64">
         <div><b>Prefer flowers?</b><span>Meet FloraLock, ShroomLock’s sister app for 70 flowers, houseplants and trees →</span></div>

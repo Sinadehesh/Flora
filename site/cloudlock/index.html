@@ -62,6 +62,7 @@
     {
       "@type": "FAQPage",
       "mainEntity": [
+        { "@type": "Question", "name": "How can I try CloudLock before it launches?", "acceptedAnswer": { "@type": "Answer", "text": "Join the closed test: join our testers group at https://groups.google.com/g/sinadehesh-testers, open https://play.google.com/apps/testing/com.cloudlock.app with the same Google account and tap “Become a tester”, then install CloudLock from Google Play. Keep it for 14 days and tell us what you think." } },
         { "@type": "Question", "name": "What is CloudLock?", "acceptedAnswer": { "@type": "Answer", "text": "CloudLock is an app locker for Android. When you open an app you locked, it shows a cloud photo with four names, usually including its real look-alikes. Name it correctly and the app opens for 10 minutes." } },
         { "@type": "Question", "name": "Which clouds will I learn?", "acceptedAnswer": { "@type": "Answer", "text": "36 clouds from the WMO International Cloud Atlas: the 10 main types (cumulus, stratus, cirrus, cumulonimbus and the rest), their best-known species such as lenticular and towering cumulus, and special clouds like mammatus, shelf clouds, noctilucent clouds and fallstreak holes." } },
         { "@type": "Question", "name": "Can CloudLock forecast the weather?", "acceptedAnswer": { "@type": "Answer", "text": "No. It teaches what clouds usually mean, which is useful and fun, but only your local weather service can warn you about storms. In stormy weather, take shelter." } },
@@ -136,6 +137,10 @@ section { padding: 72px 0; }
 .step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #6FB1E6, var(--blue)); color: #fff; font-weight: 900; margin-bottom: 14px; }
 .step h3 { font-size: 1.35rem; margin-bottom: 6px; }
 .step p { margin: 0; color: var(--muted); }
+ol.steps { list-style: none; padding: 0; margin: 0; }
+.step .btn { margin-top: 18px; padding: 11px 18px; }
+a.btn-soon { cursor: pointer; }
+.test-note { color: var(--muted); font-size: 0.95rem; margin: 22px 0 0; }
 .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .trio .card { background: #fff; border-radius: 24px; padding: 22px; text-align: center; box-shadow: 0 14px 30px -22px rgba(27, 74, 120, 0.5); }
 .trio .hand { font-size: 2.4rem; }
@@ -195,6 +200,7 @@ footer a { color: var(--muted); }
   <div class="wrap">
     <a class="brand" href="/cloudlock/"><img src="/cloudlock/img/icon-192.png" alt="" width="34" height="34">CloudLock</a>
     <nav aria-label="Page sections">
+      <a href="#test">Become a tester</a>
       <a href="#how">How it works</a>
       <a href="#read">Read the sky</a>
       <a href="#screenshots">Screenshots</a>
@@ -215,10 +221,10 @@ footer a { color: var(--muted); }
         <h1>Name the cloud.<br><em>Unlock your app.</em></h1>
         <p class="lead">Look up from your phone, literally. CloudLock turns every urge to scroll into a glance at the sky: a locked app shows a cloud photo and four names. Get it right and you’re in; get it wrong and you learn the difference, and what weather it means.</p>
         <div class="cta">
-          <span class="btn btn-soon" role="img" aria-label="Coming soon on Google Play">
+          <a class="btn btn-soon" href="#test">
             <svg width="26" height="28" viewBox="0 0 26 28" aria-hidden="true"><path fill="#D6E6F5" d="M1 1.5 15 14 1 26.5c-.6-.3-1-1-1-1.8V3.3c0-.8.4-1.5 1-1.8Z"/><path fill="#FFD9A8" d="m19.3 9.8 4.6 2.6c1.5.8 1.5 2.4 0 3.2l-4.6 2.6L15 14Z"/><path fill="#FFFFFF" d="M1 1.5 15 14l4.3-4.2L3.6.6C2.6 0 1.7.9 1 1.5Z"/><path fill="#9CC8EE" d="M1 26.5 15 14l4.3 4.2-15.7 9.2c-1 .6-1.9.1-2.6-.9Z"/></svg>
-            <span><small>Coming soon on</small><b>Google Play</b></span>
-          </span>
+            <span><small>Help us launch</small><b>Become a tester</b></span>
+          </a>
           <a class="btn btn-ghost" href="#how">See how it works</a>
         </div>
         <p class="note">Free · no ads · works offline · Android 8 and later · <a href="/cloudlock/privacy/">Privacy</a> · <a href="/cloudlock/terms/">Terms</a></p>
@@ -238,6 +244,31 @@ footer a { color: var(--muted); }
           <p>Clouds hint at the weather, but only your local weather service can warn you about storms. If a funnel, wall or shelf cloud is heading your way, go indoors. CloudLock says this in setup and on every cloud.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="test">
+    <div class="wrap">
+      <h2 class="section-title">Help us test CloudLock</h2>
+      <p class="section-lead">CloudLock is in its closed test on Google Play. Before an app can go public, Google needs real people to try it for 14 days. It’s free and takes about two minutes to join.</p>
+      <ol class="steps">
+        <li class="step">
+          <h3>Join the testers group</h3>
+          <p>Sign in with the Google account on your Android phone and tap “Join group”. One group covers all three of our app lockers.</p>
+          <a class="btn btn-ghost" href="https://groups.google.com/g/sinadehesh-testers" target="_blank" rel="noopener">Join the group</a>
+        </li>
+        <li class="step">
+          <h3>Become a tester</h3>
+          <p>Open CloudLock’s test page with the same Google account and tap “Become a tester”.</p>
+          <a class="btn btn-ghost" href="https://play.google.com/apps/testing/com.cloudlock.app" target="_blank" rel="noopener">Open the test page</a>
+        </li>
+        <li class="step">
+          <h3>Install and use it</h3>
+          <p>Install CloudLock from Google Play, keep it for 14 days and answer a few cloud quizzes now and then. Spot something odd? Use “Send feedback” on its Play page.</p>
+          <a class="btn btn-ghost" href="https://play.google.com/store/apps/details?id=com.cloudlock.app" target="_blank" rel="noopener">Install from Google Play</a>
+        </li>
+      </ol>
+      <p class="test-note">If the test page says you can’t join yet, wait a few minutes after joining the group and try again. Testing is free; you don’t need to buy anything. Testing more than one app? Our <a href="/testers/">testers page</a> has all three.</p>
     </div>
   </section>
 
@@ -327,6 +358,7 @@ footer a { color: var(--muted); }
   <section id="faq" class="faq" style="padding-top: 0">
     <div class="wrap">
       <h2 class="section-title">Questions</h2>
+      <details><summary>How can I try CloudLock before it launches?</summary><p>Join the closed test: join our <a href="https://groups.google.com/g/sinadehesh-testers" target="_blank" rel="noopener">testers group</a>, open <a href="https://play.google.com/apps/testing/com.cloudlock.app" target="_blank" rel="noopener">CloudLock’s test page</a> with the same Google account and tap “Become a tester”, then install CloudLock from Google Play. Keep it for 14 days and tell us what you think.</p></details>
       <details open><summary>What is CloudLock?</summary><p>CloudLock is an app locker for Android. When you open an app you locked, it shows a cloud photo with four names, usually including its real look-alikes. Name it correctly and the app opens for 10 minutes.</p></details>
       <details><summary>Which clouds will I learn?</summary><p>36 clouds from the WMO International Cloud Atlas: the 10 main types (cumulus, stratus, cirrus, cumulonimbus and the rest), their best-known species such as lenticular and towering cumulus, and special clouds like mammatus, shelf clouds, noctilucent clouds and fallstreak holes.</p></details>
       <details><summary>Can CloudLock forecast the weather?</summary><p>No. It teaches what clouds usually mean, which is useful and fun, but only your local weather service can warn you about storms. In stormy weather, take shelter.</p></details>
@@ -338,8 +370,8 @@ footer a { color: var(--muted); }
   <section class="final">
     <div class="wrap">
       <h2 class="section-title">Trade a scroll for the sky</h2>
-      <p class="section-lead" style="margin-inline: auto">CloudLock is almost ready for Google Play.</p>
-      <div class="cta"><span class="btn btn-soon" role="img" aria-label="Coming soon on Google Play"><span><small>Coming soon on</small><b>Google Play</b></span></span></div>
+      <p class="section-lead" style="margin-inline: auto">CloudLock is almost ready for Google Play. Help it get there.</p>
+      <div class="cta"><a class="btn btn-soon" href="#test"><span><small>Try it before launch</small><b>Become a tester</b></span></a></div>
       <div class="sisters">
         <a class="sister flora" href="/floralock/"><img src="/floralock/img/icon-192.png" alt="" width="56" height="56"><div><b>FloraLock</b><span>Learn 70 flowers, houseplants and trees →</span></div></a>
         <a class="sister shroom" href="/shroomlock/"><img src="/shroomlock/img/icon-192.png" alt="" width="56" height="56"><div><b>ShroomLock</b><span>Learn 71 mushrooms and their look-alikes →</span></div></a>
