@@ -69,11 +69,11 @@ the build. It should match the upload key, and Play Console → Setup → App si
      fallback.
 4. New personal developer accounts must run a closed test with at least 12 testers for 14 days before
    publishing to production.
-   **Testers:** the website recruits them through one Google Group for all three apps,
-   `sinadehesh-testers@googlegroups.com` (anyone can join). Add that group under Testing → Closed testing →
-   Testers → Google Groups for each app. The share link is `https://www.sinadehesh.com/testers/`; each app page
-   also has a "Become a tester" section (`#test`) with the group, the app's opt-in link
-   (`https://play.google.com/apps/testing/<package>`) and its Play listing.
+   **Testers:** the website recruits them through one WhatsApp group for all three apps
+   (`https://chat.whatsapp.com/JEVVEjH7SAAJiVL1E12KbD`). Testers send their Gmail address there; add each one under
+   Testing → Closed testing → Testers → Email lists, for every app they want to test. The share link is
+   `https://www.sinadehesh.com/testers/`; each app page also has a "Become a tester" section (`#test`) with the
+   group, the app's opt-in link (`https://play.google.com/apps/testing/<package>`) and its Play listing.
 
 ## 3. FloraLock Plus (the in-app purchase)
 
