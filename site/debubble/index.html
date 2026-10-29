@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeBubble – Cozy Self-Care, One Tiny Step at a Time | Android</title>
+<meta name="description" content="DeBubble is a cozy pixel-art self-care app for Android. Four tiny things a day for your body, your room and your heart, plus one small step outside your bubble, and your little room grows as you go. Free, offline, no ads.">
+<link rel="canonical" href="https://www.sinadehesh.com/debubble/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#33243A">
+<link rel="icon" href="/debubble/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/debubble/img/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DeBubble">
+<meta property="og:title" content="DeBubble – look after yourself, watch your world grow">
+<meta property="og:description" content="Four tiny things a day for your body, your room and your heart, and one small step outside. Your little pixel room grows as you go.">
+<meta property="og:url" content="https://www.sinadehesh.com/debubble/">
+<meta property="og:image" content="https://www.sinadehesh.com/debubble/img/social.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A little pixel character and a smiling heart in a cozy room, beside the words DeBubble: Look after yourself. Watch your world grow.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DeBubble – cozy self-care, one tiny step at a time">
+<meta name="twitter:description" content="Tiny daily self-care and brave little steps. A cozy pixel room grows with you. Android.">
+<meta name="twitter:image" content="https://www.sinadehesh.com/debubble/img/social.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "@id": "https://www.sinadehesh.com/debubble/#app",
+  "name": "DeBubble",
+  "description": "A cozy pixel-art self-care app for Android: four tiny things a day for your body, your room and your heart, plus one small step outside your comfort zone, and a little room that grows as you go.",
+  "url": "https://www.sinadehesh.com/debubble/",
+  "image": "https://www.sinadehesh.com/debubble/img/icon-192.png",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Android",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "screenshot": [
+    "https://www.sinadehesh.com/debubble/img/screenshot-1.webp",
+    "https://www.sinadehesh.com/debubble/img/screenshot-2.webp",
+    "https://www.sinadehesh.com/debubble/img/screenshot-3.webp",
+    "https://www.sinadehesh.com/debubble/img/screenshot-4.webp"
+  ]
+}
+</script>
+<style>
+:root { --bg: #FFF8EC; --wall: #FFF3DC; --paper: #FFFFFF; --ink: #33243A; --muted: #6B5A6E; --line: #EAD9C0; --blush: #A8435F; --blush-soft: #F3B8C8; --teal: #2E6F75; --teal-soft: #9BD7D1; --honey: #E8B476; --plum: #241A28; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; color: var(--ink); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow-x: hidden;
+  /* The room's wallpaper: cream with little diamonds, as in the app. */
+  background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' shape-rendering='crispEdges'%3E%3Cg fill='%23F3E4C8'%3E%3Crect x='9' y='6' width='3' height='9'/%3E%3Crect x='6' y='9' width='9' height='3'/%3E%3Crect x='33' y='30' width='3' height='9'/%3E%3Crect x='30' y='33' width='9' height='3'/%3E%3C/g%3E%3C/svg%3E"); }
+h1, h2, h3, .brand { font-family: "Jersey 10", ui-monospace, monospace; font-weight: 400; line-height: 1.05; margin: 0; letter-spacing: 0.01em; }
+a { color: var(--blush); }
+img { max-width: 100%; height: auto; display: block; }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 16px; top: 16px; background: var(--paper); padding: 8px 12px; border-radius: 8px; z-index: 10; }
+.wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+header.top { background: rgba(255, 248, 236, 0.92); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; backdrop-filter: blur(6px); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: 1.9rem; }
+.brand img { width: 36px; height: 36px; border-radius: 9px; image-rendering: pixelated; }
+.top nav { display: flex; gap: 20px; }
+.top nav a { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+.top nav a:hover { color: var(--ink); }
+section { padding: 72px 0; }
+.hero { padding: 56px 0 40px; }
+.hero .wrap { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; }
+.eyebrow { display: inline-block; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); background: rgba(155, 215, 209, 0.35); padding: 4px 12px; border-radius: 999px; }
+.hero h1 { font-size: clamp(3.4rem, 8vw, 5.6rem); margin: 18px 0 18px; }
+.hero h1 em { font-style: normal; color: var(--blush); }
+.lead { font-size: 1.2rem; color: var(--muted); max-width: 32em; margin: 0; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 14px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 24px; border-radius: 14px; font-weight: 700; text-decoration: none; font-size: 1.05rem; }
+.btn-main { background: var(--ink); color: #fff; box-shadow: 0 6px 0 #1A1220; }
+.btn-main:active { transform: translateY(3px); box-shadow: 0 3px 0 #1A1220; }
+.btn-ghost { color: var(--ink); border: 2px solid var(--ink); background: var(--paper); }
+.note { color: var(--muted); font-size: 0.93rem; margin: 6px 0 0; }
+.phone { justify-self: center; width: min(320px, 78vw); border-radius: 34px; padding: 10px; background: var(--ink); box-shadow: 0 30px 60px -24px rgba(51, 36, 58, 0.55); transform: rotate(2deg); }
+.phone img { border-radius: 26px; }
+.section-title { font-size: clamp(2.4rem, 5vw, 3.4rem); margin-bottom: 12px; }
+.section-lead { color: var(--muted); font-size: 1.12rem; max-width: 42em; margin: 0 0 32px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; list-style: none; padding: 0; margin: 0; counter-reset: s; }
+.steps li { background: var(--paper); border: 2px solid var(--line); border-radius: 22px; padding: 26px; }
+.steps li::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--blush-soft); color: var(--ink); font-family: "Jersey 10", ui-monospace, monospace; font-size: 1.6rem; margin-bottom: 14px; }
+.steps h3 { font-size: 2.2rem; margin-bottom: 6px; }
+.steps p { margin: 0; color: var(--muted); }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.features div { background: var(--paper); border: 2px solid var(--line); border-radius: 20px; padding: 22px 24px; }
+.features h3 { font-size: 1.95rem; margin-bottom: 4px; color: var(--teal); }
+.features p { margin: 0; color: var(--muted); }
+.band { background: var(--plum); color: #FFF3DC; }
+.band .section-title { color: #FFF3DC; }
+.band .section-lead { color: #C9B8CC; }
+.gallery { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 4px 24px; scrollbar-width: thin; }
+.gallery figure { margin: 0; flex: 0 0 min(250px, 68vw); scroll-snap-align: start; }
+.gallery img { border-radius: 22px; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7); }
+.gallery figcaption { font-size: 0.92rem; color: #C9B8CC; margin-top: 10px; }
+.banner { margin-top: 28px; border-radius: 22px; overflow: hidden; image-rendering: pixelated; }
+.science { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.science div { background: var(--paper); border-left: 6px solid var(--teal-soft); border-radius: 14px; padding: 18px 22px; }
+.science h3 { font-size: 1.85rem; margin-bottom: 4px; }
+.science p { margin: 0; color: var(--muted); }
+.care-note { margin: 26px 0 0; color: var(--muted); font-size: 0.95rem; max-width: 46em; }
+.faq details { background: var(--paper); border: 2px solid var(--line); border-radius: 16px; padding: 18px 20px; margin-bottom: 12px; }
+.faq summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; }
+.faq p { margin: 10px 0 0; color: var(--muted); }
+.final { text-align: center; }
+.final .cta { justify-content: center; }
+.final img { width: 96px; height: 96px; margin: 0 auto 18px; border-radius: 22px; image-rendering: pixelated; }
+footer { padding: 32px 0 48px; color: var(--muted); font-size: 0.92rem; border-top: 1px solid var(--line); background: var(--bg); }
+footer a { color: var(--muted); }
+@media (max-width: 860px) {
+  .hero .wrap, .steps, .features, .science { grid-template-columns: 1fr; }
+  .hero { padding-top: 32px; }
+  .phone { transform: none; }
+  .top nav { display: none; }
+  section { padding: 56px 0; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/debubble/"><img src="/debubble/img/icon-192.png" alt="" width="36" height="36">DeBubble</a>
+    <nav aria-label="Page sections">
+      <a href="#how">How it works</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#faq">FAQ</a>
+      <a href="/testers/">Become a tester</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Cozy self-care for Android</span>
+        <h1>Look after yourself.<br><em>Watch your world grow.</em></h1>
+        <p class="lead">DeBubble gives you four tiny things a day: one for your body, one for your room, one for your heart, and one small step outside your bubble. Do them and your little pixel room fills up, tidies up and opens up to the world.</p>
+        <div class="cta">
+          <a class="btn btn-main" href="/testers/">Become a tester</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <p class="note">Free · no ads · works offline · Android 8 and later · <a href="/debubble/privacy/">Privacy</a> · <a href="/debubble/terms/">Terms</a></p>
+      </div>
+      <div class="phone">
+        <img src="/debubble/img/screenshot-1.webp" width="540" height="960" alt="DeBubble home screen: a cozy pixel room with a little character and a heart buddy, above today's four tasks" fetchpriority="high">
+      </div>
+    </div>
+  </section>
+
+  <section id="how" style="padding-top: 24px">
+    <div class="wrap">
+      <h2 class="section-title">How DeBubble works</h2>
+      <p class="section-lead">A few minutes a day. Nothing to keep up with, nothing to lose.</p>
+      <ol class="steps">
+        <li><h3>Four tiny things</h3><p>Each day, one thing for your body, your room and your heart (like washing up, clearing one surface or naming how you feel) and one small mission outside. Each takes a few minutes, and you choose the routines.</p></li>
+        <li><h3>Your room grows</h3><p>You start with an empty room. Looking after yourself earns the lamp, the plant, the cat. Skip a few days and it gets a little messy, but nothing you earned is ever taken away.</p></li>
+        <li><h3>Step outside</h3><p>Missions arrive as letters: a new street, a new café, a hello. They start tiny and grow with you, and every one you do opens the room a bit more: a window, a door, the street.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section style="padding-top: 0">
+    <div class="wrap">
+      <h2 class="section-title">Gentle on purpose</h2>
+      <div class="features">
+        <div><h3>Remind me, right there</h3><p>Next to “I did it” on every task: pick this evening, before bed or any time, and get one nudge. Or none.</p></div>
+        <div><h3>No streaks to lose</h3><p>DeBubble counts the days you showed up, and that number only ever goes up. A missed day is just a day.</p></div>
+        <div><h3>Guess, then go</h3><p>Before a mission, write what you think will happen. Afterwards, see how it really went. It is usually easier than you thought.</p></div>
+        <div><h3>A spark, not a fail</h3><p>Didn’t go to plan? Say what got in the way and it becomes a spark of courage in your jar.</p></div>
+        <div><h3>Journeys</h3><p>Thirty stops toward something you want, like a real circle of friends or a life worth describing.</p></div>
+        <div><h3>On your home screen</h3><p>A widget shows your room and today’s four, so the next tiny step is always one tap away.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screenshots" class="band">
+    <div class="wrap">
+      <h2 class="section-title">See it in action</h2>
+      <p class="section-lead">The real app, three weeks in: a furnished room, a journey under way and a reminder set for this evening.</p>
+      <div class="gallery" tabindex="0" aria-label="DeBubble screenshots">
+        <figure><img src="/debubble/img/screenshot-1.webp" width="540" height="960" loading="lazy" alt="Home: the room and today's four tasks"><figcaption>Your room and today’s four</figcaption></figure>
+        <figure><img src="/debubble/img/screenshot-2.webp" width="540" height="960" loading="lazy" alt="Choosing a reminder time for a task: every day at 8:00 am, 6:10 pm, 7:00 pm or 9:30 pm, or pick a time"><figcaption>Not now? Pick a time</figcaption></figure>
+        <figure><img src="/debubble/img/screenshot-3.webp" width="540" height="960" loading="lazy" alt="Today's letter: a mission to sit among people for thirty minutes, with steps and a hold-to-finish button"><figcaption>Today’s letter from outside</figcaption></figure>
+        <figure><img src="/debubble/img/screenshot-4.webp" width="540" height="960" loading="lazy" alt="Outside: the stages your room has opened through, and three roads out of your bubble"><figcaption>Three roads out of your bubble</figcaption></figure>
+        <figure><img src="/debubble/img/screenshot-5.webp" width="540" height="960" loading="lazy" alt="A journey to a real circle of friends: stop 9 of 30 on a winding trail"><figcaption>A journey, one stop at a time</figcaption></figure>
+        <figure><img src="/debubble/img/screenshot-6.webp" width="540" height="960" loading="lazy" alt="The wardrobe: your character wearing a flower clip, and hats that arrive with levels"><figcaption>Earn hats as you level up</figcaption></figure>
+        <figure><img src="/debubble/img/screenshot-7.webp" width="540" height="960" loading="lazy" alt="The journal: postcards written after missions"><figcaption>A postcard from every step</figcaption></figure>
+      </div>
+      <img class="banner" src="/debubble/img/feature-graphic.webp" width="1024" height="500" loading="lazy" alt="DeBubble: a little character and a smiling heart in a cozy pixel room. Look after yourself. Watch your world grow.">
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Built on how habits stick</h2>
+      <p class="section-lead">Every part of DeBubble comes from what research says helps new habits last and makes brave things feel smaller.</p>
+      <div class="science">
+        <div><h3>Tied to a moment you already have</h3><p>Each routine is linked to a cue you choose, like “when I put the kettle on”. If-then plans like this make people more likely to follow through.</p></div>
+        <div><h3>Tiny first, bigger later</h3><p>Missions climb a ladder one small rung at a time, the way people build confidence in situations that feel hard.</p></div>
+        <div><h3>Checking the forecast</h3><p>Writing down what you fear will happen, then comparing it with what did, is how worries lose their grip.</p></div>
+        <div><h3>Rewards you can see</h3><p>A room that fills up and a character you dressed yourself make progress visible, which keeps people coming back.</p></div>
+      </div>
+      <p class="care-note">DeBubble is a self-help app, not therapy or medical care. If you are struggling, please talk to someone you trust or a local support service.</p>
+    </div>
+  </section>
+
+  <section id="faq" class="faq" style="padding-top: 0">
+    <div class="wrap">
+      <h2 class="section-title">Questions</h2>
+      <details open><summary>Is DeBubble free?</summary><p>Yes. It is free to download and use, with no ads.</p></details>
+      <details><summary>Does it need the internet or an account?</summary><p>No. DeBubble has no account and doesn’t even have permission to use the internet. Everything you write stays on your phone. See the <a href="/debubble/privacy/">privacy policy</a>.</p></details>
+      <details><summary>What happens if I miss a day?</summary><p>Nothing you earned is taken away and there is no streak to break. Your room gets a little messy if you skip a few days, and tidies up again as soon as you’re back.</p></details>
+      <details><summary>Do I have to go outside every day?</summary><p>No. The mission outside is one of four, and you can swap it, save it for later, or say what got in the way. The other three happen at home.</p></details>
+      <details><summary>Is there an iPhone version?</summary><p>Not yet. DeBubble is for Android phones (Android 8 or later).</p></details>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <img src="/debubble/img/icon-192.png" alt="" width="96" height="96">
+      <h2 class="section-title">Your room is waiting</h2>
+      <p class="section-lead" style="margin-inline: auto">DeBubble is in a closed test on Google Play. Join the testers and help it launch.</p>
+      <div class="cta">
+        <a class="btn btn-main" href="/testers/">Become a tester</a>
+        <a class="btn btn-ghost" href="https://play.google.com/store/apps/details?id=com.debubble.app" target="_blank" rel="noopener">Get it on Google Play</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">© 2026 <a href="https://sinadehesh.com">sinadehesh.com</a> · <a href="/testers/">Become a tester</a> · <a href="/debubble/privacy/">Privacy policy</a> · <a href="/debubble/terms/">Terms of Service</a></div>
+</footer>
+</body>
+</html>
