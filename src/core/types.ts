@@ -65,6 +65,8 @@ export interface Settings {
   categories: PlantCategory[];
   /** First-launch setup finished. */
   onboarded: boolean;
+  /** A notification in the evening on days the lesson isn't done yet (see core/reminders.ts). */
+  reminders: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -74,6 +76,7 @@ export const DEFAULT_SETTINGS: Settings = {
   emergencyUnlocksPerDay: 2,
   categories: ['flower', 'houseplant', 'tree'],
   onboarded: false,
+  reminders: true,
 };
 
 export const PLANTS_PER_DAY_MIN = 1;

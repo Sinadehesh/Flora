@@ -16,7 +16,7 @@ FloraLock: Learn Plants
 Lock distracting apps. Name the plant in the photo to open them.
 ```
 
-## Full description (2238/4000)
+## Full description (2337/4000)
 
 ```text
 FloraLock is an app blocker that teaches you something. Turn every urge to scroll into a five-second botany lesson.
@@ -37,6 +37,7 @@ LEARN A FEW PLANTS A DAY
 WHAT'S INSIDE
 • 70 plants: 35 flowers, plus houseplants and trees, each with three real photos.
 • A daily streak, a collection with milestones, and your Botany IQ.
+• A gentle evening reminder on days you haven’t done your lesson (you can turn it off).
 • Light and dark mode.
 
 FREE, WITH AN OPTIONAL UPGRADE

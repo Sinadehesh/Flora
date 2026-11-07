@@ -78,7 +78,7 @@ run() {
 
 caption "FloraLock: name the plant to unlock" "An app lock for Android (com.floralock.app)"
 sleep 3
-caption "1. Pick an app, turn the lock on" "Turning it on starts the foreground service"
+caption "1. Pick an app, turn the lock on" "Turning it on starts the foreground service; then learn today’s plant"
 run 1-setup.yaml
 if [ "$status" = 0 ]; then
   caption "2. The lock runs in the background" "Notification while it runs: “FloraLock is on”"

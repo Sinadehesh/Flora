@@ -21,6 +21,7 @@ Everything runs offline; nothing leaves the phone ([privacy policy](PRIVACY.md))
 | First-launch setup: plants per day, apps to lock, the lock   | ✅ Built                                                                         |
 | Daily lesson + exam, spaced reviews, lock-screen quiz        | ✅ Built and unit-tested                                                         |
 | Look-alikes, field clues, streaks and milestones             | ✅ Built and unit-tested                                                         |
+| Evening reminder when the lesson isn’t done (can be off)     | ✅ Built (`expo-notifications`), timing unit-tested                              |
 | Plant browser and plant pages (about, edibility, uses, lore) | ✅ All 70 plants                                                                 |
 | Photos                                                       | ✅ 3 real iNaturalist photos per plant, CC0 / CC BY / CC BY-SA, bundled          |
 | Android app lock (UsageStats + foreground service)           | ✅ Passes the emulator test on Android 8, 10, 13 and 15; needs real phones       |

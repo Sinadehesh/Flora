@@ -82,17 +82,15 @@ export function recordReview(learn: LearnMap, plantId: string, correct: boolean,
 }
 
 /**
- * Plants the lock screen asks about: today's exam first; once the user has nothing due,
- * anything they've learned; on day one before the lesson, today's new plants (the
- * penalty screen teaches the name).
+ * The plants the lock screen may ask about: only ones the user has studied. Today's exam
+ * first (today's new plants once studied, then the reviews due), else anything learned.
+ * Empty when nothing has been studied yet: the lock screen then sends the user to the
+ * lesson instead of quizzing them on a plant they've never seen.
  */
 export function lockScreenPool(deck: Plant[], learn: LearnMap, today: string, perDay: number): Plant[] {
   const exam = examPlants(deck, learn, today, perDay);
   if (exam.length) return exam;
-  const learned = deck.filter((m) => learn[m.id]);
-  if (learned.length) return learned;
-  const fresh = todaysNewPlants(deck, learn, today, perDay);
-  return fresh.length ? fresh : deck;
+  return deck.filter((m) => learn[m.id]);
 }
 
 /**

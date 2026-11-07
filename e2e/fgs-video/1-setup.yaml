@@ -1,4 +1,5 @@
-# Step 1: choose the app to lock and turn the lock on, which starts the foreground service.
+# Step 1: choose the app to lock and turn the lock on, which starts the foreground service,
+# then learn today's plant so the lock has something to ask.
 # The optional waits for "__pause__" (never on screen) are pauses, so viewers can follow along.
 appId: com.floralock.app
 ---
@@ -42,5 +43,22 @@ appId: com.floralock.app
 - tapOn: "Finish setup"
 - extendedWaitUntil:
     visible: "Start today.s lesson"
+    timeout: 10000
+# Learn today's plant (Peony): the lock only asks about plants the user has studied.
+- tapOn: "Start today.s lesson"
+- tapOn: "Start the exam"
+- tapOn: "Peony"
+- scrollUntilVisible:
+    element:
+      text: "See my score"
+    direction: DOWN
+- tapOn: "See my score"
+- scrollUntilVisible:
+    element:
+      text: "Done for today"
+    direction: DOWN
+- tapOn: "Done for today"
+- extendedWaitUntil:
+    visible: "Tomorrow: .*"
     timeout: 10000
 - pressKey: Home
