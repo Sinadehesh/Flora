@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gem Jar – drop, merge and make the Diamond | Android merge puzzle</title>
+<meta name="description" content="Gem Jar is a relaxing merge puzzle: drop gems into the jar, merge two of a kind and make the Diamond. 11 gem sets and 132 gems to collect, plus 20 Gem Mine stages. Play in your browser or on Android.">
+<link rel="canonical" href="https://www.sinadehesh.com/apps/gemjar/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#1B1038">
+<link rel="icon" href="/gemjar/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/apps/gemjar/img/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gem Jar">
+<meta property="og:title" content="Gem Jar – can you make the Diamond?">
+<meta property="og:description" content="Drop gems, merge two of a kind and climb all the way to the Diamond. 11 gem sets and 132 gems to collect.">
+<meta property="og:url" content="https://www.sinadehesh.com/apps/gemjar/">
+<meta property="og:image" content="https://www.sinadehesh.com/apps/gemjar/img/social.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Gem Jar logo beside a glass jar overflowing with shiny gems">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Gem Jar – can you make the Diamond?">
+<meta name="twitter:description" content="A relaxing merge puzzle with 11 gem sets to collect. Play in your browser or on Android.">
+<meta name="twitter:image" content="https://www.sinadehesh.com/apps/gemjar/img/social.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Titan+One&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "@id": "https://www.sinadehesh.com/apps/gemjar/#app",
+  "name": "Gem Jar",
+  "description": "A relaxing merge puzzle: drop gems into the jar, merge two of a kind and make the Diamond, with 11 gem sets to collect and 20 Gem Mine stages.",
+  "url": "https://www.sinadehesh.com/apps/gemjar/",
+  "image": "https://www.sinadehesh.com/apps/gemjar/img/icon-192.png",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Android",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<style>
+:root { --bg: #1B1038; --bg2: #241550; --ink: #F4EEFF; --muted: #B9ACD9; --gold: #FFD65C; --pink: #FF5C8C; --green: #46C86A; --card: #2A1A5C; --line: #3F2C7A; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: radial-gradient(1200px 700px at 50% -200px, #5B34C2 0%, transparent 70%), var(--bg); color: var(--ink); font: 17px/1.6 Poppins, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
+a { color: var(--gold); }
+img { max-width: 100%; height: auto; display: block; }
+.wrap { width: min(1080px, 100% - 32px); margin-inline: auto; }
+.display { font-family: "Titan One", Poppins, sans-serif; font-weight: 400; letter-spacing: 0.01em; }
+header.top { border-bottom: 1px solid var(--line); background: rgba(27, 16, 56, 0.85); position: sticky; top: 0; z-index: 5; backdrop-filter: blur(8px); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 16px; }
+.logo { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: 1.25rem; }
+.logo img { width: 36px; height: 36px; border-radius: 10px; }
+.top nav { display: flex; gap: 20px; align-items: center; }
+.top nav a { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+.top nav a.play { color: #fff; background: var(--green); padding: 8px 16px; border-radius: 999px; }
+.hero { padding: 36px 0 20px; text-align: center; }
+.hero .art { border-radius: 26px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 90px -30px rgba(160, 110, 255, 0.7); }
+.hero .art img { width: 100%; }
+.eyebrow { margin: 32px 0 0; color: var(--muted); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.85rem; }
+.hero h1 { font-size: clamp(2.3rem, 7vw, 4.2rem); line-height: 1.05; margin: 10px 0 16px; color: #fff; text-shadow: 0 4px 0 #3A1878; }
+.hero h1 span { color: var(--gold); }
+.hero p.lead { color: var(--muted); font-size: 1.15rem; max-width: 34em; margin: 0 auto; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 28px 0 10px; }
+.go { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 28px; border-radius: 18px; font-weight: 700; font-size: 1.1rem; text-decoration: none; background: linear-gradient(#5EE07F, #2FA853); color: #fff; box-shadow: 0 6px 0 #1E7A3A, 0 14px 30px -10px rgba(70, 200, 106, 0.6); }
+.go:active { transform: translateY(3px); box-shadow: 0 3px 0 #1E7A3A; }
+.soon { display: inline-flex; align-items: center; padding: 16px 24px; border-radius: 18px; font-weight: 600; color: var(--muted); border: 1.5px dashed var(--line); }
+.note { color: var(--muted); font-size: 0.92rem; margin: 6px 0 0; }
+section { padding: 52px 0; }
+h2 { font-size: clamp(1.8rem, 4.4vw, 2.7rem); line-height: 1.15; margin: 0 0 12px; color: #fff; text-shadow: 0 3px 0 #3A1878; }
+h2 span { color: var(--gold); }
+.sub { color: var(--muted); max-width: 40em; margin: 0 0 26px; font-size: 1.08rem; }
+.gallery { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 6px 2px 18px; scrollbar-width: thin; }
+.gallery img { flex: 0 0 auto; width: 240px; border-radius: 22px; scroll-snap-align: start; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7); }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 22px; }
+.card h3 { margin: 0 0 6px; font-size: 1.15rem; color: var(--gold); }
+.card p { margin: 0; color: var(--muted); }
+.card .ico { font-size: 1.8rem; line-height: 1; margin-bottom: 10px; }
+.sets { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.set { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 16px 18px 18px; position: relative; }
+.set h3 { margin: 0 0 8px; font-size: 1.08rem; }
+.set img { width: 100%; max-width: 336px; margin: 0 auto 10px; }
+.set .how { margin: 0; font-size: 0.92rem; color: var(--muted); }
+.set .tag { position: absolute; top: 14px; right: 14px; font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #3B2A76; color: var(--gold); }
+.set .tag.open { background: #1F5A35; color: #9BF0B4; }
+.count { display: inline-block; background: var(--pink); color: #fff; font-weight: 700; padding: 6px 16px; border-radius: 999px; margin: 0 0 18px; box-shadow: 0 4px 0 #A8285A; }
+.mine { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: center; }
+.mine .shots { display: flex; gap: 14px; justify-content: center; }
+.mine .shots img { width: 48%; border-radius: 20px; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7); }
+ul.ticks { list-style: none; padding: 0; margin: 0 0 20px; }
+ul.ticks li { padding-left: 32px; position: relative; margin: 10px 0; color: var(--muted); }
+ul.ticks li b { color: var(--ink); }
+ul.ticks li::before { content: "💎"; position: absolute; left: 0; top: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { background: #3B2A76; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-weight: 700; color: var(--gold); font-size: 0.95rem; }
+details { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px 20px; margin: 0 0 12px; }
+summary { cursor: pointer; font-weight: 700; }
+details p { color: var(--muted); margin: 10px 0 2px; }
+.final { text-align: center; padding: 60px 0 70px; }
+.final img { width: 120px; margin: 0 auto 10px; filter: drop-shadow(0 12px 24px rgba(160, 110, 255, 0.6)); }
+footer { padding: 30px 0 46px; color: var(--muted); font-size: 0.92rem; border-top: 1px solid var(--line); }
+footer a { color: var(--muted); }
+@media (max-width: 820px) { .cards { grid-template-columns: 1fr; } .mine { grid-template-columns: 1fr; } .top nav a:not(.play) { display: none; } .hero { padding-top: 18px; } .gallery img { width: 200px; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo display" href="/apps/gemjar/"><img src="/apps/gemjar/img/icon-192.png" alt="" width="36" height="36">Gem Jar</a>
+    <nav aria-label="Pages"><a href="#sets">Gem sets</a><a href="#mine">Gem Mine</a><a href="#faq">Questions</a><a class="play" href="https://sinadehesh.github.io/Happy-Fruit-merge/gems/">Play now</a></nav>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="art"><img src="/apps/gemjar/img/feature-graphic.webp" alt="The Gem Jar logo beside a glass jar overflowing with shiny gems" width="1024" height="500"></div>
+      <p class="eyebrow">Gem Jar · a merge puzzle</p>
+      <h1 class="display">Can you make <span>the Diamond?</span></h1>
+      <p class="lead">Drop a gem into the jar. When two of the same touch, they merge into a bigger one. Keep going, from a little pebble all the way up to the Diamond, before the jar fills to the top.</p>
+      <div class="ctas">
+        <a class="go" href="https://sinadehesh.github.io/Happy-Fruit-merge/gems/">▶ Play now in your browser</a>
+        <span class="soon">Coming soon to Google Play</span>
+      </div>
+      <p class="note">No sign-up. Plays offline. Android 7 and up, or any browser.</p>
+    </div>
+  </section>
+
+  <section aria-label="Screenshots">
+    <div class="wrap">
+      <div class="gallery">
+        <img src="/apps/gemjar/img/screenshot-1.webp" alt="Gem Jar: a jar full of shiny gems and the word INCREDIBLE after a big combo" width="540" height="960" loading="lazy">
+        <img src="/apps/gemjar/img/screenshot-2.webp" alt="The gem sets screen with Rocks & Gems, Crystal Cave and Ocean Jewels" width="540" height="960" loading="lazy">
+        <img src="/apps/gemjar/img/screenshot-3.webp" alt="The Gem Pets set: a frog, a fox, a whale and a kitten made of gems" width="540" height="960" loading="lazy">
+        <img src="/apps/gemjar/img/screenshot-4.webp" alt="The Neon Nights set: glowing hearts, stars and drops in the jar" width="540" height="960" loading="lazy">
+        <img src="/apps/gemjar/img/screenshot-5.webp" alt="The Gem Mine map, a path of stages going down into the mine" width="540" height="960" loading="lazy">
+        <img src="/apps/gemjar/img/screenshot-6.webp" alt="A Gem Mine stage with wooden crates on shelves to break" width="540" height="960" loading="lazy">
+        <img src="/apps/gemjar/img/screenshot-7.webp" alt="Stage clear with three stars and a new gem set opened" width="540" height="960" loading="lazy">
+        <img src="/apps/gemjar/img/screenshot-8.webp" alt="The home menu with Play, the Gem Mine, the daily challenge, Gem Rush and quests" width="540" height="960" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="display">Easy to start, <span>hard to put down</span></h2>
+      <p class="sub">One finger is all it takes. Every drop is a little decision, and every merge pops with sparkles.</p>
+      <div class="cards">
+        <div class="card"><div class="ico">👆</div><h3>Drop</h3><p>Tap where you want the gem to fall. No timer and no rush: you can see the next gem coming, so you can plan ahead.</p></div>
+        <div class="card"><div class="ico">✨</div><h3>Merge</h3><p>Two of the same make the next gem up. Chain merges into combos and the narrator cheers you on: SWEET! JUICY! INCREDIBLE!</p></div>
+        <div class="card"><div class="ico">💎</div><h3>Make the Diamond</h3><p>Twelve gems, from a pebble to the Diamond. Keep the jar from filling to the top and see how far you can go.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sets">
+    <div class="wrap">
+      <h2 class="display">11 gem sets. <span>Can you open them all?</span></h2>
+      <p class="sub">Each set turns every gem in the jar into something new. The first ones open as you make gems; the rarest are deep in the Gem Mine.</p>
+      <p class="count">132 gems to collect</p>
+      <div class="sets">
+        <div class="set"><span class="tag open">Open</span><h3>Rocks &amp; Gems</h3><img src="/apps/gemjar/img/set-rocks.webp" alt="The 12 gems of Rocks & Gems, from a pebble to a diamond" width="672" height="224" loading="lazy"><p class="how">Yours from the first drop.</p></div>
+        <div class="set"><span class="tag">≈ 1 hour</span><h3>Crystal Cave</h3><img src="/apps/gemjar/img/set-crystal.webp" alt="The 12 gems of Crystal Cave" width="672" height="224" loading="lazy"><p class="how">Make 40 Gold Nuggets and 12 Rubies.</p></div>
+        <div class="set"><span class="tag">≈ 2 hours</span><h3>Ocean Jewels</h3><img src="/apps/gemjar/img/set-ocean.webp" alt="The 12 gems of Ocean Jewels, with pearls, coral and a jellyfish" width="672" height="224" loading="lazy"><p class="how">Make 25 Rubies and 2 Opals.</p></div>
+        <div class="set"><span class="tag">≈ 4 hours</span><h3>Royal Treasury</h3><img src="/apps/gemjar/img/set-royal.webp" alt="The 12 gems of Royal Treasury" width="672" height="224" loading="lazy"><p class="how">Make 50 Rubies and 4 Opals.</p></div>
+        <div class="set"><span class="tag">≈ 8 hours</span><h3>Cosmic Gems</h3><img src="/apps/gemjar/img/set-cosmic.webp" alt="The 12 gems of Cosmic Gems, with a moon, Saturn and a galaxy egg" width="672" height="224" loading="lazy"><p class="how">Make 100 Rubies and 8 Opals.</p></div>
+        <div class="set"><span class="tag">≈ 16 hours</span><h3>Volcano Gems</h3><img src="/apps/gemjar/img/set-volcano.webp" alt="The 12 gems of Volcano Gems, with a phoenix egg and a dragon's eye" width="672" height="224" loading="lazy"><p class="how">Make 200 Rubies and 16 Opals.</p></div>
+        <div class="set"><span class="tag">18 ★</span><h3>Pixel Treasure</h3><img src="/apps/gemjar/img/set-pixel.webp" alt="The 12 gems of Pixel Treasure, in retro pixel art" width="672" height="224" loading="lazy"><p class="how">Win 18 stars in the Gem Mine.</p></div>
+        <div class="set"><span class="tag">30 ★</span><h3>Odd Shapes</h3><img src="/apps/gemjar/img/set-odd.webp" alt="The 12 gems of Odd Shapes: a cloud, a clover, a bell and more" width="672" height="224" loading="lazy"><p class="how">Win 30 stars in the Gem Mine.</p></div>
+        <div class="set"><span class="tag">40 ★</span><h3>Cyber Circuit</h3><img src="/apps/gemjar/img/set-cyber.webp" alt="The 12 gems of Cyber Circuit: a chip, a gear, a robot heart and more" width="672" height="224" loading="lazy"><p class="how">Win 40 stars in the Gem Mine.</p></div>
+        <div class="set"><span class="tag">48 ★</span><h3>Neon Nights</h3><img src="/apps/gemjar/img/set-neon.webp" alt="The 12 gems of Neon Nights, glowing shapes" width="672" height="224" loading="lazy"><p class="how">Win 48 stars in the Gem Mine.</p></div>
+        <div class="set"><span class="tag">55 ★</span><h3>Gem Pets</h3><img src="/apps/gemjar/img/set-pets.webp" alt="The 12 Gem Pets, from a bunny to a baby dragon" width="672" height="224" loading="lazy"><p class="how">The rarest set: win 55 of the 60 stars in the Gem Mine.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mine">
+    <div class="wrap mine">
+      <div>
+        <h2 class="display">Dig deeper in <span>the Gem Mine</span></h2>
+        <p class="sub">Puzzle stages under the ground, where every drop counts.</p>
+        <ul class="ticks">
+          <li><b>20 stages</b> with crates to break, shelves, pegs, slopes and funnels inside the jar.</li>
+          <li><b>A set number of drops</b> in each stage: plan your moves and win up to 3 stars.</li>
+          <li><b>Two boss stages</b> with extra rewards.</li>
+          <li><b>Rare gem sets</b> that open only with the stars you find down there.</li>
+        </ul>
+        <div class="chips"><span class="chip">20 stages</span><span class="chip">60 stars</span><span class="chip">5 rare sets</span></div>
+      </div>
+      <div class="shots">
+        <img src="/apps/gemjar/img/screenshot-5.webp" alt="The Gem Mine map" width="540" height="960" loading="lazy">
+        <img src="/apps/gemjar/img/screenshot-6.webp" alt="A Gem Mine stage with crates" width="540" height="960" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="display">Something new <span>every day</span></h2>
+      <p class="sub">Short games when you have a minute, long ones when you want to relax.</p>
+      <div class="cards">
+        <div class="card"><div class="ico">📅</div><h3>Daily challenge</h3><p>A new goal every day, with a reward for finishing it.</p></div>
+        <div class="card"><div class="ico">⏱️</div><h3>Gem Rush</h3><p>How high can you score in 90 seconds?</p></div>
+        <div class="card"><div class="ico">✅</div><h3>Quests</h3><p>Fresh quests every few hours, each with a reward.</p></div>
+        <div class="card"><div class="ico">⭐</div><h3>200 levels</h3><p>Climb levels for rewards, titles and new jar colours.</p></div>
+        <div class="card"><div class="ico">⚡</div><h3>Boosters</h3><p>Zap a gem out of the way, or use a Star to lift any gem one level up.</p></div>
+        <div class="card"><div class="ico">🎵</div><h3>Made to relax</h3><p>Calm music, soft pops and gentle buzzes, all of which you can turn off.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <h2 class="display">Questions</h2>
+      <details><summary>Is Gem Jar free?</summary><p>Yes, it is free to play, with ads. An optional one-time “No Ads” purchase switches off the banner and the ads between games; the videos you can choose to watch for a reward stay available.</p></details>
+      <details><summary>Does it work offline?</summary><p>Yes. The game plays without internet; only the ads need a connection.</p></details>
+      <details><summary>Which phones does it run on?</summary><p>Android 7 and up. You can also play it right now in any browser, on a phone or a computer.</p></details>
+      <details><summary>Do I need an account?</summary><p>No. There is no sign-up, and your game is saved on your phone, so you can pick up right where you left off.</p></details>
+      <details><summary>What data does it collect?</summary><p>The game itself sends nothing about you to us. The ads come from Google AdMob; the <a href="/gemjar/privacy/">privacy policy</a> explains what it collects and your choices.</p></details>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <img src="/apps/gemjar/img/icon-192.png" alt="" width="192" height="192">
+      <h2 class="display">Your first <span>Diamond</span> is waiting</h2>
+      <div class="ctas"><a class="go" href="https://sinadehesh.github.io/Happy-Fruit-merge/gems/">▶ Play now in your browser</a></div>
+      <p class="note">Coming soon to Google Play.</p>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">© 2026 <a href="https://sinadehesh.com">sinadehesh.com</a> · <a href="/gemjar/privacy/">Privacy policy</a> · <a href="/gemjar/terms/">Terms of Service</a></div>
+</footer>
+</body>
+</html>

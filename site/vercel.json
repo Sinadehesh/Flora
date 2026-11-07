@@ -3,7 +3,12 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/:path((?!floralock|shroomlock|cloudlock|app-lockers|testers|mergefarmstead|debubble|gemjar|app-ads\\.txt|robots\\.txt|sitemap\\.xml).*)",
+      "source": "/gemjar/",
+      "destination": "/apps/gemjar/",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!floralock|shroomlock|cloudlock|app-lockers|testers|mergefarmstead|debubble|gemjar|apps|app-ads\\.txt|robots\\.txt|sitemap\\.xml).*)",
       "has": [
         {
           "type": "host",
@@ -16,7 +21,7 @@
   ],
   "rewrites": [
     {
-      "source": "/:path((?!shroomlock|floralock|cloudlock|app-lockers|testers|mergefarmstead|debubble|gemjar|app-ads\\.txt|robots\\.txt|sitemap\\.xml).*)",
+      "source": "/:path((?!shroomlock|floralock|cloudlock|app-lockers|testers|mergefarmstead|debubble|gemjar|apps|app-ads\\.txt|robots\\.txt|sitemap\\.xml).*)",
       "has": [
         {
           "type": "host",
@@ -26,7 +31,7 @@
       "destination": "/shroomlock/:path"
     },
     {
-      "source": "/:path((?!shroomlock|floralock|cloudlock|app-lockers|testers|mergefarmstead|debubble|gemjar|app-ads\\.txt|robots\\.txt|sitemap\\.xml).*)",
+      "source": "/:path((?!shroomlock|floralock|cloudlock|app-lockers|testers|mergefarmstead|debubble|gemjar|apps|app-ads\\.txt|robots\\.txt|sitemap\\.xml).*)",
       "has": [
         {
           "type": "host",
