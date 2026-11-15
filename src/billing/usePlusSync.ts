@@ -28,7 +28,6 @@ export function usePlusSync() {
         if (owned === null || owned === 'pending') return;
         const plus = owned === 'owned';
         dispatch({ type: 'setPlus', plus });
-        shareFamilyPlus(plus);
         if (!plus && !codeUnlock.current) {
           const locked = blocker.getBlockedApps();
           const allowed = allowedLockedApps(locked, false);
@@ -37,14 +36,16 @@ export function usePlusSync() {
       });
     check();
     const appState = AppState.addEventListener('change', (s) => s === 'active' && check());
-    const purchases = onPurchaseUpdate((u) => {
-      if (u.state !== 'purchased') return;
-      dispatch({ type: 'setPlus', plus: true });
-      shareFamilyPlus(true);
-    });
+    const purchases = onPurchaseUpdate((u) => u.state === 'purchased' && dispatch({ type: 'setPlus', plus: true }));
     return () => {
       appState.remove();
       purchases();
     };
   }, [hydrated, dispatch]);
+
+  // Tell the sister apps whenever Plus changes here (purchase, restore, refund). `plus` only
+  // ever comes from Google Play; a review code is kept apart (codeUnlock) and isn't shared.
+  useEffect(() => {
+    if (hydrated) shareFamilyPlus(state.plus);
+  }, [hydrated, state.plus]);
 }
