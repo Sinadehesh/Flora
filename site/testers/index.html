@@ -117,6 +117,13 @@ footer a { color: var(--muted); }
 .steps1 li::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 800; margin-bottom: 12px; }
 .steps1 h3 { font-size: 1.25rem; margin-bottom: 6px; }
 .steps1 p { margin: 0; color: var(--muted); }
+.thanks { background: #fff; border: 2px solid var(--green); border-radius: 26px; padding: 30px 30px 28px; text-align: center; }
+.thanks h2 { font-size: clamp(1.8rem, 3.4vw, 2.4rem); margin-bottom: 12px; }
+.thanks p { color: var(--muted); max-width: 40em; margin: 0 auto 14px; }
+.thanks .row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 22px 0 18px; }
+.thanks .go.shroom { background: #3E2416; color: var(--amber); }
+.thanks .go.cloud { background: #2F6FA8; color: #fff; }
+.thanks .small { font-size: 0.92rem; margin-bottom: 0; }
 .go { display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: 10px; padding: 13px 20px; border-radius: 14px; font-weight: 700; text-decoration: none; background: var(--ink); color: #fff; }
 .go.big { font-size: 1.1rem; padding: 16px 26px; }
 .go.line { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
@@ -167,6 +174,21 @@ footer a { color: var(--muted); }
       <span class="eyebrow">Closed test on Google Play · free · Android</span>
       <h1>Help us launch <em>five new apps</em></h1>
       <p>FloraLock, ShroomLock and CloudLock lock your distracting apps until you name a plant, a mushroom or a cloud. Merge Farmstead is a merge game with a mystery: who took the Golden Bell? DeBubble is a cozy self-care app: four tiny things a day, and your little pixel room grows as you go. Before they can go public, Google needs real people to test them for 14 days. It’s free: send us your Gmail address first, and once we’ve added you (usually within a day) you can install the apps.</p>
+    </div>
+  </section>
+
+  <section id="thank-you" style="padding-top: 0">
+    <div class="wrap">
+      <div class="thanks">
+        <h2>🎉 Thank you, testers!</h2>
+        <p><b style="color: var(--ink)">ShroomLock and CloudLock passed Google’s test and are approved for release on Google Play, for everyone.</b> This happened because of you. Every install, every quiz you answered and every message you sent us in the group counted. Without you, these apps couldn’t have gone public.</p>
+        <div class="row">
+          <a class="go shroom" href="https://play.google.com/store/apps/details?id=com.shroomlock.app" target="_blank" rel="noopener">🍄 ShroomLock on Google Play</a>
+          <a class="go cloud" href="https://play.google.com/store/apps/details?id=com.cloudlock.app" target="_blank" rel="noopener">☁️ CloudLock on Google Play</a>
+        </div>
+        <p>Share the links with friends and family, and if you enjoy the apps, a review on Google Play helps other people find them. Already have the app? Keep it: it updates by itself and your progress stays.</p>
+        <p class="small">If a link still says the app isn’t found, the public release is on its way: check back in a few days. FloraLock and the other apps below still need testers, so if you have a moment, try one more. Want to do even more? <a href="/support/">See our mission and how you can help</a>.</p>
+      </div>
     </div>
   </section>
 
