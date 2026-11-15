@@ -27,6 +27,8 @@ Everything runs offline; nothing leaves the phone ([privacy policy](PRIVACY.md))
 | Android app lock (UsageStats + foreground service)           | ✅ Passes the emulator test on Android 8, 10, 13 and 15; needs real phones       |
 | Play Store signing and privacy policy                        | ✅ Ready; see [docs/PLAY_STORE.md](docs/PLAY_STORE.md)                           |
 | FloraLock Plus (one-time or monthly, Google Play Billing)    | ✅ Built; `floralock_plus` and `floralock_plus_monthly` must be created in Play  |
+| Family price: Plus for less with Plus in ShroomLock/CloudLock | ✅ Built; `floralock_plus_family` (one-time, $1.99) must be created in Play      |
+| Our mission screen: sister apps, donate (website), rate, share | ✅ Built; donations happen on www.sinadehesh.com/support/                       |
 | iOS shield (Screen Time API)                                 | ⏳ Not started. See [docs/PLATFORM_INTEGRATION.md](docs/PLATFORM_INTEGRATION.md) |
 
 ## Learning model
@@ -81,7 +83,8 @@ src/
     (tabs)/index.tsx      Today: lesson card, streak, next goal, Botany IQ, trouble plants
     (tabs)/browse.tsx     Collection: collected and mastered, milestones, searchable guide
     (tabs)/settings.tsx   Lock, Plus, plants per day, unlock window, penalty, emergency unlocks, deck
-    upgrade.tsx           FloraLock Plus: what it adds, purchase and restore
+    upgrade.tsx           FloraLock Plus: what it adds, purchase and restore, the family price
+    mission.tsx           Our mission, the sister apps, and ways to help (donate, rate, share)
     lesson.tsx            Study cards, then the exam
     challenge.tsx         The lock-screen intercept (floralock://challenge?source=Instagram)
     plant/[id].tsx        Plant page
@@ -93,11 +96,13 @@ src/
     quiz.ts               Look-alike distractors
     stats.ts              Botany IQ, accuracy, trouble plants
     plus.ts               What's free and what Plus unlocks
+    family.ts             The sister apps (ShroomLock, CloudLock) and who gets the family price
     saved.ts              Saved progress: reading older saves after an app update
   data/                 Plants, plant details, photos (generated), privacy policy
   blocker/              Bridge to the native Android lock
+  family/               Asks the sister apps (through the native module) whether they have Plus
   state/store.tsx       App state, persisted to AsyncStorage
-modules/app-blocker/    Native Android lock: foreground service, overlay fallback, boot receiver
+modules/app-blocker/    Native Android lock: foreground service, overlay fallback, boot receiver, FamilyProvider (Plus status for the sister apps)
 modules/play-billing/   Google Play Billing for Plus (one-time purchase and monthly subscription)
 ```
 
