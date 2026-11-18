@@ -146,14 +146,21 @@ footer a { color: var(--muted); }
   <footer>© 2026 <a href="https://sinadehesh.com">sinadehesh.com</a></footer>
 </main>
 <script>
-// Google Play links carry where the visitor came from (…/links/?src=instagram), so Play Console
-// can show which profile brought the installs.
+// Google Play links carry where the visitor came from, so Play Console's acquisition report can show
+// which profile and which post brought the installs: …/links/?src=instagram&campaign=mushroom_quiz
+// becomes utm_source=instagram, utm_campaign=mushroom_quiz. Without a campaign it's "links".
 (function () {
-  var src = 'links';
-  try { src = (new URLSearchParams(location.search).get('src') || 'links').replace(/[^a-z0-9_-]/gi, '').slice(0, 30) || 'links'; } catch (e) {}
+  var q = null;
+  try { q = new URLSearchParams(location.search); } catch (e) {}
+  function tag(name, fallback) {
+    var v = q && q.get(name);
+    return (v || fallback).replace(/[^a-z0-9_-]/gi, '').slice(0, 30) || fallback;
+  }
+  var src = tag('src', 'links');
+  var campaign = tag('campaign', 'links');
   document.querySelectorAll('[data-play]').forEach(function (a) {
     a.href = 'https://play.google.com/store/apps/details?id=' + a.dataset.play +
-      '&referrer=' + encodeURIComponent('utm_source=' + src + '&utm_medium=bio');
+      '&referrer=' + encodeURIComponent('utm_source=' + src + '&utm_medium=bio&utm_campaign=' + campaign);
   });
 })();
 </script>
